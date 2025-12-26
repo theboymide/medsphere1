@@ -1,0 +1,484 @@
+OCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDSphere - Sponsored Ads</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ADS PAGE SPECIFIC STYLES */
+        .ads-header {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+        
+        .ads-header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .back-to-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 30px;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+        
+        .back-to-home:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .ads-container {
+            padding: 80px 0;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .ads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            padding: 0 20px;
+        }
+        
+        .ad-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.1);
+            transition: transform 0.3s;
+            border: 1px solid #fecaca;
+        }
+        
+        .ad-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(220, 38, 38, 0.15);
+        }
+        
+        .ad-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #dc2626;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        
+        .ad-thumbnail {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .ad-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .ad-card:hover .ad-thumbnail img {
+            transform: scale(1.05);
+        }
+        
+        .ad-info {
+            padding: 25px;
+        }
+        
+        .ad-sponsor {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .sponsor-logo {
+            width: 40px;
+            height: 40px;
+            background: #fee2e2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #dc2626;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .sponsor-name {
+            font-weight: 600;
+            color: #991b1b;
+        }
+        
+        .ad-title {
+            font-size: 1.3rem;
+            color: #991b1b;
+            margin-bottom: 10px;
+            line-height: 1.4;
+        }
+        
+        .ad-desc {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .ad-features {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+        
+        .ad-features li {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .ad-features i {
+            color: #dc2626;
+        }
+        
+        .ad-cta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid #fecaca;
+        }
+        
+        .ad-discount {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .btn-ad {
+            background: #dc2626;
+            color: white;
+            padding: 10px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-ad:hover {
+            background: #ef4444;
+            transform: translateY(-2px);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .ads-header h1 {
+                font-size: 2rem;
+            }
+            
+            .ads-grid {
+                grid-template-columns: 1fr;
+                padding: 0 15px;
+            }
+            
+            .ad-card {
+                margin-bottom: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .ads-header {
+                padding: 40px 0;
+            }
+            
+            .ads-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .ad-title {
+                font-size: 1.1rem;
+            }
+            
+            .ad-desc {
+                font-size: 0.9rem;
+            }
+            
+            .ad-cta {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+            
+            .btn-ad {
+                text-align: center;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ads Header -->
+    <header class="ads-header">
+        <div class="container">
+            <h1><i class="fas fa-ad"></i> Sponsored Ads</h1>
+            <p>Exclusive deals, discounts, and promotions for MEDSphere students</p>
+            <!-- LINK BACK TO INDEX.HTML -->
+            <a href="index.html" class="back-to-home">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+        </div>
+    </header>
+
+    <!-- Ads Section -->
+    <section class="ads-container">
+        <div class="ads-grid">
+            <!-- Ad 1 -->
+            <div class="ad-card">
+                <div class="ad-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=600&auto=format&fit=crop" alt="Food Discount">
+                    <span class="ad-badge">Food & Dining</span>
+                </div>
+                <div class="ad-info">
+                    <div class="ad-sponsor">
+                        <div class="sponsor-logo">CF</div>
+                        <span class="sponsor-name">Campus Food Court</span>
+                    </div>
+                    <h3 class="ad-title">20% Off All Student Meals</h3>
+                    <p class="ad-desc">Show your student ID and get 20% off any meal at the campus food court. Valid Monday-Friday.</p>
+                    <ul class="ad-features">
+                        <li><i class="fas fa-check"></i> Valid for all students</li>
+                        <li><i class="fas fa-check"></i> No minimum purchase</li>
+                        <li><i class="fas fa-check"></i> Includes all food items</li>
+                    </ul>
+                    <div class="ad-cta">
+                        <span class="ad-discount">20% OFF</span>
+                        <a href="#" class="btn-ad" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Redeem Offer
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ad 2 -->
+            <div class="ad-card">
+                <div class="ad-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1571115764595-644a1f56a55c?w=600&auto=format&fit=crop" alt="Bookstore">
+                    <span class="ad-badge">Textbooks</span>
+                </div>
+                <div class="ad-info">
+                    <div class="ad-sponsor">
+                        <div class="sponsor-logo">BS</div>
+                        <span class="sponsor-name">Bookstore Solutions</span>
+                    </div>
+                    <h3 class="ad-title">15% Off Textbooks + Free Shipping</h3>
+                    <p class="ad-desc">Get 15% off all textbooks and free shipping on orders over $50. Use code: MEDSPHERE15</p>
+                    <ul class="ad-features">
+                        <li><i class="fas fa-check"></i> Free shipping over $50</li>
+                        <li><i class="fas fa-check"></i> Digital and physical books</li>
+                        <li><i class="fas fa-check"></i> Rent or buy options</li>
+                    </ul>
+                    <div class="ad-cta">
+                        <span class="ad-discount">15% OFF</span>
+                        <a href="#" class="btn-ad" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Shop Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ad 3 -->
+            <div class="ad-card">
+                <div class="ad-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&auto=format&fit=crop" alt="Fitness">
+                    <span class="ad-badge">Fitness</span>
+                </div>
+                <div class="ad-info">
+                    <div class="ad-sponsor">
+                        <div class="sponsor-logo">GF</div>
+                        <span class="sponsor-name">GymFlex</span>
+                    </div>
+                    <h3 class="ad-title">Student Gym Membership - 30% Off</h3>
+                    <p class="ad-desc">Premium gym membership at 30% discount for students. Includes all classes and equipment.</p>
+                    <ul class="ad-features">
+                        <li><i class="fas fa-check"></i> No initiation fee</li>
+                        <li><i class="fas fa-check"></i> Free personal training session</li>
+                        <li><i class="fas fa-check"></i> Access to all locations</li>
+                    </ul>
+                    <div class="ad-cta">
+                        <span class="ad-discount">30% OFF</span>
+                        <a href="#" class="btn-ad" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Join Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ad 4 -->
+            <div class="ad-card">
+                <div class="ad-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=600&auto=format&fit=crop" alt="Software">
+                    <span class="ad-badge">Software</span>
+                </div>
+                <div class="ad-info">
+                    <div class="ad-sponsor">
+                        <div class="sponsor-logo">MS</div>
+                        <span class="sponsor-name">Microsoft Edu</span>
+                    </div>
+                    <h3 class="ad-title">Free Microsoft Office 365 for Students</h3>
+                    <p class="ad-desc">Get free access to Word, Excel, PowerPoint, and 1TB OneDrive storage with your student email.</p>
+                    <ul class="ad-features">
+                        <li><i class="fas fa-check"></i> Word, Excel, PowerPoint</li>
+                        <li><i class="fas fa-check"></i> 1TB OneDrive storage</li>
+                        <li><i class="fas fa-check"></i> Free upgrades</li>
+                    </ul>
+                    <div class="ad-cta">
+                        <span class="ad-discount">FREE</span>
+                        <a href="#" class="btn-ad" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Get Software
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ad 5 -->
+            <div class="ad-card">
+                <div class="ad-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&auto=format&fit=crop" alt="Coffee">
+                    <span class="ad-badge">Coffee</span>
+                </div>
+                <div class="ad-info">
+                    <div class="ad-sponsor">
+                        <div class="sponsor-logo">CS</div>
+                        <span class="sponsor-name">Coffee Spot</span>
+                    </div>
+                    <h3 class="ad-title">Buy 1 Get 1 Free Coffee</h3>
+                    <p class="ad-desc">Buy any coffee drink and get another one free. Valid at all campus Coffee Spot locations.</p>
+                    <ul class="ad-features">
+                        <li><i class="fas fa-check"></i> All coffee drinks included</li>
+                        <li><i class="fas fa-check"></i> Valid 2-5 PM daily</li>
+                        <li><i class="fas fa-check"></i> Show student ID required</li>
+                    </ul>
+                    <div class="ad-cta">
+                        <span class="ad-discount">BOGO</span>
+                        <a href="#" class="btn-ad" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Find Location
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ad 6 -->
+            <div class="ad-card">
+                <div class="ad-thumbnail">
+                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&auto=format&fit=crop" alt="Transport">
+                    <span class="ad-badge">Transport</span>
+                </div>
+                <div class="ad-info">
+                    <div class="ad-sponsor">
+                        <div class="sponsor-logo">UR</div>
+                        <span class="sponsor-name">UrbanRide</span>
+                    </div>
+                    <h3 class="ad-title">50% Off Ride Shares to Campus</h3>
+                    <p class="ad-desc">Get 50% off all UrbanRide trips to and from campus. Use code: CAMPUS50 at checkout.</p>
+                    <ul class="ad-features">
+                        <li><i class="fas fa-check"></i> Valid for all campus trips</li>
+                        <li><i class="fas fa-check"></i> Up to 4 rides per week</li>
+                        <li><i class="fas fa-check"></i> Available 24/7</li>
+                    </ul>
+                    <div class="ad-cta">
+                        <span class="ad-discount">50% OFF</span>
+                        <a href="#" class="btn-ad" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Book Ride
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-text">MEDSphere</span>
+                    <p class="footer-tagline">Your premier campus lifestyle community</p>
+                  
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <!-- LINK BACK TO INDEX.HTML -->
+                        <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="index.html#events"><i class="fas fa-chevron-right"></i> Events</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; <span class="current-year">2023</span> MEDSphere Campus Community. All rights reserved.</p>
+                <p class="footer-url">medsphere-campus.vercel.app</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Update current year
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentYear = new Date().getFullYear();
+            const yearElements = document.querySelectorAll('.current-year');
+            yearElements.forEach(el => {
+                el.textContent = currentYear;
+            });
+        });
+    </script>
+</body>
+<!--- Back to Top Button -->
+<button id="backToTop" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</button>
+<script>
+    // Back to Top Button Functionality
+    const backToTopButton = document.getElementById('backToTop');
+    
+    // Show/hide button based on scroll position
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTopButton.classList.add('show');
+        } else {
+            backToTopButton.classList.remove('show');
+        }
+    });
+    
+    // Scroll to top when clicked
+    backToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+</script>
+</html>
