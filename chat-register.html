@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedSphere Chat - Register/Login</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* NAVIGATION BAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+        
+        .nav-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-logo span {
+            font-size: 28px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 8px 15px;
+            border-radius: 8px;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+            background: #f7fafc;
+        }
+        
+        .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .back-to-site {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .back-to-site:hover {
+            background: #5a67d8;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 90px 20px 20px;
+        }
+        
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+        
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 5px;
+        }
+        
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: #4a5568;
+        }
+        
+        .auth-tab.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+        
+        .auth-form {
+            display: none;
+        }
+        
+        .auth-form.active {
+            display: block;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-header h1 {
+            color: #4a5568;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .auth-header p {
+            color: #718096;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #4a5568;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .auth-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .auth-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        .features {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+        }
+        
+        .features h3 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .feature-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .feature-item span {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .feature-item p {
+            font-size: 14px;
+            color: #4a5568;
+        }
+        
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+        }
+        
+        .success-message {
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span>💬</span> MedSphere Chat
+            </a>
+            
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="chat-register.html" class="active">Chat Login</a>
+                <a href="events.html">Events</a>
+                <a href="about.html">About</a>
+                <a href="index.html" class="back-to-site">← Back to Site</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="auth-container">
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchTab('login')">Login</button>
+            <button class="auth-tab" onclick="switchTab('register')">Register</button>
+        </div>
+        
+        <!-- ERROR/SUCCESS MESSAGES -->
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+        
+        <!-- LOGIN FORM -->
+        <div class="auth-form active" id="loginForm">
+            <div class="auth-header">
+                <h1>Welcome Back! 👋</h1>
+                <p>Login to join the campus chat</p>
+            </div>
+            
+            <form id="loginFormElement">
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" placeholder="Enter your username" required>
+                </div>
+                
+                <button type="button" class="auth-btn" onclick="login()">
+                    Login to Chat Room
+                </button>
+            </form>
+            
+            <div class="forgot-password">
+                <a href="#" onclick="switchTab('register')">Don't have an account? Register</a>
+            </div>
+        </div>
+        
+        <!-- REGISTER FORM -->
+        <div class="auth-form" id="registerForm">
+            <div class="auth-header">
+                <h1>Join Campus Chat 🎓</h1>
+                <p>Create your account in 30 seconds</p>
+            </div>
+            
+            <form id="registerFormElement">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="faculty">Faculty</label>
+                    <select id="faculty" required>
+                        <option value="">Select Faculty</option>
+                        <option value="Clinicals">Clinicals</option>
+                        <option value="Dentistry">Dentistry</option>
+                        <option value="Medical Rehabilitation">Medical Rehabilitation</option>
+                        <option value="Nursing">Nursing</option>
+                        <option value="Allied Health">Allied Health</option>
+                        <option value="Community Health">Community Health</option>
+                        <option value="Pharmacy">Pharmacy</option>
+                        <option value="Sciences">Sciences</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Choose a username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="level">Level/Year</label>
+                    <select id="level" required>
+                        <option value="">Select Level</option>
+                        <option value="100">100 Level</option>
+                        <option value="200">200 Level</option>
+                        <option value="300">300 Level</option>
+                        <option value="400">400 Level</option>
+                        <option value="500">500 Level</option>
+                        <option value="600">600 Level</option>
+                    </select>
+                </div>
+                
+                <button type="button" class="auth-btn" onclick="register()">
+                    Create Account & Join Chat
+                </button>
+            </form>
+            
+            <div class="forgot-password">
+                <a href="#" onclick="switchTab('login')">Already have an account? Login</a>
+            </div>
+        </div>
+        
+        <div class="features">
+            <h3>Chat Features:</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <span>💬</span>
+                    <p>Real-time messaging</p>
+                </div>
+                <div class="feature-item">
+                    <span>📷</span>
+                    <p>Share images & files</p>
+                </div>
+                <div class="feature-item">
+                    <span>👥</span>
+                    <p>See online students</p>
+                </div>
+                <div class="feature-item">
+                    <span>🎓</span>
+                    <p>Filter by faculty</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // User data management
+    const STORAGE_KEY = 'medsphere_users';
+    
+    // Initialize users storage if empty
+    function initStorage() {
+        if (!localStorage.getItem(STORAGE_KEY)) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+        }
+    }
+    
+    // Switch between login and register tabs
+    function switchTab(tab) {
+        // Update tabs
+        document.querySelectorAll('.auth-tab').forEach(t => {
+            t.classList.remove('active');
+            if (t.textContent.toLowerCase().includes(tab)) {
+                t.classList.add('active');
+            }
+        });
+        
+        // Update forms
+        document.querySelectorAll('.auth-form').forEach(form => {
+            form.classList.remove('active');
+        });
+        
+        if (tab === 'login') {
+            document.getElementById('loginForm').classList.add('active');
+            document.getElementById('loginUsername').focus();
+        } else {
+            document.getElementById('registerForm').classList.add('active');
+            document.getElementById('name').focus();
+        }
+        
+        // Clear messages
+        hideMessages();
+    }
+    
+    // Show error message
+    function showError(message) {
+        const errorEl = document.getElementById('errorMessage');
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+        document.getElementById('successMessage').style.display = 'none';
+    }
+    
+    // Show success message
+    function showSuccess(message) {
+        const successEl = document.getElementById('successMessage');
+        successEl.textContent = message;
+        successEl.style.display = 'block';
+        document.getElementById('errorMessage').style.display = 'none';
+    }
+    
+    // Hide all messages
+    function hideMessages() {
+        document.getElementById('errorMessage').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'none';
+    }
+    
+    // Check if username exists
+    function usernameExists(username) {
+        const users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        return users.some(user => user.username === username);
+    }
+    
+    // Register new user
+    function register() {
+        const name = document.getElementById('name').value.trim();
+        const faculty = document.getElementById('faculty').value;
+        const username = document.getElementById('username').value.trim();
+        const level = document.getElementById('level').value;
+        
+        // Validation
+        if (!name || !faculty || !username || !level) {
+            showError("Please fill in all fields!");
+            return;
+        }
+        
+        if (username.length < 3) {
+            showError("Username must be at least 3 characters!");
+            return;
+        }
+        
+        if (usernameExists(username)) {
+            showError("Username already taken! Please choose another one.");
+            return;
+        }
+        
+        // Create user object
+        const userData = {
+            id: Date.now(),
+            name: name,
+            faculty: faculty,
+            username: username,
+            level: level,
+            avatar: name.charAt(0).toUpperCase(),
+            joinedAt: new Date().toISOString(),
+            lastLogin: new Date().toISOString()
+        };
+        
+        // Get existing users
+        const users = JSON.parse(lStorage.getItem(STORAGE_KEY) || '[]');
+        
+        // Add new user
+        users.push(userData);
+        
+        // Save to localStorage
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+        
+        // Also save as current user
+        localStorage.setItem('medsphere_chat_user', JSON.stringify(userData));
+        
+        // Show success message
+        showSuccess("Account created successfully! Opening chat room...");
+        
+        // Clear form
+        document.getElementById('name').value = '';
+        document.getElementById('faculty').value = '';
+        document.getElementById('username').value = '';
+        document.getElementById('level').value = '';
+        
+        // OPEN CHAT ROOM IMMEDIATELY (FIXED)
+        setTimeout(() => {
+            const chatWindow = window.open('chat-room.html', '_blank');
+            if (!chatWindow || chatWindow.closed) {
+                showError("Popup blocked! Please allow popups for this site.");
+                // Alternative: Redirect current window
+                window.location.href = 'chat-room.html';
+            }
+        }, 500);
+    }
+    
+    // Login existing user
+    function login() {
+        const username = document.getElementById('loginUsername').value.trim();
+        
+        if (!username) {
+            showError("Please enter your username!");
+            return;
+        }
+        
+        // Get all users
+        const users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        
+        // Find user
+        const user = users.find(u => u.username === username);
+        
+        if (!user) {
+            showError("Username not found! Please register first.");
+            return;
+        }
+        
+        // Update last login time
+        user.lastLogin = new Date().toISOString();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
+        
+        // Save as current user
+        localStorage.setItem('medsphere_chat_user', JSON.stringify(user));
+        
+        // Show success message
+        showSuccess(`Welcome back, ${user.name}! Opening chat room...`);
+        
+        // Clear login form
+        document.getElementById('loginUsername').value = '';
+        
+        // OPEN CHAT ROOM IMMEDIATELY (FIXED)
+        setTimeout(() => {
+            const chatWindow = window.open('chat-room.html', '_blank');
+            if (!chatWindow || chatWindow.closed) {
+                showError("Popup blocked! Please allow popups for this site.");
+                // Alternative: Redirect current window
+                window.location.href = 'chat-room.html';
+            }
+        }, 500);
+    }
+    
+    // Check if user is already logged in
+    function checkExistingLogin() {
+        const currentUser = localStorage.getItem('medsphere_chat_user');
+        if (currentUser) {
+            showSuccess("You're already logged in! Opening chat...");
+            setTimeout(() => {
+                const chatWindow = window.open('chat-room.html', '_blank');
+                if (!chatWindow || chatWindow.closed) {
+                    window.location.href = 'chat-room.html';
+                }
+            }, 1000);
+        }
+    }
+    
+    // Auto-login for demo users (optional)
+    function setupDemoUsers() {
+        const users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        
+        if (users.length === 0) {
+            // Create some demo users
+            const demoUsers = [
+                {
+                    id: 1,
+                    name: "Alex Johnson",
+                    faculty: "Clinicals",
+                    username: "alexj",
+                    level: "300",
+                    avatar: "A",
+                    joinedAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    name: "Sarah Miller",
+                    faculty: "Nursing",
+                    username: "sarah_m",
+                    level: "400",
+                    avatar: "S",
+                    joinedAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                }
+            ];
+            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(demoUsers));
+        }
+    }
+    
+    // Handle Enter key
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const activeForm = document.querySelector('.auth-form.active');
+            if (activeForm.id === 'loginForm') {
+                login();
+            } else {
+                register();
+            }
+        }
+    });
+    
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', function() {
+        initStorage();
+        setupDemoUsers();
+        checkExistingLogin();
+        
+        // Auto-focus appropriate field
+        const activeForm = document.querySelector('.auth-form.active');
+        if (activeForm.id === 'loginForm') {
+            document.getElementById('loginUsername').focus();
+        } else {
+            document.getElementById('name').focus();
+        }
+        
+        // Test if we can open windows
+        console.log("Page loaded - chat system ready");
+    });
+</script>
+</body>
+</html>
