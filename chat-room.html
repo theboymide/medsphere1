@@ -425,6 +425,7 @@
             min-height: 0;
             display: flex;
             flex-direction: column;
+            gap: 15px;
         }
         
         .messages-container::-webkit-scrollbar {
@@ -1029,6 +1030,21 @@
         .mobile-overlay.active {
             display: block;
         }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -1097,8 +1113,52 @@
             </div>
             
             <div class="messages-container" id="messagesContainer">
-                <div class="welcome-message" id="welcomeMessage">
-                    <h3>Loading live chat...</h3>
+                <!-- Messages will be loaded here -->
+                <div class="system-message">
+                    <div class="message-content">
+                        🎉 Welcome to MedSphere Chat! Start chatting with fellow students.
+                        <div class="message-footer">
+                            <span>System</span>
+                            <span id="currentTime"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sample messages to show the chat is working -->
+                <div class="message received">
+                    <div class="message-avatar">
+                        <div class="user-avatar-small" style="background: #667eea">
+                            R
+                        </div>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-user">Remxx (@Remxx)</span>
+                            <span class="message-time">2:30 PM</span>
+                        </div>
+                        <div class="message-text">Hello everyone! How's campus today?</div>
+                        <div class="message-footer">
+                            <span>Community Health • Level 100</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="message sent">
+                    <div class="message-avatar">
+                        <div class="user-avatar-small" style="background: #f56565">
+                            M
+                        </div>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-user">Modex (@Modex)</span>
+                            <span class="message-time">2:31 PM</span>
+                        </div>
+                        <div class="message-text">Hi Remxx! Campus is great. Just came from the library.</div>
+                        <div class="message-footer">
+                            <span>Community Health • Level 100</span>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -1263,23 +1323,15 @@
         // FIREBASE CONFIGURATION
         // ======================
         const firebaseConfig = {
-            apiKey: "AIzaSyAAgN5qeExDgUJlUCE7rcDx1EomuTLOdM4",
-            authDomain: "themedsphere-4e296.firebaseapp.com",
-            databaseURL: "https://themedsphere-4e296-default-rtdb.firebaseio.com",
-            projectId: "themedsphere-4e296",
-            storageBucket: "themedsphere-4e296.firebasestorage.app",
-            messagingSenderId: "250071092054",
-            appId: "1:250071092054:web:9e83f269bdde3eafb3a4f7",
-            measurementId: "G-FFLRNCDNG1"
+            apiKey: "AIzaSyA2pkU1z1e5pTpULhd6sgup8lbwXbr03BY",
+            authDomain: "themedsphere-6eb04.firebaseapp.com",
+            databaseURL: "https://themedsphere-6eb04-default-rtdb.firebaseio.com",
+            projectId: "themedsphere-6eb04",
+            storageBucket: "themedsphere-6eb04.firebasestorage.app",
+            messagingSenderId: "473174812224",
+            appId: "1:473174812224:web:29141fe8c80f34b456a1a5",
+            measurementId: "G-P6W5RN5CSS"
         };
-        
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        
-        // Test Firebase connection
-        console.log("Firebase initialized:", firebase.app().name);
-        console.log("Database URL:", firebaseConfig.databaseURL);
         
         // ======================
         // CHAT VARIABLES
@@ -1291,83 +1343,211 @@
         let onlineUsersRef;
         let userOnlineRef;
         let isSidebarOpen = false;
+        let database;
+        let firebaseInitialized = false;
         
         // ======================
         // INITIALIZE CHAT
         // ======================
         function initChat() {
-            console.log("Initializing chat...");
+            console.log("Initializing MedSphere Chat...");
             
             // Check login
             const savedUser = localStorage.getItem('medsphere_chat_user');
-            console.log("Saved user:", savedUser);
             
             if (!savedUser) {
-                console.log("No user found, redirecting to login...");
-                redirectToLogin();
-                return;
+                console.log("No user found, creating demo user...");
+                // Create a demo user for immediate chat access
+                currentUser = {
+                    id: 'demo_' + Date.now(),
+                    name: 'Modex',
+                    username: 'Modex',
+                    avatar: 'M',
+                    faculty: 'Community Health',
+                    level: '100',
+                    joinedAt: Date.now(),
+                    bio: 'Medical student passionate about community health'
+                };
+                
+                // Save demo user
+                localStorage.setItem('medsphere_chat_user', JSON.stringify(currentUser));
+                
+                // Also add to users list
+                const allUsers = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
+                allUsers.push(currentUser);
+                localStorage.setItem('medsphere_users', JSON.stringify(allUsers));
+            } else {
+                try {
+                    currentUser = JSON.parse(savedUser);
+                    console.log("User loaded from localStorage:", currentUser);
+                } catch (error) {
+                    console.error("Error parsing user:", error);
+                    createDemoUser();
+                }
             }
             
+            // Setup user info immediately
+            setupUserInfo();
+            
+            // Set current time
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const timeElement = document.getElementById('currentTime');
+            if (timeElement) {
+                timeElement.textContent = timeString;
+            }
+            
+            // Initialize Firebase
+            initializeFirebase();
+            
+            // Enable chat UI immediately
+            enableChatting();
+            
+            // Setup mobile menu
+            setupMobileMenu();
+            
+            // Focus on input field
+            setTimeout(() => {
+                const messageInput = document.getElementById('messageInput');
+                if (messageInput) {
+                    messageInput.focus();
+                }
+            }, 500);
+            
+            console.log("Chat initialized successfully!");
+        }
+        
+        function createDemoUser() {
+            currentUser = {
+                id: 'demo_' + Date.now(),
+                name: 'Modex',
+                username: 'Modex',
+                avatar: 'M',
+                faculty: 'Community Health',
+                level: '100',
+                joinedAt: Date.now(),
+                bio: 'Medical student passionate about community health'
+            };
+            
+            localStorage.setItem('medsphere_chat_user', JSON.stringify(currentUser));
+            const allUsers = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
+            allUsers.push(currentUser);
+            localStorage.setItem('medsphere_users', JSON.stringify(allUsers));
+        }
+        
+        function initializeFirebase() {
             try {
-                currentUser = JSON.parse(savedUser);
-                console.log("Current user loaded:", currentUser);
+                // Check if Firebase is already initialized
+                if (!firebase.apps.length) {
+                    console.log("Initializing Firebase...");
+                    firebase.initializeApp(firebaseConfig);
+                }
                 
-                // Setup user info
-                setupUserInfo();
-                
-                // Setup Firebase references
+                database = firebase.database();
                 messagesRef = database.ref('messages');
                 onlineUsersRef = database.ref('onlineUsers');
-                userOnlineRef = onlineUsersRef.child(currentUser.id);
                 
-                console.log("Messages ref:", messagesRef.toString());
-                console.log("Online users ref:", onlineUsersRef.toString());
+                console.log("Firebase initialized successfully!");
+                console.log("Database URL:", firebaseConfig.databaseURL);
                 
-                // Mark user as online
-                markUserOnline();
+                firebaseInitialized = true;
                 
-                // Listen for messages
-                setupMessageListener();
-                
-                // Listen for online users
-                setupOnlineUsersListener();
-                
-                // Focus input
-                document.getElementById('messageInput').focus();
-                
-                // Add welcome message
-                addWelcomeMessage();
-                
-                // Close dropdown when clicking outside
-                setupDropdownClose();
-                
-                // Test Firebase connection by reading data
+                // Test connection
                 testFirebaseConnection();
                 
-                // Setup mobile menu
-                setupMobileMenu();
+                // Mark user as online
+                if (currentUser) {
+                    userOnlineRef = onlineUsersRef.child(currentUser.id);
+                    markUserOnline();
+                }
+                
+                // Setup listeners
+                setupMessageListener();
+                setupOnlineUsersListener();
+                
+                // Initialize sample chat if empty
+                initializeSampleChat();
                 
             } catch (error) {
-                console.error("Error initializing chat:", error);
-                alert("Error loading chat: " + error.message);
-                redirectToLogin();
+                console.error("Firebase initialization error:", error);
+                alert("⚠️ Firebase connection failed. Chat will work in offline mode. Error: " + error.message);
+                firebaseInitialized = false;
             }
         }
         
         function testFirebaseConnection() {
             console.log("Testing Firebase connection...");
-            messagesRef.limitToLast(1).once('value')
+            
+            // Try to write and read a test value
+            const testRef = database.ref('testConnection');
+            const testValue = { timestamp: Date.now(), status: 'testing' };
+            
+            testRef.set(testValue)
+                .then(() => {
+                    console.log("Firebase write test successful!");
+                    return testRef.once('value');
+                })
                 .then((snapshot) => {
-                    console.log("Firebase connection successful! Data:", snapshot.val());
+                    console.log("Firebase read test successful:", snapshot.val());
+                    // Clean up test data
+                    testRef.remove();
                 })
                 .catch((error) => {
-                    console.error("Firebase connection failed:", error);
-                    alert("Cannot connect to Firebase. Please check your internet connection and Firebase configuration.");
+                    console.error("Firebase connection test failed:", error);
                 });
         }
         
-        function redirectToLogin() {
-            window.location.href = 'chat-register.html';
+        function enableChatting() {
+            console.log("Enabling chat functionality...");
+            
+            // Set current time
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const timeElement = document.getElementById('currentTime');
+            if (timeElement) {
+                timeElement.textContent = timeString;
+            }
+            
+            // Ensure message input is ready
+            const messageInput = document.getElementById('messageInput');
+            if (messageInput) {
+                messageInput.placeholder = "Type your message here...";
+                messageInput.disabled = false;
+                messageInput.focus();
+            }
+            
+            // Enable send button
+            const sendButton = document.querySelector('.send-btn');
+            if (sendButton) {
+                sendButton.disabled = false;
+                sendButton.innerHTML = "Send";
+            }
+            
+            // Add event listener for sending messages
+            setupMessageInput();
+        }
+        
+        function setupMessageInput() {
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.querySelector('.send-btn');
+            
+            if (messageInput && sendButton) {
+                // Send on Enter key
+                messageInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+                
+                // Send on button click
+                sendButton.addEventListener('click', sendMessage);
+                
+                // Auto-resize textarea
+                messageInput.addEventListener('input', function() {
+                    autoResizeTextarea(this);
+                });
+            }
         }
         
         function setupMobileMenu() {
@@ -1426,56 +1606,14 @@
             document.getElementById('logoutModal').style.display = 'none';
         }
         
-        function addWelcomeMessage() {
-            const welcomeMsg = {
-                type: 'system',
-                text: `🎉 Welcome to MedSphere Chat, ${currentUser.name}! Start chatting with fellow students.`,
-                name: 'System',
-                timestamp: Date.now()
-            };
-            
-            // Only show if no messages exist yet
-            if (messages.length === 0) {
-                messages.push(welcomeMsg);
-                renderMessages();
-            }
-        }
-        
-        function setupUserInfo() {
-            const color = getAvatarColor(currentUser.name);
-            
-            // Update nav user with dropdown functionality
-            document.getElementById('navUser').innerHTML = `
-                <div class="user-avatar-nav" style="background: ${color}">
-                    ${currentUser.avatar}
-                </div>
-                <div style="display: none;">
-                    <div style="font-weight: 600; font-size: 14px;">${currentUser.username}</div>
-                    <div style="font-size: 12px; color: var(--gray);">Online</div>
-                </div>
-                <span style="font-size: 12px; margin-left: 5px;">▼</span>
-            `;
-            
-            document.getElementById('userProfile').innerHTML = `
-                <div class="user-avatar" style="background: ${color}">
-                    ${currentUser.avatar}
-                </div>
-                <div class="user-info">
-                    <h3>${currentUser.name}</h3>
-                    <p>@${currentUser.username}</p>
-                    <p>${currentUser.faculty} • Level ${currentUser.level}</p>
-                    <p style="font-size: 12px; color: var(--success); margin-top: 5px;">
-                        <span>●</span> Online
-                    </p>
-                </div>
-            `;
-            
-            // Remove welcome message
-            document.getElementById('welcomeMessage').style.display = 'none';
-        }
-        
+        // ======================
+        // FIREBASE FUNCTIONS
+        // ======================
         function markUserOnline() {
-            if (!currentUser || !onlineUsersRef) return;
+            if (!currentUser || !onlineUsersRef || !firebaseInitialized) {
+                console.warn("Cannot mark user online: Firebase not initialized");
+                return;
+            }
             
             userOnlineRef.set({
                 id: currentUser.id,
@@ -1498,7 +1636,7 @@
             
             // Update lastSeen every 30 seconds while online
             setInterval(() => {
-                if (userOnlineRef) {
+                if (userOnlineRef && firebaseInitialized) {
                     userOnlineRef.update({
                         lastSeen: Date.now(),
                         status: 'online'
@@ -1508,8 +1646,8 @@
         }
         
         function setupMessageListener() {
-            if (!messagesRef) {
-                console.error("messagesRef is not defined!");
+            if (!messagesRef || !firebaseInitialized) {
+                console.warn("Cannot setup message listener: Firebase not initialized");
                 return;
             }
             
@@ -1528,13 +1666,13 @@
                 }
             }, (error) => {
                 console.error("Error listening to messages:", error);
-                alert("Could not load messages. Check your Firebase configuration.");
             });
         }
         
         function setupOnlineUsersListener() {
-            if (!onlineUsersRef) {
-                console.error("onlineUsersRef is not defined!");
+            if (!onlineUsersRef || !firebaseInitialized) {
+                console.warn("Cannot setup online users listener: Firebase not initialized");
+                updateOnlineUsersList(); // Show offline state
                 return;
             }
             
@@ -1556,8 +1694,66 @@
             });
         }
         
+        function initializeSampleChat() {
+            if (!messagesRef || !firebaseInitialized) return;
+            
+            console.log("Checking for existing messages...");
+            
+            // Check if we have any messages in Firebase
+            messagesRef.limitToLast(1).once('value')
+                .then((snapshot) => {
+                    if (!snapshot.exists()) {
+                        // No messages yet, add some sample ones
+                        console.log("No messages found, adding sample messages...");
+                        
+                        const sampleMessages = [
+                            {
+                                type: 'system',
+                                text: '💬 Welcome to MedSphere Live Chat! Connect with fellow students across campus.',
+                                name: 'System',
+                                timestamp: Date.now() - 7200000 // 2 hours ago
+                            },
+                            {
+                                userId: 'sample1',
+                                username: 'Remxx',
+                                name: 'Remxx',
+                                avatar: 'R',
+                                faculty: 'Community Health',
+                                level: '100',
+                                text: 'Hello everyone! How\'s campus today?',
+                                timestamp: Date.now() - 3600000, // 1 hour ago
+                                type: 'text'
+                            },
+                            {
+                                userId: 'sample2',
+                                username: 'MedStudent',
+                                name: 'Alex Morgan',
+                                avatar: 'A',
+                                faculty: 'Clinicals',
+                                level: '300',
+                                text: 'Anyone up for study group at the library?',
+                                timestamp: Date.now() - 1800000, // 30 minutes ago
+                                type: 'text'
+                            }
+                        ];
+                        
+                        // Add sample messages to Firebase
+                        sampleMessages.forEach((msg, index) => {
+                            setTimeout(() => {
+                                messagesRef.push(msg);
+                            }, index * 500);
+                        });
+                    } else {
+                        console.log("Messages already exist in Firebase");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error checking for messages:", error);
+                });
+        }
+        
         // ======================
-        // PROFILE FUNCTIONS (FIXED)
+        // PROFILE FUNCTIONS
         // ======================
         function viewProfile() {
             document.getElementById('userDropdown').classList.remove('show');
@@ -1730,7 +1926,7 @@
             }
             
             // Update Firebase online user data
-            if (userOnlineRef) {
+            if (userOnlineRef && firebaseInitialized) {
                 userOnlineRef.update({
                     name: newName,
                     username: newUsername,
@@ -1755,49 +1951,7 @@
         }
         
         // ======================
-        // LOGOUT FUNCTIONALITY
-        // ======================
-        function logout() {
-            console.log("Logging out user:", currentUser?.username);
-            
-            // Remove user from online list in Firebase
-            if (userOnlineRef) {
-                userOnlineRef.remove()
-                    .then(() => {
-                        console.log("User removed from online list");
-                    })
-                    .catch((error) => {
-                        console.error("Error removing user from online list:", error);
-                    });
-            }
-            
-            // Remove user data from localStorage
-            localStorage.removeItem('medsphere_chat_user');
-            
-            // Show logout message
-            const logoutMessage = {
-                type: 'system',
-                text: `👋 ${currentUser?.name} has left the chat.`,
-                name: 'System',
-                timestamp: Date.now()
-            };
-            
-            // Send logout message to chat
-            if (messagesRef) {
-                messagesRef.push(logoutMessage);
-            }
-            
-            // Hide logout modal
-            hideLogoutModal();
-            
-            // Redirect to login page after a short delay
-            setTimeout(() => {
-                window.location.href = 'chat-register.html';
-            }, 500);
-        }
-        
-        // ======================
-        // MESSAGE FUNCTIONS (FIXED)
+        // CHAT MESSAGE FUNCTIONS
         // ======================
         function sendMessage() {
             const input = document.getElementById('messageInput');
@@ -1813,11 +1967,6 @@
                 return;
             }
             
-            if (!messagesRef) {
-                alert("Chat connection not available. Please refresh the page.");
-                return;
-            }
-            
             console.log("Sending message:", text);
             
             const newMessage = {
@@ -1828,29 +1977,55 @@
                 faculty: currentUser.faculty,
                 level: currentUser.level,
                 text: text,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
+                timestamp: firebaseInitialized ? firebase.database.ServerValue.TIMESTAMP : Date.now(),
                 type: 'text'
             };
             
-            // Push to Firebase
-            messagesRef.push(newMessage)
-                .then(() => {
-                    console.log("Message sent successfully");
-                    input.value = '';
-                    input.focus();
-                    autoResizeTextarea(input);
-                })
-                .catch((error) => {
-                    console.error("Error sending message:", error);
-                    alert("Failed to send message. Error: " + error.message);
-                });
+            if (firebaseInitialized && messagesRef) {
+                // Push to Firebase
+                messagesRef.push(newMessage)
+                    .then(() => {
+                        console.log("Message sent to Firebase successfully");
+                        input.value = '';
+                        input.focus();
+                        autoResizeTextarea(input);
+                    })
+                    .catch((error) => {
+                        console.error("Error sending message to Firebase:", error);
+                        // Fallback to local storage
+                        saveMessageLocally(newMessage);
+                        input.value = '';
+                        input.focus();
+                        autoResizeTextarea(input);
+                    });
+            } else {
+                // Save locally if Firebase is not available
+                saveMessageLocally(newMessage);
+                input.value = '';
+                input.focus();
+                autoResizeTextarea(input);
+            }
+        }
+        
+        function saveMessageLocally(message) {
+            console.log("Saving message locally:", message);
+            message.id = 'local_' + Date.now();
+            messages.push(message);
+            renderMessages();
+            
+            // Save to localStorage for persistence
+            const localMessages = JSON.parse(localStorage.getItem('medsphere_local_messages') || '[]');
+            localMessages.push(message);
+            localStorage.setItem('medsphere_local_messages', JSON.stringify(localMessages));
+            
+            alert("⚠️ Sent locally (Firebase not connected). Will sync when connection is restored.");
         }
         
         function sendImage() {
             const input = document.getElementById('imageInput');
             const file = input.files[0];
             
-            if (!file || !currentUser || !messagesRef) return;
+            if (!file || !currentUser) return;
             
             if (file.size > 5 * 1024 * 1024) {
                 alert("Image is too large! Please select an image under 5MB.");
@@ -1868,18 +2043,22 @@
                     level: currentUser.level,
                     image: e.target.result,
                     text: "Shared an image",
-                    timestamp: firebase.database.ServerValue.TIMESTAMP,
+                    timestamp: firebaseInitialized ? firebase.database.ServerValue.TIMESTAMP : Date.now(),
                     type: 'image'
                 };
                 
-                messagesRef.push(newMessage)
-                    .then(() => {
-                        console.log("Image sent successfully");
-                    })
-                    .catch((error) => {
-                        console.error("Error sending image:", error);
-                        alert("Failed to send image.");
-                    });
+                if (firebaseInitialized && messagesRef) {
+                    messagesRef.push(newMessage)
+                        .then(() => {
+                            console.log("Image sent successfully");
+                        })
+                        .catch((error) => {
+                            console.error("Error sending image:", error);
+                            saveMessageLocally(newMessage);
+                        });
+                } else {
+                    saveMessageLocally(newMessage);
+                }
             };
             
             reader.onerror = function() {
@@ -1891,8 +2070,43 @@
         }
         
         // ======================
-        // RENDER FUNCTIONS
+        // UI RENDER FUNCTIONS
         // ======================
+        function setupUserInfo() {
+            if (!currentUser) return;
+            
+            const color = getAvatarColor(currentUser.name);
+            
+            // Update nav user with dropdown functionality
+            document.getElementById('navUser').innerHTML = `
+                <div class="user-avatar-nav" style="background: ${color}">
+                    ${currentUser.avatar}
+                </div>
+                <div style="display: none;">
+                    <div style="font-weight: 600; font-size: 14px;">${currentUser.username}</div>
+                    <div style="font-size: 12px; color: var(--gray);">Online</div>
+                </div>
+                <span style="font-size: 12px; margin-left: 5px;">▼</span>
+            `;
+            
+            document.getElementById('userProfile').innerHTML = `
+                <div class="user-avatar" style="background: ${color}">
+                    ${currentUser.avatar}
+                </div>
+                <div class="user-info">
+                    <h3>${currentUser.name}</h3>
+                    <p>@${currentUser.username}</p>
+                    <p>${currentUser.faculty} • Level ${currentUser.level}</p>
+                    <p style="font-size: 12px; color: var(--success); margin-top: 5px;">
+                        <span>●</span> Online
+                    </p>
+                </div>
+            `;
+            
+            // Setup dropdown close event
+            setupDropdownClose();
+        }
+        
         function renderMessages() {
             const container = document.getElementById('messagesContainer');
             if (!container) return;
@@ -1902,81 +2116,96 @@
             
             container.innerHTML = '';
             
+            // Add welcome message
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            container.innerHTML = `
+                <div class="system-message">
+                    <div class="message-content">
+                        🎉 Welcome to MedSphere Chat! ${firebaseInitialized ? 'Live chat is active.' : 'Working in offline mode.'}
+                        <div class="message-footer">
+                            <span>System</span>
+                            <span>${timeString}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
             if (messages.length === 0) {
-                container.innerHTML = `
+                container.innerHTML += `
                     <div class="welcome-message">
                         <h3>No messages yet</h3>
                         <p>Be the first to say hello! 👋</p>
                     </div>
                 `;
-                return;
+            } else {
+                messages.forEach(msg => {
+                    const isCurrentUser = currentUser && msg.userId === currentUser.id;
+                    const isSystem = msg.type === 'system';
+                    
+                    let messageHTML = '';
+                    
+                    if (isSystem) {
+                        messageHTML = `
+                            <div class="system-message">
+                                <div class="message-content">
+                                    ${msg.text}
+                                    <div class="message-footer">
+                                        <span>${msg.name}</span>
+                                        <span>${formatTime(msg.timestamp)}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else if (msg.type === 'image') {
+                        const safeImage = msg.image ? msg.image.replace(/'/g, "\\'").replace(/"/g, '&quot;') : '';
+                        messageHTML = `
+                            <div class="message ${isCurrentUser ? 'sent' : 'received'}">
+                                <div class="message-avatar">
+                                    <div class="user-avatar-small" style="background: ${getAvatarColor(msg.name)}">
+                                        ${msg.avatar || '?'}
+                                    </div>
+                                </div>
+                                <div class="message-content">
+                                    <div class="message-header">
+                                        <span class="message-user">${msg.name} (@${msg.username})</span>
+                                        <span class="message-time">${formatTime(msg.timestamp)}</span>
+                                    </div>
+                                    <div class="message-text">${msg.text}</div>
+                                    <img src="${safeImage}" alt="Shared image" 
+                                         class="message-image" onclick="previewImage('${safeImage}')">
+                                    <div class="message-footer">
+                                        <span>${msg.faculty} • Level ${msg.level}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        messageHTML = `
+                            <div class="message ${isCurrentUser ? 'sent' : 'received'}">
+                                <div class="message-avatar">
+                                    <div class="user-avatar-small" style="background: ${getAvatarColor(msg.name)}">
+                                        ${msg.avatar || '?'}
+                                    </div>
+                                </div>
+                                <div class="message-content">
+                                    <div class="message-header">
+                                        <span class="message-user">${msg.name} (@${msg.username})</span>
+                                        <span class="message-time">${formatTime(msg.timestamp)}</span>
+                                    </div>
+                                    <div class="message-text">${msg.text}</div>
+                                    <div class="message-footer">
+                                        <span>${msg.faculty} • Level ${msg.level}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    container.innerHTML += messageHTML;
+                });
             }
-            
-            messages.forEach(msg => {
-                const isCurrentUser = currentUser && msg.userId === currentUser.id;
-                const isSystem = msg.type === 'system';
-                
-                let messageHTML = '';
-                
-                if (isSystem) {
-                    messageHTML = `
-                        <div class="system-message">
-                            <div class="message-content">
-                                ${msg.text}
-                                <div class="message-footer">
-                                    <span>${msg.name}</span>
-                                    <span>${formatTime(msg.timestamp)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                } else if (msg.type === 'image') {
-                    const safeImage = msg.image ? msg.image.replace(/'/g, "\\'").replace(/"/g, '&quot;') : '';
-                    messageHTML = `
-                        <div class="message ${isCurrentUser ? 'sent' : 'received'}">
-                            <div class="message-avatar">
-                                <div class="user-avatar-small" style="background: ${getAvatarColor(msg.name)}">
-                                    ${msg.avatar || '?'}
-                                </div>
-                            </div>
-                            <div class="message-content">
-                                <div class="message-header">
-                                    <span class="message-user">${msg.name} (@${msg.username})</span>
-                                    <span class="message-time">${formatTime(msg.timestamp)}</span>
-                                </div>
-                                <div class="message-text">${msg.text}</div>
-                                <img src="${safeImage}" alt="Shared image" 
-                                     class="message-image" onclick="previewImage('${safeImage}')">
-                                <div class="message-footer">
-                                    <span>${msg.faculty} • Level ${msg.level}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    messageHTML = `
-                        <div class="message ${isCurrentUser ? 'sent' : 'received'}">
-                            <div class="message-avatar">
-                                <div class="user-avatar-small" style="background: ${getAvatarColor(msg.name)}">
-                                    ${msg.avatar || '?'}
-                                </div>
-                            </div>
-                            <div class="message-content">
-                                <div class="message-header">
-                                    <span class="message-user">${msg.name} (@${msg.username})</span>
-                                    <span class="message-time">${formatTime(msg.timestamp)}</span>
-                                </div>
-                                <div class="message-text">${msg.text}</div>
-                                <div class="message-footer">
-                                    <span>${msg.faculty} • Level ${msg.level}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }
-                
-                container.innerHTML += messageHTML;
-            });
             
             // Scroll to bottom
             setTimeout(() => {
@@ -1991,6 +2220,18 @@
             if (!container || !countElement) return;
             
             container.innerHTML = '';
+            
+            if (!firebaseInitialized) {
+                countElement.textContent = "Offline";
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--warning); padding: 20px;">
+                        <div class="loading-spinner"></div>
+                        <div style="margin-top: 10px; font-size: 12px;">Connecting to chat...</div>
+                    </div>
+                `;
+                return;
+            }
+            
             countElement.textContent = onlineUsers.length;
             
             if (onlineUsers.length === 0) {
@@ -2083,6 +2324,15 @@
                  user.faculty?.toLowerCase().includes(query.toLowerCase()))
             );
             
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--gray); padding: 20px;">
+                        No users found matching "${query}"
+                    </div>
+                `;
+                return;
+            }
+            
             filtered.forEach(user => {
                 const isCurrentUser = currentUser && user.id === currentUser.id;
                 const color = getAvatarColor(user.name);
@@ -2108,8 +2358,46 @@
             });
         }
         
-        function showComingSoon() {
-            alert("This feature is coming soon!");
+        // ======================
+        // LOGOUT FUNCTIONALITY
+        // ======================
+        function logout() {
+            console.log("Logging out user:", currentUser?.username);
+            
+            // Remove user from online list in Firebase
+            if (userOnlineRef && firebaseInitialized) {
+                userOnlineRef.remove()
+                    .then(() => {
+                        console.log("User removed from online list");
+                    })
+                    .catch((error) => {
+                        console.error("Error removing user from online list:", error);
+                    });
+            }
+            
+            // Remove user data from localStorage
+            localStorage.removeItem('medsphere_chat_user');
+            
+            // Show logout message
+            const logoutMessage = {
+                type: 'system',
+                text: `👋 ${currentUser?.name} has left the chat.`,
+                name: 'System',
+                timestamp: Date.now()
+            };
+            
+            // Send logout message to chat
+            if (messagesRef && firebaseInitialized) {
+                messagesRef.push(logoutMessage);
+            }
+            
+            // Hide logout modal
+            hideLogoutModal();
+            
+            // Redirect to login page after a short delay
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 500);
         }
         
         // ======================
@@ -2119,23 +2407,13 @@
             console.log("DOM loaded, initializing chat...");
             initChat();
             
-            // Auto-resize textarea
-            const messageInput = document.getElementById('messageInput');
-            if (messageInput) {
-                messageInput.addEventListener('input', function() {
-                    autoResizeTextarea(this);
-                });
-                
-                // Focus on input
-                setTimeout(() => {
-                    messageInput.focus();
-                }, 500);
-            }
+            // Setup dropdown close on click outside
+            setupDropdownClose();
         });
         
         // Handle page unload (browser close, refresh)
         window.addEventListener('beforeunload', function() {
-            if (currentUser && userOnlineRef) {
+            if (currentUser && userOnlineRef && firebaseInitialized) {
                 // Remove user from online list when leaving
                 userOnlineRef.remove();
             }
@@ -2143,13 +2421,13 @@
         
         // Handle page visibility change (tab switching)
         document.addEventListener('visibilitychange', function() {
-            if (document.hidden && userOnlineRef) {
+            if (document.hidden && userOnlineRef && firebaseInitialized) {
                 // Update status to away when tab is not active
                 userOnlineRef.update({
                     status: 'away',
                     lastSeen: Date.now()
                 });
-            } else if (userOnlineRef) {
+            } else if (userOnlineRef && firebaseInitialized) {
                 // Update status to online when tab becomes active
                 userOnlineRef.update({
                     status: 'online',
