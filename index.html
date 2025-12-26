@@ -3,201 +3,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEDSphere - Campus Community</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>TheMedSphere | Campus Community Hub</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="main-nav">
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTop" class="scroll-top-btn">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <!-- Main Header -->
+    <div class="main-header">
         <div class="container">
-            <div class="nav-content">
-                <div class="logo">
-                    <span class="logo-text">MEDSphere</span>
-                    <span class="tagline">Campus Community</span>
-                </div>
-                
-                <ul class="nav-menu">
-                    <li><a href="#home" class="nav-link active"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="#blogs" class="nav-link"><i class="fas fa-newspaper"></i> Blogs</a></li>
-                    <li><a href="#events" class="nav-link"><i class="fas fa-calendar-alt"></i> Events</a></li>
-                
-                    <li><a href="ads.html" class="nav-link"><i class="fas fa-ad"></i> Sponsored Ads</a></li>
-                </ul>
-                
-                <div class="mobile-menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </div>
-            </div>
+            <div class="navbar">
+                <a href="#" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="logo-text">The<span>MedSphere</span></div>
+                </a>
+
+            <!-- Main Navigation -->
+            <nav class="main-nav">
+                <a href="#home" class="nav-link active">Home</a>
+                <a href="#events" class="nav-link">Events</a>
+                <a href="#chat" class="nav-link">Chat</a>
+                <a href="#advertise" class="nav-link">Advertise</a>
+            </nav>
         </div>
-    </nav>
+    </div>
 
     <!-- Hero Section -->
-    <section class="hero-section" id="home">
+    <section id="home" class="hero">
         <div class="container">
             <div class="hero-content">
-                <div class="hero-text">
-                    <h1 class="hero-title">MEDSphere Campus Community</h1>
-                    <p class="hero-subtitle">Your premier campus lifestyle community. Discover events, and connect with other students on campus!</p>
-                    
-                    <div class="hero-actions">
-                        <a href="#events" class="btn-primary">
-                            <i class="fas fa-rocket"></i>
-                            Upcoming Events
-                        </a>
-                     
-
-                        <a href="ads.html" class="btn-ads">
-                            <i class="fas fa-ad"></i>
-                            Sponsored Ads
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="hero-image">
-                    <div class="floating-card card-1">
-                        <div class="card-header">
-                            <i class="fas fa-users"></i>
-                            <h3>Community Hub</h3>
-                        </div>
-                        <p>Student account creation is coming soon...</p>
-                    </div>
-                    
-                    <div class="floating-card card-2">
-                        <div class="card-header">
-                            <i class="fas fa-bell"></i>
-                            <h3>Live Updates</h3>
-                        </div>
-                        <p>Stay informed with campus news</p>
-                    </div>
+                <h1 class="hero-title">Welcome to TheMedSphere</h1>
+                <p class="hero-subtitle">Your Ultimate Campus Connection Platform</p>
+                <p class="hero-desc">Connect with students, discover events, join conversations, and make campus life unforgettable. Everything campus, in one place.</p>
                 </div>
             </div>
-        </div>
     </section>
 
-    <!-- Welcome Section -->
-    <section class="welcome-section" id="welcome">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Welcome to MEDSphere</h2>
-                <p class="section-subtitle">Connect with fellow students, stay updated with campus news and gist. This is your space to engage with the campus community.</p>
-            </div>
-            
-            <div class="features-grid">
-                <a href="#events" class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-calendar-alt"></i>
-                    </div>
-                    <h3 class="feature-title">Discover Events</h3>
-                    <p class="feature-desc">Never miss out on campus events, parties, workshops, and gatherings.</p>
-                </a>
-                
-              
-                <!-- SPONSORED ADS FEATURE CARD -->
-                <a href="ads.html"class="feature-card">
-                    <div class="feature-icon">
-                        <i class="fas fa-ad"></i>
-                    </div>
-                    <h3 class="feature-title">Sponsored Ads</h3>
-                    <p class="feature-desc">Discover special offers, student discounts, and promotions from brands.</p>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Blogs Section -->
-   <!-- Campus Gist Section -->
-<div class="campus-gist-section" id="campus-gist">
-    <div class="section-header">
-        <h2><i class="fas fa-newspaper"></i> Campus Gist</h2>
-        <p class="section-subtitle">Don't miss out the latest gist on campus</p>
-    </div>
-    
-    <!-- Clickable Campus Gist Card -->
-    <div class="campus-gist-card" onclick="window.location.href='campusgist.html'">
-        <div class="gist-content">
-            <div class="gist-header">
-                <div class="gist-author">
-                    <div class="author-image">
-                        <i class="fas fa-university"></i>
-                    </div>
-                    <div class="author-info">
-                        <h4>MEDSphere</h4>
-                        <span>Official Announcement</span>
-                    </div>
-                </div>
-                <span class="gist-date">Today</span>
-            </div>
-            
-            <h3 class="gist-title">Unimed gives students 2 weeks break</h3>
-            <p class="gist-excerpt">The school has announced 2 weeks break. All students are required to resume back fully to school by January 4th 2026.</p>
-            
-            <div class="gist-footer">
-                </div>
-                <span class="read-more">click for more details...</span>
-            </div>
-        </div>
-    </div>
-    
-    <!-- View All Button -->
-    <div class="section-cta">
-        <a href="campusgist.html" class="btn-outline">
-            <i class="fas fa-book-open"></i>
-            View All Campus Gist
-        </a>
-    </div>
-</div>
     <!-- Events Section -->
-    <section class="events-section" id="events">
+    <section id="events" class="events">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Upcoming Events</h2>
-                <p class="section-subtitle">Join campus events, activities, and social gatherings on campus. Don't miss out on the fun!</p>
+                <h2 class="section-title">Upcoming Campus Events</h2>
+                <p class="section-subtitle">Don't miss out on these amazing campus activities</p>
+            </div>
+            <div class="events-grid">
+                <!-- Event 1 -->
+                <div class="event-card featured">
+                    <div class="event-badge">Featured</div>
+                    <div class="event-date">
+                        <span class="date-day">15</span>
+                        <span class="date-month">JAN</span>
+                        <span class="date-year">2025</span>
+                    </div>
+                    <div class="event-image">
+                        <img src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&auto=format&fit=crop" alt="Career Fair">
+                    </div>
+                    <div class="event-content">
+                        <div class="event-category">
+                            <i class="fas fa-briefcase"></i> Career
+                        </div>
+                        <h3 class="event-title">Annual Career Fair 2025</h3>
+                        <div class="event-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> Main Auditorium</span>
+                            <span><i class="fas fa-clock"></i> 10:00 AM - 4:00 PM</span>
+                        </div>
+                        <p class="event-desc">Connect with top employers and discover exciting internship opportunities tailored for students.</p>
+                        <a href="#" class="event-action">
+                            <i class="fas fa-arrow-right"></i> Register Now
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Event 2 -->
+                <div class="event-card">
+                    <div class="event-date">
+                        <span class="date-day">10</span>
+                        <span class="date-month">FEB</span>
+                        <span class="date-year">2025</span>
+                    </div>
+                    <div class="event-image">
+                        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&auto=format&fit=crop" alt="Tech Workshop">
+                    </div>
+                    <div class="event-content">
+                        <div class="event-category">
+                            <i class="fas fa-laptop-code"></i> Technology
+                        </div>
+                        <h3 class="event-title">Tech Innovation Workshop</h3>
+                        <div class="event-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> Tech Building</span>
+                            <span><i class="fas fa-clock"></i> 2:00 PM - 5:00 PM</span>
+                        </div>
+                        <p class="event-desc">Master the latest technologies with hands-on workshops led by industry experts.</p>
+                        <a href="#" class="event-action">
+                            <i class="fas fa-arrow-right"></i> Join Workshop
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Event 3 -->
+                <div class="event-card">
+                    <div class="event-date">
+                        <span class="date-day">05</span>
+                        <span class="date-month">MAR</span>
+                        <span class="date-year">2025</span>
+                    </div>
+                    <div class="event-image">
+                        <img src="https://images.unsplash.com/photo-1540350394557-8d14678e7f91?w=600&auto=format&fit=crop" alt="Sports Tournament">
+                    </div>
+                    <div class="event-content">
+                        <div class="event-category">
+                            <i class="fas fa-basketball-ball"></i> Sports
+                        </div>
+                        <h3 class="event-title">Inter-Department Sports</h3>
+                        <div class="event-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> University Stadium</span>
+                            <span><i class="fas fa-clock"></i> 8:00 AM - 6:00 PM</span>
+                        </div>
+                        <p class="event-desc">Cheer for your department in thrilling sports competitions across multiple games.</p>
+                        <a href="#" class="event-action">
+                            <i class="fas fa-arrow-right"></i> View Schedule
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Event 4 -->
+                <div class="event-card">
+                    <div class="event-date">
+                        <span class="date-day">20</span>
+                        <span class="date-month">APR</span>
+                        <span class="date-year">2025</span>
+                    </div>
+                    <div class="event-image">
+                        <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=600&auto=format&fit=crop" alt="Cultural Fest">
+                    </div>
+                    <div class="event-content">
+                        <div class="event-category">
+                            <i class="fas fa-globe-africa"></i> Cultural
+                        </div>
+                        <h3 class="event-title">Cultural Diversity Festival</h3>
+                        <div class="event-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> Student Union Lawn</span>
+                            <span><i class="fas fa-clock"></i> 12:00 PM - 8:00 PM</span>
+                        </div>
+                        <p class="event-desc">Experience a world of cultures through food, music, dance, and traditional performances.</p>
+                        <a href="#" class="event-action">
+                            <i class="fas fa-arrow-right"></i> Learn More
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chat Feature Section -->
+    <section id="chat" class="chat-section">
+        <div class="container">
+            <div class="chat-content">
+                <div class="chat-text">
+                    <h2 class="chat-title">Campus Chat & Connect</h2>
+                    <p class="chat-desc">Join thousands of students in real-time conversations. Form study groups, discuss events, and make new friends across campus.</p>
+                    
+                    <div class="chat-features">
+                        <div class="feature">
+                            <i class="fas fa-bolt"></i>
+                            <div>
+                                <h4>Real-time Messaging</h4>
+                                <p>Instant chat with fellow students</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <h4>Study Groups</h4>
+                                <p>Create or join academic groups</p>
+                            </div>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <div>
+                                <h4>Secure & Private</h4>
+                                <p>Your conversations are protected</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-actions">
+                        <a href="chat-register.html" class="chat-btn primary-btn">
+                            <i class="fas fa-comment-dots"></i> Start Chatting Now
+                        </a>
+                        <a href="chat-register.html" class="chat-btn outline-btn">
+                            <i class="fas fa-user-plus"></i> Create Account
+                        </a>
+                    </div>
+                </div>
+                <div class="chat-visual">
+                    <div class="chat-phone">
+                        <div class="phone-screen">
+                            <div class="message user">
+                                <div class="avatar">S</div>
+                                <div class="text">Anyone for study group?</div>
+                            </div>
+                            <div class="message other">
+                                <div class="avatar">M</div>
+                                <div class="text">I'm in! Library at 3?</div>
+                            </div>
+                            <div class="message user">
+                                <div class="avatar">S</div>
+                                <div class="text">Perfect! See you there 👋</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advertise Section -->
+    <section id="advertise" class="advertise-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Advertise With Us</h2>
+                <p class="section-subtitle">Reach thousands of students on campus</p>
             </div>
             
-            <div class="events-grid">
-                <div class="event-card">
-                    <div class="event-date">
-                        <div class="event-day">04</div>
-                        <div class="event-month">JAN</div>
+            <div class="ad-container">
+                <div class="ad-card premium">
+                    <div class="ad-badge">Most Popular</div>
+                    <div class="ad-header">
+                        <i class="fas fa-crown"></i>
+                        <h3>Premium Ad Space</h3>
+                        <p class="ad-price">₦15,000 <span>/month</span></p>
                     </div>
-                    <div class="event-content">
-                        <h3 class="event-title">School Resumption</h3>
-                        <p class="event-location"><i class="fas fa-map-marker-alt"></i>Main Campus</p>
-                        <div class="event-info">
-                            <span class="event-tag">Academics</span>
-                            <span>5:00 PM</span>
+                    <ul class="ad-features">
+                        <li><i class="fas fa-check-circle"></i> Homepage & Events page placement</li>
+                        <li><i class="fas fa-check-circle"></i> Large banner advertisement</li>
+                        <li><i class="fas fa-check-circle"></i> Reaches 10,000+ students daily</li>
+                        <li><i class="fas fa-check-circle"></i> Performance analytics dashboard</li>
+                        <li><i class="fas fa-check-circle"></i> Priority customer support</li>
+                    </ul>
+                    <div class="ad-cta">
+                        <a href="ads.html" target="_blank" class="ad-btn">
+                            <i class="fas fa-bullhorn"></i> Get This Space
+                        </a>
+                        <a href="https://wa.me/message/ASKFQBQND5AHJ1" target="_blank" class="ad-btn outline">
+                            <i class="fab fa-whatsapp"></i> Contact on WhatsApp
+                        </a>
+                    </div>
+                </div>
+
+                <div class="ad-info">
+                    <h3>Why Choose TheMedSphere?</h3>
+                    <div class="benefits-grid">
+                        <div class="benefit">
+                            <div class="benefit-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <h4>High Engagement</h4>
+                            <p>Our active student community ensures your ads get noticed.</p>
+                        </div>
+                        <div class="benefit">
+                            <div class="benefit-icon">
+                                <i class="fas fa-crosshairs"></i>
+                            </div>
+                            <h4>Targeted Audience</h4>
+                            <p>Reach students specifically interested in campus activities.</p>
+                        </div>
+                        <div class="benefit">
+                            <div class="benefit-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <h4>Quick Setup</h4>
+                            <p>Get your ad live within 24 hours of confirmation.</p>
+                        </div>
+                        <div class="benefit">
+                            <div class="benefit-icon">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <h4>Dedicated Support</h4>
+                            <p>Our team helps optimize your campaign for best results.</p>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <div class="contact-content">
+                <h2 class="contact-title">Stay Connected</h2>
+                <p class="contact-desc">Have questions or suggestions? Reach out to us!</p>
                 
-                <div class="event-card">
-                    <div class="event-date">
-                        <div class="event-day">05</div>
-                        <div class="event-month">JAN</div>
-                    </div>
-                    <div class="event-content">
-                        <h3 class="event-title">Class Resumes</h3>
-                        <p class="event-location"><i class="fas fa-map-marker-alt"></i> Odoshida/Laje</p>
-                        <div class="event-info">
-                            <span class="event-tag">Academics</span>
-                            <span>8:00am</span>
+                <div class="contact-methods">
+                    <div class="method">
+                        <div class="method-icon">
+                            <i class="fab fa-whatsapp"></i>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="event-card">
-                    <div class="event-date">
-                        <div class="event-day">15</div>
-                        <div class="event-month">JAN</div>
-                    </div>
-                    <div class="event-content">
-                        <h3 class="event-title">Student Union</h3>
-                        <div class="event-info">
-                            <span class="event-tag">Sport</span>
-                            <span>6:30 PM</span>
-                        </div>
+                        <h4>WhatsApp</h4>
+                        <p>For advertising inquiries</p>
+                        <a href="https://wa.me/message/ASKFQBQND5AHJ1" target="_blank" class="method-link">
+                            Chat Now <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -205,54 +319,94 @@
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer>
         <div class="container">
             <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="logo">
+                        <div class="logo-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="logo-text">The<span>MedSphere</span></div>
+                    </div>
+                    <p class="footer-desc">Connecting campus communities through events, conversations, and meaningful interactions.</p>
                 </div>
+                
                 <div class="footer-links">
-                    <h4>Quick Links</h4>
-                    <ul>
-                        <li><a href="#home"><i class="fas fa-chevron-right"></i> Home</a></li>
-                        <li><a href="#blogs"><i class="fas fa-chevron-right"></i> Blogs</a></li>
-                        <li><a href="#events"><i class="fas fa-chevron-right"></i> Events</a></li>
-                    
-
-                        <li><a href="ads.html"><i class="fas fa-chevron-right"></i> Sponsored Ads</a></li>
-                    </ul>
+                    <div class="link-group">
+                        <h4>Explore</h4>
+                        <a href="#home">Home</a>
+                        <a href="#events">Events</a>
+                        <a href="chat.html" target="_blank">Campus Chat</a>
+                        <a href="ads.html" target="_blank">Advertise</a>
+                    </div>
+                    <div class="link-group">
+                    </div>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; <span class="current-year">2025</span> MEDSphere Campus Community. All rights reserved.</p>
-                <p class="footer-url">medsphere-campus.vercel.app</p>
+                <p>&copy; 2025 TheMedSphere. All rights reserved.</p>
+                <p>Made with <i class="fas fa-heart" style="color: #ff4757;"></i> for students</p>
             </div>
         </div>
     </footer>
 
     <script src="script.js"></script>
-</body>
-<!--- Back to Top Button -->
-<button id="backToTop" class="back-to-top">
-    <i class="fas fa-arrow-up"></i>
-</button>
-<script>
-    // Back to Top Button Functionality
-    const backToTopButton = document.getElementById('backToTop');
     
-    // Show/hide button based on scroll position
-    window.addEventListener('scroll', () => {
+    
+    
+    
+    
+    
+    <style>
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background-color:blue;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        display: none; /* Hidden by default */
+        font-size: 24px;
+        z-index: 1000;
+        transition: all 0.3s;
+    }
+    
+    .back-to-top:hover {
+        background-color: #blue;
+        transform: scale(1.1);
+    }
+    
+    .back-to-top.show {
+        display: block;
+    }
+</style>
+
+<button class="back-to-top" onclick="scrollToTop()">↑</button>
+
+<script>
+    // Show/hide button on scroll
+    window.addEventListener('scroll', function() {
+        const button = document.querySelector('.back-to-top');
         if (window.scrollY > 300) {
-            backToTopButton.classList.add('show');
+            button.classList.add('show');
         } else {
-            backToTopButton.classList.remove('show');
+            button.classList.remove('show');
         }
     });
     
-    // Scroll to top when clicked
-    backToTopButton.addEventListener('click', () => {
+    // Scroll to top function
+    function scrollToTop() {
         window.scrollTo({
             top: 0,
             behavior: 'smooth'
         });
-    });
+    }
 </script>
+</body>
+</html>
