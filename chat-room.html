@@ -10,6 +10,7 @@
             --secondary: #764ba2;
             --success: #48bb78;
             --danger: #f56565;
+            --warning: #ed8936;
             --light: #f7fafc;
             --dark: #2d3748;
             --gray: #718096;
@@ -93,6 +94,13 @@
             color: white;
             font-weight: bold;
             font-size: 14px;
+            overflow: hidden;
+        }
+        
+        .user-avatar-small img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         /* SIDEBAR */
@@ -148,6 +156,13 @@
             color: white;
             font-weight: bold;
             font-size: 20px;
+            overflow: hidden;
+        }
+        
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .user-info h3 {
@@ -271,6 +286,7 @@
             display: flex;
             gap: 10px;
             max-width: 90%;
+            position: relative;
         }
         
         .message.received {
@@ -294,6 +310,7 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             max-width: 85%;
             word-wrap: break-word;
+            position: relative;
         }
         
         .message.sent .message-content {
@@ -335,10 +352,46 @@
         .message-footer {
             font-size: 11px;
             color: var(--gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .message.sent .message-footer {
             color: rgba(255,255,255,0.8);
+        }
+        
+        .message-actions {
+            opacity: 0;
+            transition: opacity 0.2s;
+            display: flex;
+            gap: 5px;
+        }
+        
+        .message:hover .message-actions {
+            opacity: 1;
+        }
+        
+        .message-action-btn {
+            background: rgba(0,0,0,0.1);
+            border: none;
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 10px;
+            cursor: pointer;
+            color: inherit;
+        }
+        
+        .message.sent .message-action-btn {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .message-action-btn:hover {
+            background: rgba(0,0,0,0.2);
+        }
+        
+        .message.sent .message-action-btn:hover {
+            background: rgba(255,255,255,0.3);
         }
         
         .system-message {
@@ -352,6 +405,72 @@
             font-style: italic;
             display: inline-block;
             padding: 10px 15px;
+        }
+        
+        /* STICKERS */
+        .sticker {
+            font-size: 32px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+        
+        .sticker:hover {
+            transform: scale(1.2);
+        }
+        
+        .sticker-message {
+            font-size: 40px;
+            line-height: 1;
+        }
+        
+        /* STICKER SELECTOR */
+        .sticker-selector {
+            position: absolute;
+            bottom: 70px;
+            left: 15px;
+            right: 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            padding: 15px;
+            display: none;
+            z-index: 1001;
+        }
+        
+        .sticker-selector.active {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+        
+        .sticker-category {
+            margin-bottom: 15px;
+        }
+        
+        .sticker-category h4 {
+            color: var(--dark);
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .sticker-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 10px;
+        }
+        
+        .sticker-item {
+            font-size: 24px;
+            text-align: center;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+        
+        .sticker-item:hover {
+            background: #f8f9fa;
         }
         
         /* CHAT INPUT AREA */
@@ -385,6 +504,30 @@
         .message-input:focus {
             outline: none;
             border-color: var(--primary);
+        }
+        
+        .input-buttons {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .input-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            color: var(--gray);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .input-btn:hover {
+            background: #f8f9fa;
         }
         
         .send-btn {
@@ -460,6 +603,41 @@
                 opacity: 1;
                 transform: translateY(0);
             }
+        }
+        
+        /* LOGOUT MODAL */
+        .logout-modal .modal-content {
+            max-width: 300px;
+        }
+        
+        .modal-body {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .modal-btn-cancel {
+            background: #e9ecef;
+            color: var(--dark);
+        }
+        
+        .modal-btn-confirm {
+            background: var(--danger);
+            color: white;
         }
         
         /* SCROLLBAR */
@@ -549,7 +727,7 @@
             <div class="user-avatar" id="profileAvatar">M</div>
             <div class="user-info">
                 <h3 id="profileName">Modex</h3>
-                <p id="profileUsername">@Remxx</p>
+                <p id="profileUsername">@Modex</p>
                 <p id="profileDetails">Community Health • Level 100</p>
                 <div class="user-status">
                     <span>●</span> Online
@@ -565,23 +743,45 @@
             <input type="text" class="search-box" placeholder="Search users..." id="searchUsers">
             
             <div class="online-users" id="onlineUsersList">
-                <div class="user-item" onclick="startChatWithUser('Remxx')">
-                    <div class="user-status-indicator"></div>
-                    <div class="user-avatar-small">R</div>
-                    <div class="user-details">
-                        <div class="user-name">Remxx</div>
-                        <div class="user-meta">@Remxx • Community Health</div>
-                    </div>
-                </div>
-                
-                <div class="user-item">
-                    <div class="user-status-indicator"></div>
-                    <div class="user-avatar-small">M</div>
-                    <div class="user-details">
-                        <div class="user-name">Modex (You)</div>
-                        <div class="user-meta">@Modex • Community Health</div>
-                    </div>
-                </div>
+                <!-- Online users will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- STICKER SELECTOR -->
+    <div class="sticker-selector" id="stickerSelector">
+        <div class="sticker-category">
+            <h4>Smileys & People</h4>
+            <div class="sticker-grid">
+                <div class="sticker-item" onclick="sendSticker('😊')">😊</div>
+                <div class="sticker-item" onclick="sendSticker('😂')">😂</div>
+                <div class="sticker-item" onclick="sendSticker('🥰')">🥰</div>
+                <div class="sticker-item" onclick="sendSticker('😎')">😎</div>
+                <div class="sticker-item" onclick="sendSticker('🤔')">🤔</div>
+                <div class="sticker-item" onclick="sendSticker('🙌')">🙌</div>
+                <div class="sticker-item" onclick="sendSticker('👍')">👍</div>
+                <div class="sticker-item" onclick="sendSticker('👋')">👋</div>
+                <div class="sticker-item" onclick="sendSticker('💪')">💪</div>
+                <div class="sticker-item" onclick="sendSticker('🎉')">🎉</div>
+                <div class="sticker-item" onclick="sendSticker('🙏')">🙏</div>
+                <div class="sticker-item" onclick="sendSticker('❤️')">❤️</div>
+            </div>
+        </div>
+        <div class="sticker-category">
+            <h4>Objects & Symbols</h4>
+            <div class="sticker-grid">
+                <div class="sticker-item" onclick="sendSticker('📚')">📚</div>
+                <div class="sticker-item" onclick="sendSticker('🎓')">🎓</div>
+                <div class="sticker-item" onclick="sendSticker('💯')">💯</div>
+                <div class="sticker-item" onclick="sendSticker('🔥')">🔥</div>
+                <div class="sticker-item" onclick="sendSticker('⭐')">⭐</div>
+                <div class="sticker-item" onclick="sendSticker('💬')">💬</div>
+                <div class="sticker-item" onclick="sendSticker('📱')">📱</div>
+                <div class="sticker-item" onclick="sendSticker('💡')">💡</div>
+                <div class="sticker-item" onclick="sendSticker('🎵')">🎵</div>
+                <div class="sticker-item" onclick="sendSticker('🏆')">🏆</div>
+                <div class="sticker-item" onclick="sendSticker('✨')">✨</div>
+                <div class="sticker-item" onclick="sendSticker('🚀')">🚀</div>
             </div>
         </div>
     </div>
@@ -592,54 +792,7 @@
     <!-- MAIN CHAT AREA -->
     <div class="chat-area">
         <div class="messages-container" id="messagesContainer">
-            <div class="system-message">
-                <div class="message-content">
-                    🎉 Welcome to MedSphere Chat! Live chat is active.
-                    <div class="message-footer">System • Just now</div>
-                </div>
-            </div>
-            
-            <div class="message received">
-                <div class="message-avatar">
-                    <div class="user-avatar-small">R</div>
-                </div>
-                <div class="message-content">
-                    <div class="message-header">
-                        <span class="message-user">Remxx</span>
-                        <span class="message-time">22:40</span>
-                    </div>
-                    <div class="message-text">Hello! How's campus today?</div>
-                    <div class="message-footer">Community Health • Level 100</div>
-                </div>
-            </div>
-            
-            <div class="message sent">
-                <div class="message-avatar">
-                    <div class="user-avatar-small">M</div>
-                </div>
-                <div class="message-content">
-                    <div class="message-header">
-                        <span class="message-user">Modex</span>
-                        <span class="message-time">22:41</span>
-                    </div>
-                    <div class="message-text">Hi! Campus is great. Studying at the library.</div>
-                    <div class="message-footer">Community Health • Level 100</div>
-                </div>
-            </div>
-            
-            <div class="message received">
-                <div class="message-avatar">
-                    <div class="user-avatar-small">R</div>
-                </div>
-                <div class="message-content">
-                    <div class="message-header">
-                        <span class="message-user">Remxx</span>
-                        <span class="message-time">30m ago</span>
-                    </div>
-                    <div class="message-text">Anyone up for study group?</div>
-                    <div class="message-footer">Community Health • Level 100</div>
-                </div>
-            </div>
+            <!-- Messages will be loaded here -->
         </div>
     </div>
     
@@ -648,6 +801,9 @@
         <textarea class="message-input" id="messageInput" 
                   placeholder="Type your message here..." 
                   rows="1"></textarea>
+        <div class="input-buttons">
+            <button class="input-btn" onclick="toggleStickers()">😀</button>
+        </div>
         <button class="send-btn" onclick="sendMessage()" id="sendButton">↑</button>
     </div>
     
@@ -681,6 +837,11 @@
                     </button>
                     <button style="flex: 1; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;" onclick="editProfile()">
                         Edit Profile
+                    </button>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button style="width: 100%; padding: 12px; background: var(--danger); color: white; border: none; border-radius: 8px; cursor: pointer;" onclick="showLogoutModal()">
+                        🚪 Logout
                     </button>
                 </div>
             </div>
@@ -743,6 +904,27 @@
             </div>
         </div>
     </div>
+    
+    <!-- LOGOUT MODAL -->
+    <div class="modal logout-modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div style="font-size: 48px; margin-bottom: 20px;">🚪</div>
+                <h3 style="margin-bottom: 10px;">Logout from Chat?</h3>
+                <p style="color: var(--gray); margin-bottom: 20px;">
+                    You will be removed from online users and will need to login again to continue chatting.
+                </p>
+                <div class="modal-actions">
+                    <button class="modal-btn modal-btn-cancel" onclick="closeLogoutModal()">
+                        Cancel
+                    </button>
+                    <button class="modal-btn modal-btn-confirm" onclick="logout()">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -761,50 +943,145 @@
             measurementId: "G-P6W5RN5CSS"
         };
         
-        // Initialize Firebase
-        let database, messagesRef, onlineUsersRef;
+        // Global variables
+        let database, messagesRef, onlineUsersRef, userOnlineRef;
         let currentUser = {
-            id: 'user_' + Date.now(),
+            id: localStorage.getItem('medsphere_user_id') || 'user_' + Date.now(),
             name: 'Modex',
             username: 'Modex',
             faculty: 'Community Health',
             level: '100',
-            avatar: 'M'
+            avatar: 'M',
+            profileImage: null
         };
+        let stickersVisible = false;
         
-        // Initialize app
-        function initApp() {
-            try {
-                firebase.initializeApp(firebaseConfig);
-                database = firebase.database();
-                messagesRef = database.ref('messages');
-                onlineUsersRef = database.ref('onlineUsers');
-                
-                console.log('Firebase initialized');
-                
-                // Load messages
-                loadMessages();
-                
-                // Mark user online
-                markUserOnline();
-                
-                // Listen for new messages
-                messagesRef.on('child_added', (snapshot) => {
-                    const message = snapshot.val();
-                    addMessageToUI(message);
-                });
-                
-                // Listen for online users
-                onlineUsersRef.on('value', (snapshot) => {
-                    updateOnlineUsers(snapshot.val());
-                });
-                
-            } catch (error) {
-                console.error('Firebase error:', error);
-            }
+        // Save user ID for persistence
+        if (!localStorage.getItem('medsphere_user_id')) {
+            localStorage.setItem('medsphere_user_id', currentUser.id);
         }
         
-        // UI Functions
+        // ========== PROFILE PICTURE FUNCTIONS ==========
+        
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Check file size (max 1MB)
+            if (file.size > 1024 * 1024) {
+                alert('❌ Image must be less than 1MB');
+                return;
+            }
+            
+            // Check file type
+            if (!file.type.startsWith('image/')) {
+                alert('❌ Please select an image file (JPG, PNG, GIF)');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Save image data to currentUser object
+                currentUser.profileImage = e.target.result;
+                
+                // Update all avatar displays immediately
+                updateAllAvatars(e.target.result);
+                
+                // Save to localStorage
+                saveUserToLocalStorage();
+                
+                // Update in Firebase (if online)
+                updateUserInFirebase();
+                
+                alert('✅ Profile picture updated!');
+            };
+            
+            reader.onerror = function() {
+                alert('❌ Error reading image file');
+            };
+            
+            reader.readAsDataURL(file);
+        }
+        
+        function updateAllAvatars(imageData) {
+            // Update all avatar displays
+            const avatars = [
+                'navAvatar',
+                'profileAvatar', 
+                'modalAvatar',
+                'editAvatar'
+            ];
+            
+            avatars.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.innerHTML = `<img src="${imageData}" alt="Profile" 
+                        style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+                }
+            });
+        }
+        
+        function saveUserToLocalStorage() {
+            // Save user to localStorage for persistence
+            localStorage.setItem('medsphere_user', JSON.stringify(currentUser));
+            
+            // Also save to users list
+            const users = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+            } else {
+                users.push(currentUser);
+            }
+            localStorage.setItem('medsphere_users', JSON.stringify(users));
+        }
+        
+        function updateUserInFirebase() {
+            if (!onlineUsersRef) return;
+            
+            // Update user data in Firebase
+            const userUpdate = {
+                name: currentUser.name,
+                username: currentUser.username,
+                faculty: currentUser.faculty,
+                level: currentUser.level,
+                avatar: currentUser.avatar || currentUser.name.charAt(0).toUpperCase(),
+                lastSeen: Date.now(),
+                status: 'online',
+                hasProfileImage: !!currentUser.profileImage
+            };
+            
+            onlineUsersRef.child(currentUser.id).update(userUpdate)
+                .then(() => console.log('✅ User updated in Firebase'))
+                .catch(error => console.error('❌ Firebase update error:', error));
+        }
+        
+        function loadSavedUser() {
+            // Try to load user from localStorage
+            const savedUser = localStorage.getItem('medsphere_user');
+            
+            if (savedUser) {
+                try {
+                    const parsedUser = JSON.parse(savedUser);
+                    currentUser = { ...currentUser, ...parsedUser };
+                    
+                    // If user has saved profile image, update avatars
+                    if (currentUser.profileImage) {
+                        updateAllAvatars(currentUser.profileImage);
+                    }
+                    
+                    console.log('✅ Loaded saved user:', currentUser.name);
+                } catch (error) {
+                    console.error('❌ Error loading user:', error);
+                }
+            }
+            
+            // Update UI with user data
+            updateUserUI();
+        }
+        
+        // ========== UI FUNCTIONS ==========
+        
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
@@ -829,7 +1106,15 @@
             document.getElementById('editUsername').value = currentUser.username;
             document.getElementById('editFaculty').value = currentUser.faculty;
             document.getElementById('editLevel').value = currentUser.level;
-            document.getElementById('editAvatar').textContent = currentUser.avatar;
+            
+            // Update avatar preview
+            const editAvatar = document.getElementById('editAvatar');
+            if (currentUser.profileImage) {
+                editAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
+                    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                editAvatar.textContent = currentUser.avatar;
+            }
         }
         
         function closeEditModal() {
@@ -856,77 +1141,209 @@
             // Update UI
             updateUserUI();
             
+            // Save to localStorage
+            saveUserToLocalStorage();
+            
             // Update Firebase
-            if (onlineUsersRef) {
-                onlineUsersRef.child(currentUser.id).update({
-                    name: newName,
-                    username: newUsername,
-                    faculty: newFaculty,
-                    level: newLevel,
-                    avatar: newAvatar
-                });
-            }
+            updateUserInFirebase();
             
             closeEditModal();
-            alert('Profile updated successfully!');
+            alert('✅ Profile updated successfully!');
         }
         
         function updateUserUI() {
             // Update nav avatar
-            document.getElementById('navAvatar').textContent = currentUser.avatar;
+            const navAvatar = document.getElementById('navAvatar');
+            if (currentUser.profileImage) {
+                navAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
+                    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                navAvatar.textContent = currentUser.avatar;
+            }
             
             // Update profile section
             document.getElementById('profileName').textContent = currentUser.name;
             document.getElementById('profileUsername').textContent = '@' + currentUser.username;
             document.getElementById('profileDetails').textContent = `${currentUser.faculty} • Level ${currentUser.level}`;
-            document.getElementById('profileAvatar').textContent = currentUser.avatar;
+            
+            const profileAvatar = document.getElementById('profileAvatar');
+            if (currentUser.profileImage) {
+                profileAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
+                    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                profileAvatar.textContent = currentUser.avatar;
+            }
             
             // Update modal
             document.getElementById('modalName').textContent = currentUser.name;
             document.getElementById('modalUsername').textContent = '@' + currentUser.username;
             document.getElementById('modalFaculty').textContent = currentUser.faculty;
             document.getElementById('modalLevel').textContent = currentUser.level;
-            document.getElementById('modalAvatar').textContent = currentUser.avatar;
+            
+            const modalAvatar = document.getElementById('modalAvatar');
+            if (currentUser.profileImage) {
+                modalAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
+                    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                modalAvatar.textContent = currentUser.avatar;
+            }
         }
         
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        // ========== LOGOUT FUNCTION ==========
+        
+        function showLogoutModal() {
+            closeProfileModal();
+            document.getElementById('logoutModal').classList.add('active');
+        }
+        
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('active');
+        }
+        
+        function logout() {
+            console.log("Logging out user:", currentUser.username);
             
-            // Check file size (max 1MB)
-            if (file.size > 1024 * 1024) {
-                alert('Image must be less than 1MB');
-                return;
+            // Remove user from online list in Firebase
+            if (userOnlineRef) {
+                userOnlineRef.remove()
+                    .then(() => {
+                        console.log("User removed from online list");
+                    })
+                    .catch((error) => {
+                        console.error("Error removing user from online list:", error);
+                    });
             }
             
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                // Store image URL (in real app, upload to Firebase Storage)
-                currentUser.profileImage = e.target.result;
-                
-                // Update avatar preview
-                const editAvatar = document.getElementById('editAvatar');
-                editAvatar.innerHTML = `<img src="${e.target.result}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-                
-                // Also update other avatars
-                document.getElementById('navAvatar').innerHTML = `<img src="${e.target.result}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-                document.getElementById('profileAvatar').innerHTML = `<img src="${e.target.result}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-                document.getElementById('modalAvatar').innerHTML = `<img src="${e.target.result}" alt="Profile" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            // Clear localStorage
+            localStorage.removeItem('medsphere_user');
+            localStorage.removeItem('medsphere_user_id');
+            
+            // Send logout system message
+            const logoutMessage = {
+                type: 'system',
+                text: `👋 ${currentUser.name} has left the chat.`,
+                name: 'System',
+                timestamp: Date.now()
             };
-            reader.readAsDataURL(file);
+            
+            if (messagesRef) {
+                messagesRef.push(logoutMessage);
+            }
+            
+            // Close modal
+            closeLogoutModal();
+            
+            // Redirect to login/register page
+            setTimeout(() => {
+                window.location.href = 'index.html'; // Change to your login page
+                // If no login page, refresh to reset
+                // window.location.reload();
+            }, 1000);
+        }
+        
+        // ========== STICKER FUNCTIONS ==========
+        
+        function toggleStickers() {
+            stickersVisible = !stickersVisible;
+            const stickerSelector = document.getElementById('stickerSelector');
+            const overlay = document.getElementById('overlay');
+            
+            if (stickersVisible) {
+                stickerSelector.classList.add('active');
+                overlay.classList.add('active');
+                overlay.onclick = closeStickers;
+            } else {
+                closeStickers();
+            }
+        }
+        
+        function closeStickers() {
+            stickersVisible = false;
+            document.getElementById('stickerSelector').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            document.getElementById('overlay').onclick = toggleSidebar;
+        }
+        
+        function sendSticker(sticker) {
+            closeStickers();
+            
+            const message = {
+                userId: currentUser.id,
+                name: currentUser.name,
+                username: currentUser.username,
+                avatar: currentUser.avatar,
+                faculty: currentUser.faculty,
+                level: currentUser.level,
+                text: sticker,
+                timestamp: Date.now(),
+                type: 'sticker'
+            };
+            
+            if (messagesRef) {
+                messagesRef.push(message);
+            }
+            
+            // Add to UI immediately
+            addMessageToUI({...message, userId: currentUser.id});
+        }
+        
+        // ========== MESSAGE FUNCTIONS ==========
+        
+        function initApp() {
+            try {
+                firebase.initializeApp(firebaseConfig);
+                database = firebase.database();
+                messagesRef = database.ref('messages');
+                onlineUsersRef = database.ref('onlineUsers');
+                userOnlineRef = onlineUsersRef.child(currentUser.id);
+                
+                console.log('✅ Firebase initialized');
+                
+                // Mark user online
+                markUserOnline();
+                
+                // Load messages
+                loadMessages();
+                
+                // Listen for new messages
+                messagesRef.on('child_added', (snapshot) => {
+                    const message = snapshot.val();
+                    message.id = snapshot.key;
+                    addMessageToUI(message);
+                });
+                
+                // Listen for message removal
+                messagesRef.on('child_removed', (snapshot) => {
+                    const messageId = snapshot.key;
+                    removeMessageFromUI(messageId);
+                });
+                
+                // Listen for online users
+                onlineUsersRef.on('value', (snapshot) => {
+                    updateOnlineUsers(snapshot.val());
+                });
+                
+            } catch (error) {
+                console.error('❌ Firebase error:', error);
+            }
         }
         
         function markUserOnline() {
             if (!onlineUsersRef) return;
             
-            onlineUsersRef.child(currentUser.id).set({
+            const userData = {
                 ...currentUser,
                 lastSeen: Date.now(),
                 status: 'online'
-            });
+            };
+            
+            // Remove profileImage from Firebase data (too large)
+            delete userData.profileImage;
+            
+            userOnlineRef.set(userData);
             
             // Remove on disconnect
-            onlineUsersRef.child(currentUser.id).onDisconnect().remove();
+            userOnlineRef.onDisconnect().remove();
         }
         
         function updateOnlineUsers(users) {
@@ -935,6 +1352,7 @@
             
             if (!users) {
                 onlineCount.textContent = '1';
+                onlineUsersList.innerHTML = '<div class="loading">No other users online</div>';
                 return;
             }
             
@@ -965,46 +1383,141 @@
         }
         
         function startChatWithUser(username) {
-            toggleSidebar(); // Close sidebar
+            toggleSidebar();
             alert('Starting chat with ' + username + '...');
-            // In a full implementation, this would switch to a private chat
         }
         
         function loadMessages() {
             if (!messagesRef) return;
             
-            messagesRef.limitToLast(20).once('value', (snapshot) => {
+            messagesRef.limitToLast(50).once('value', (snapshot) => {
                 const messages = snapshot.val();
-                if (!messages) return;
+                if (!messages) {
+                    // Add welcome message if no messages exist
+                    addWelcomeMessage();
+                    return;
+                }
                 
-                Object.values(messages).forEach(message => {
+                Object.entries(messages).forEach(([id, message]) => {
+                    message.id = id;
                     addMessageToUI(message);
                 });
             });
         }
         
+        function addWelcomeMessage() {
+            const welcomeMessage = {
+                id: 'welcome_' + Date.now(),
+                type: 'system',
+                text: '🎉 Welcome to MedSphere Chat! Start chatting with fellow students.',
+                name: 'System',
+                timestamp: Date.now()
+            };
+            
+            if (messagesRef) {
+                messagesRef.push(welcomeMessage);
+            }
+        }
+        
         function addMessageToUI(message) {
             const container = document.getElementById('messagesContainer');
             const isCurrentUser = message.userId === currentUser.id;
+            const isSystem = message.type === 'system';
+            const isSticker = message.type === 'sticker';
+            
+            // Check if message already exists
+            if (document.getElementById(`message-${message.id}`)) return;
             
             const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isCurrentUser ? 'sent' : 'received'}`;
-            messageDiv.innerHTML = `
-                <div class="message-avatar">
-                    <div class="user-avatar-small">${message.avatar || '?'}</div>
-                </div>
-                <div class="message-content">
-                    <div class="message-header">
-                        <span class="message-user">${message.name}</span>
-                        <span class="message-time">${formatTime(message.timestamp)}</span>
-                    </div>
-                    <div class="message-text">${message.text}</div>
-                    <div class="message-footer">${message.faculty} • Level ${message.level}</div>
-                </div>
-            `;
+            messageDiv.className = `message ${isCurrentUser ? 'sent' : 'received'} ${isSystem ? 'system-message' : ''}`;
+            messageDiv.id = `message-${message.id}`;
             
+            let messageContent = '';
+            
+            if (isSystem) {
+                messageContent = `
+                    <div class="message-content">
+                        ${message.text}
+                        <div class="message-footer">
+                            <span>${message.name}</span>
+                            <span>${formatTime(message.timestamp)}</span>
+                        </div>
+                    </div>
+                `;
+            } else if (isSticker) {
+                messageContent = `
+                    <div class="message-avatar">
+                        <div class="user-avatar-small">${message.avatar || '?'}</div>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-user">${message.name}</span>
+                            <span class="message-time">${formatTime(message.timestamp)}</span>
+                        </div>
+                        <div class="message-text sticker-message">${message.text}</div>
+                        <div class="message-footer">
+                            <span>${message.faculty} • Level ${message.level}</span>
+                            ${isCurrentUser ? `
+                                <div class="message-actions">
+                                    <button class="message-action-btn" onclick="deleteMessage('${message.id}')">Delete</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            } else {
+                messageContent = `
+                    <div class="message-avatar">
+                        <div class="user-avatar-small">${message.avatar || '?'}</div>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-user">${message.name}</span>
+                            <span class="message-time">${formatTime(message.timestamp)}</span>
+                        </div>
+                        <div class="message-text">${message.text}</div>
+                        <div class="message-footer">
+                            <span>${message.faculty} • Level ${message.level}</span>
+                            ${isCurrentUser ? `
+                                <div class="message-actions">
+                                    <button class="message-action-btn" onclick="deleteMessage('${message.id}')">Delete</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            messageDiv.innerHTML = messageContent;
             container.appendChild(messageDiv);
             container.scrollTop = container.scrollHeight;
+        }
+        
+        function removeMessageFromUI(messageId) {
+            const messageElement = document.getElementById(`message-${messageId}`);
+            if (messageElement) {
+                messageElement.remove();
+            }
+        }
+        
+        // ========== DELETE MESSAGE FUNCTION ==========
+        
+        function deleteMessage(messageId) {
+            if (!confirm('Are you sure you want to delete this message?')) return;
+            
+            if (messagesRef) {
+                messagesRef.child(messageId).remove()
+                    .then(() => {
+                        console.log('✅ Message deleted');
+                    })
+                    .catch((error) => {
+                        console.error('❌ Error deleting message:', error);
+                        alert('Failed to delete message: ' + error.message);
+                    });
+            } else {
+                // If Firebase not available, remove from UI only
+                removeMessageFromUI(messageId);
+            }
         }
         
         function sendMessage() {
@@ -1033,8 +1546,8 @@
             input.value = '';
             input.style.height = 'auto';
             
-            // Add to UI immediately
-            addMessageToUI({...message, userId: currentUser.id});
+            // Add to UI immediately (will also be added by Firebase listener)
+            addMessageToUI({...message, id: 'temp_' + Date.now(), userId: currentUser.id});
         }
         
         function formatTime(timestamp) {
@@ -1048,21 +1561,8 @@
             return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
         }
         
-        // Auto-resize textarea
-        document.getElementById('messageInput').addEventListener('input', function() {
-            this.style.height = 'auto';
-            this.style.height = Math.min(this.scrollHeight, 100) + 'px';
-        });
+        // ========== SEARCH USERS ==========
         
-        // Send on Enter (but allow Shift+Enter for new line)
-        document.getElementById('messageInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-        
-        // Search users
         document.getElementById('searchUsers').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
             const userItems = document.querySelectorAll('.user-item');
@@ -1078,18 +1578,54 @@
             });
         });
         
-        // Initialize when page loads
+        // ========== INITIALIZATION ==========
+        
         document.addEventListener('DOMContentLoaded', function() {
+            // Load saved user first
+            loadSavedUser();
+            
+            // Initialize Firebase app
             initApp();
-            updateUserUI();
+            
+            // Auto-resize textarea
+            const input = document.getElementById('messageInput');
+            input.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+            });
+            
+            // Send on Enter (but allow Shift+Enter for new line)
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
             
             // Set initial textarea height
-            const input = document.getElementById('messageInput');
             input.style.height = 'auto';
             input.style.height = input.scrollHeight + 'px';
             
             // Focus on input
             setTimeout(() => input.focus(), 500);
+        });
+        
+        // Handle page unload
+        window.addEventListener('beforeunload', function() {
+            if (userOnlineRef) {
+                userOnlineRef.remove();
+            }
+        });
+        
+        // Handle tab visibility change
+        document.addEventListener('visibilitychange', function() {
+            if (userOnlineRef) {
+                if (document.hidden) {
+                    userOnlineRef.update({ status: 'away', lastSeen: Date.now() });
+                } else {
+                    userOnlineRef.update({ status: 'online', lastSeen: Date.now() });
+                }
+            }
         });
     </script>
 </body>
