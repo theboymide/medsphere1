@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Gist | MEDSphere</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Campus Gist Feed Page Styles */
+        .gist-feed-page {
+            padding: 40px 5%;
+            background: #fff5f5;
+            min-height: 100vh;
+        }
+        
+        .gist-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px 0;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.1);
+        }
+        
+        .gist-header h1 {
+            font-size: 3rem;
+            color: #dc2626;
+            margin-bottom: 15px;
+        }
+        
+        .gist-header p {
+            color: #666;
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .gist-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .gist-tab {
+            padding: 12px 25px;
+            background: white;
+            border: 2px solid #fecaca;
+            color: #666;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .gist-tab.active {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+        }
+        
+        .gist-tab:hover:not(.active) {
+            background: #fee2e2;
+            border-color: #dc2626;
+        }
+        
+        .gist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .gist-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .gist-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(220, 38, 38, 0.15);
+            border-color: #dc2626;
+        }
+        
+        .gist-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .gist-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .gist-card:hover .gist-image img {
+            transform: scale(1.05);
+        }
+        
+        .gist-content {
+            padding: 25px;
+        }
+        
+        .gist-category {
+            display: inline-block;
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        
+        .gist-title {
+            font-size: 1.4rem;
+            color: #1f2937;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        
+        .gist-excerpt {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .gist-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 2px solid #fecaca;
+        }
+        
+        .gist-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .author-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid #fee2e2;
+        }
+        
+        .author-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .author-info h4 {
+            font-size: 0.9rem;
+            color: #1f2937;
+            margin-bottom: 3px;
+        }
+        
+        .author-info span {
+            font-size: 0.8rem;
+            color: #9ca3af;
+        }
+        
+        .gist-date {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .gist-date i {
+            color: #dc2626;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .gist-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .gist-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .gist-tabs {
+                overflow-x: auto;
+                justify-content: flex-start;
+                padding-bottom: 10px;
+            }
+            
+            .gist-tab {
+                white-space: nowrap;
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .gist-feed-page {
+                padding: 20px 5%;
+            }
+            
+            .gist-header {
+                padding: 25px 15px;
+            }
+            
+            .gist-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .gist-content {
+                padding: 20px;
+            }
+            
+            .gist-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="logo">
+                    <span class="logo-text">MEDSphere</span>
+                    <span class="tagline">Campus Community</span>
+                </div>
+                
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="campusgist.html" class="nav-link active"><i class="fas fa-newspaper"></i> Campus Gist</a></li>
+                    <li><a href="ads.html" class="nav-link"><i class="fas fa-ad"></i> Sponsored Ads</a></li>
+                </ul>
+                
+                <div class="mobile-menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Campus Gist Feed -->
+    <section class="gist-feed-page">
+        <div class="container">
+            <!-- Header -->
+            <div class="gist-header">
+                <h1><i class="fas fa-newspaper"></i> Campus Gist</h1>
+                <p>Latest campus news, announcements, and student stories</p>
+            </div>
+            
+            <!-- Tabs -->
+            <div class="gist-tabs">
+                <div class="gist-tab active" data-category="all">All Gist</div>
+                <div class="gist-tab" data-category="announcements">Announcements</div>
+                <div class="gist-tab" data-category="events">Events</div>
+                <div class="gist-tab" data-category="student-life">Student Life</div>
+                <div class="gist-tab" data-category="academics">Academics</div>
+                <div class="gist-tab" data-category="sports">Sports</div>
+            </div>
+            
+            <!-- Gist Grid -->
+            <div class="gist-grid">
+                <!-- Gist 1 -->
+                <div class="gist-card" data-category="announcements" onclick="openGist('break-announcement')">
+                    <div class="gist-image">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOvVWyXduNfoYK6LrTa1yvbJFnGfZoIBUS-jHyPKMOund3VS1BwWb19Ws&s=10" alt="Campus Announcement">
+                    </div>
+                    <div class="gist-content">
+                        <span class="gist-category">Announcement</span>
+                        <h3 class="gist-title">Unimed gives students 2 weeks break</h3>
+                        <p class="gist-excerpt">The school has announced 2 weeks break. All students are required to resume fully back to school by January 4th 2026.</p>
+                        <div class="gist-meta">
+                            <div class="gist-author">
+                                <div class="author-avatar">
+                      
+                                </div>
+                                <div class="author-info">
+                                    <h4>Medsphere</h4>
+                                    <span>Official Announcement</span>
+                                </div>
+                            </div>
+                            <div class="gist-date">
+                                <i class="far fa-calendar"></i> Today
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gist 2 -->
+                <div class="gist-card" data-category="events" onclick="openGist('cultural-fest')">
+                    <div class="gist-image">
+                        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&auto=format&fit=crop" alt="Cultural Fest">
+                    </div>
+                    <div class="gist-content">
+                        <span class="gist-category">Events</span>
+                        <h3 class="gist-title">Annual Cultural Festival Returns</h3>
+                        <p class="gist-excerpt">Get ready for the biggest cultural event of the year! Food, music, dance performances, and cultural exhibitions from around the world.</p>
+                        <div class="gist-meta">
+                            <div class="gist-author">
+                                <div class="author-avatar">
+                                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop" alt="Event Coordinator">
+                                </div>
+                                <div class="author-info">
+                                    <h4>Cultural Committee</h4>
+                                    <span>Event Announcement</span>
+                                </div>
+                            </div>
+                            <div class="gist-date">
+                                <i class="far fa-calendar"></i> 2 days ago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gist 3 -->
+                <div class="gist-card" data-category="academics" onclick="openGist('library-upgrade')">
+                    <div class="gist-image">
+                        <img src="https://images.unsplash.com/photo-1589998059171-988d887df646?w=600&auto=format&fit=crop" alt="Library">
+                    </div>
+                    <div class="gist-content">
+                        <span class="gist-category">Academics</span>
+                        <h3 class="gist-title">Main Library Gets Major Upgrade</h3>
+                        <p class="gist-excerpt">New study rooms, extended hours, and 10,000+ digital resources added to our main library. Tour scheduled for next week.</p>
+                        <div class="gist-meta">
+                            <div class="gist-author">
+                                <div class="author-avatar">
+                                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop" alt="Library Staff">
+                                </div>
+                                <div class="author-info">
+                                    <h4>Library Department</h4>
+                                    <span>Academic Update</span>
+                                </div>
+                            </div>
+                            <div class="gist-date">
+                                <i class="far fa-calendar"></i> 3 days ago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gist 4 -->
+                <div class="gist-card" data-category="student-life" onclick="openGist('study-tips')">
+                    <div class="gist-image">
+                        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&auto=format&fit=crop" alt="Student Study">
+                    </div>
+                    <div class="gist-content">
+                        <span class="gist-category">Student Life</span>
+                        <h3 class="gist-title">Top 10 Study Tips from A+ Students</h3>
+                        <p class="gist-excerpt">Learn how top-performing students manage their time, study effectively, and maintain work-life balance during exams.</p>
+                        <div class="gist-meta">
+                            <div class="gist-author">
+                                <div class="author-avatar">
+                                    <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&auto=format&fit=crop" alt="Student">
+                                </div>
+                                <div class="author-info">
+                                    <h4>Sarah Johnson</h4>
+                                    <span>4th Year Medicine</span>
+                                </div>
+                            </div>
+                            <div class="gist-date">
+                                <i class="far fa-calendar"></i> 1 week ago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gist 5 -->
+                <div class="gist-card" data-category="sports" onclick="openGist('sports-tournament')">
+                    <div class="gist-image">
+                        <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&auto=format&fit=crop" alt="Sports">
+                    </div>
+                    <div class="gist-content">
+                        <span class="gist-category">Sports</span>
+                        <h3 class="gist-title">Inter-Faculty Sports Tournament Begins</h3>
+                        <p class="gist-excerpt">Basketball, football, and volleyball tournaments kick off this weekend. Support your faculty teams!</p>
+                        <div class="gist-meta">
+                            <div class="gist-author">
+                                <div class="author-avatar">
+                                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop" alt="Sports Director">
+                                </div>
+                                <div class="author-info">
+                                    <h4>Sports Department</h4>
+                                    <span>Tournament Update</span>
+                                </div>
+                            </div>
+                            <div class="gist-date">
+                                <i class="far fa-calendar"></i> 4 days ago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gist 6 -->
+                <div class="gist-card" data-category="student-life" onclick="openGist('hostel-update')">
+                    <div class="gist-image">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&auto=format&fit=crop" alt="Hostel">
+                    </div>
+                    <div class="gist-content">
+                        <span class="gist-category">Student Life</span>
+                        <h3 class="gist-title">New Hostel Facilities Now Available</h3>
+                        <p class="gist-excerpt">Renovated hostels with new furniture, Wi-Fi upgrades, and 24/7 security. Apply for room allocation now.</p>
+                        <div class="gist-meta">
+                            <div class="gist-author">
+                                <div class="author-avatar">
+                                    <img src="https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=100&auto=format&fit=crop" alt="Hostel Admin">
+                                </div>
+                                <div class="author-info">
+                                    <h4>Accommodation Office</h4>
+                                    <span>Hostel Update</span>
+                                </div>
+                            </div>
+                            <div class="gist-date">
+                                <i class="far fa-calendar"></i> 5 days ago
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <span class="logo-text">MEDSphere</span>
+                    <p class="footer-tagline">Your premier campus lifestyle community</p>
+                 
+                </div>
+                
+                <div class="footer-links">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html" class="footer-link"><i class="fas fa-chevron-right"></i> Home</a></li>
+                        <li><a href="campusgist.html" class="footer-link"><i class="fas fa-chevron-right"></i> Campus Gist</a></li>
+                        <li><a href="#events" class="footer-link"><i class="fas fa-chevron-right"></i> Events</a></li>
+                    
+                        <li><a href="ads.html" class="footer-link"><i class="fas fa-chevron-right"></i> Sponsored Ads</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; <span class="current-year">2025</span> MEDSphere Campus Community. All rights reserved.</p>
+                <p class="footer-url">medsphere-campus.vercel.app</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab Filtering
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.gist-tab');
+            const gistCards = document.querySelectorAll('.gist-card');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    const category = this.getAttribute('data-category');
+                    
+                    // Filter gist cards
+                    gistCards.forEach(card => {
+                        if (category === 'all' || card.getAttribute('data-category') === category) {
+                            card.style.display = 'block';
+                            setTimeout(() => {
+                                card.style.opacity = '1';
+                                card.style.transform = 'translateY(0)';
+                            }, 10);
+                        } else {
+                            card.style.opacity = '0';
+                            card.style.transform = 'translateY(20px)';
+                            setTimeout(() => {
+                                card.style.display = 'none';
+                            }, 300);
+                        }
+                    });
+                });
+            });
+            
+            // Update current year
+            const currentYear = new Date().getFullYear();
+            document.querySelector('.current-year').textContent = currentYear;
+            
+            // Mobile menu toggle
+            const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', function() {
+                    navMenu.classList.toggle('active');
+                    this.innerHTML = navMenu.classList.contains('active') 
+                        ? '<i class="fas fa-times"></i>' 
+                        : '<i class="fas fa-bars"></i>';
+                });
+            }
+        });
+        
+        // Open Gist Function
+        function openGist(gistId) {
+            // In a real application, you would navigate to a detailed page
+            // For now, we'll show a notification
+            const gistTitles = {
+                'break-announcement': 'Unimed gives students 2 weeks break',
+                'cultural-fest': 'Annual Cultural Festival Returns',
+                'library-upgrade': 'Main Library Gets Major Upgrade',
+                'study-tips': 'Top 10 Study Tips from A+ Students',
+                'sports-tournament': 'Inter-Faculty Sports Tournament Begins',
+                'hostel-update': 'New Hostel Facilities Now Available'
+            };
+            
+            showNotification(`Opening: ${gistTitles[gistId] || 'Campus Gist'}`);
+            
+            // For the break announcement, you could link to your detailed article page
+            if (gistId === 'break-announcement') {
+                // Uncomment this if you have a detailed article page:
+                // window.location.href = 'article-break-announcement.html';
+            }
+        }
+        
+        // Notification function
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-info-circle"></i>
+                    <div class="notification-text">${message}</div>
+                    <button class="notification-close"><i class="fas fa-times"></i></button>
+                </div>
+            `;
+            
+            // Add styles
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: white;
+                color: #333;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 10px 30px rgba(220, 38, 38, 0.15);
+                z-index: 10000;
+                max-width: 350px;
+                animation: slideInRight 0.3s ease-out;
+                border-left: 4px solid #dc2626;
+            `;
+            
+            const content = notification.querySelector('.notification-content');
+            content.style.cssText = `
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+            `;
+            
+            content.querySelector('i').style.cssText = `
+                color: #dc2626;
+                font-size: 1.2rem;
+                margin-top: 2px;
+                flex-shrink: 0;
+            `;
+            
+            content.querySelector('.notification-text').style.cssText = `
+                flex-grow: 1;
+                line-height: 1.5;
+            `;
+            
+            const closeBtn = content.querySelector('.notification-close');
+            closeBtn.style.cssText = `
+                background: none;
+                border: none;
+                color: #666;
+                cursor: pointer;
+                padding: 0;
+                margin-left: 5px;
+                flex-shrink: 0;
+            `;
+            
+            closeBtn.addEventListener('click', function() {
+                notification.style.animation = 'slideOutRight 0.3s ease-out';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            });
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOutRight 0.3s ease-out';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.remove();
+                        }
+                    }, 300);
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+<!--- Back to Top Button -->
+<button id="backToTop" class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</button>
+<script>
+    // Back to Top Button Functionality
+    const backToTopButton = document.getElementById('backToTop');
+    
+    // Show/hide button based on scroll position
+    window.addEventListener('scroll', () => {
+        if (window.scrollY > 300) {
+            backToTopButton.classList.add('show');
+        } else {
+            backToTopButton.classList.remove('show');
+        }
+    });
+    
+    // Scroll to top when clicked
+    backToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+</script>
+</html>
