@@ -1134,30 +1134,30 @@
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     
     <script>
         // ======================
         // FIREBASE CONFIGURATION
         // ======================
-        // ⚠️ REPLACE THIS WITH YOUR ACTUAL FIREBASE CONFIG FROM FIREBASE CONSOLE
         const firebaseConfig = {
-                apiKey: "AIzaSyAAgN5qeExDgUJlUCE7rcDx1EomuTLOdM4",
-    authDomain: "themedsphere-4e296.firebaseapp.com",
-    projectId: "themedsphere-4e296",
-    storageBucket: "themedsphere-4e296.firebasestorage.app",
-    messagingSenderId: "250071092054",
-    appId: "1:250071092054:web:9e83f269bdde3eafb3a4f7",
-    measurementId: "G-FFLRNCDNG1"
-  };
+            apiKey: "AIzaSyAAgN5qeExDgUJlUCE7rcDx1EomuTLOdM4",
+            authDomain: "themedsphere-4e296.firebaseapp.com",
+            databaseURL: "https://themedsphere-4e296-default-rtdb.firebaseio.com",
+            projectId: "themedsphere-4e296",
+            storageBucket: "themedsphere-4e296.firebasestorage.app",
+            messagingSenderId: "250071092054",
+            appId: "1:250071092054:web:9e83f269bdde3eafb3a4f7",
+            measurementId: "G-FFLRNCDNG1"
+        };
         
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        
+        // Test Firebase connection
+        console.log("Firebase initialized:", firebase.app().name);
+        console.log("Database URL:", firebaseConfig.databaseURL);
         
         // ======================
         // CHAT VARIABLES
@@ -1174,6 +1174,8 @@
         // ======================
         function initChat() {
             console.log("Initializing chat...");
+            console.log("Testing Firebase connection...");
+            console.log("Database object:", database);
             
             // Check login
             const savedUser = localStorage.getItem('medsphere_chat_user');
@@ -1197,6 +1199,9 @@
                 onlineUsersRef = database.ref('onlineUsers');
                 userOnlineRef = onlineUsersRef.child(currentUser.id);
                 
+                console.log("Messages ref:", messagesRef.toString());
+                console.log("Online users ref:", onlineUsersRef.toString());
+                
                 // Mark user as online
                 markUserOnline();
                 
@@ -1215,10 +1220,26 @@
                 // Close dropdown when clicking outside
                 setupDropdownClose();
                 
+                // Test Firebase connection by reading data
+                testFirebaseConnection();
+                
             } catch (error) {
                 console.error("Error initializing chat:", error);
+                alert("Error loading chat: " + error.message);
                 redirectToLogin();
             }
+        }
+        
+        function testFirebaseConnection() {
+            console.log("Testing Firebase connection...");
+            messagesRef.limitToLast(1).once('value')
+                .then((snapshot) => {
+                    console.log("Firebase connection successful! Data:", snapshot.val());
+                })
+                .catch((error) => {
+                    console.error("Firebase connection failed:", error);
+                    alert("Cannot connect to Firebase. Please check your internet connection and Firebase configuration.");
+                });
         }
         
         function redirectToLogin() {
@@ -1237,7 +1258,8 @@
             });
         }
         
-        function toggleUserDropdown() {
+        function toggleUserDropdown(event) {
+            event.stopPropagation();
             const dropdown = document.getElementById('userDropdown');
             dropdown.classList.toggle('show');
         }
@@ -1313,6 +1335,10 @@
                 timestamp: firebase.database.ServerValue.TIMESTAMP,
                 lastSeen: Date.now(),
                 status: 'online'
+            }).then(() => {
+                console.log("User marked as online in Firebase");
+            }).catch((error) => {
+                console.error("Error marking user online:", error);
             });
             
             // Remove user when they disconnect (including logout)
@@ -1330,11 +1356,18 @@
         }
         
         function setupMessageListener() {
-            if (!messagesRef) return;
+            if (!messagesRef) {
+                console.error("messagesRef is not defined!");
+                return;
+            }
+            
+            console.log("Setting up message listener...");
             
             messagesRef.limitToLast(50).on('child_added', (snapshot) => {
                 const message = snapshot.val();
                 message.id = snapshot.key;
+                
+                console.log("New message received:", message);
                 
                 // Don't add duplicates
                 if (!messages.find(m => m.id === message.id)) {
@@ -1343,12 +1376,17 @@
                 }
             }, (error) => {
                 console.error("Error listening to messages:", error);
-                showErrorMessage("Could not load messages. Check your Firebase configuration.");
+                alert("Could not load messages. Check your Firebase configuration.");
             });
         }
         
         function setupOnlineUsersListener() {
-            if (!onlineUsersRef) return;
+            if (!onlineUsersRef) {
+                console.error("onlineUsersRef is not defined!");
+                return;
+            }
+            
+            console.log("Setting up online users listener...");
             
             onlineUsersRef.on('value', (snapshot) => {
                 onlineUsers = [];
@@ -1359,10 +1397,186 @@
                         onlineUsers.push(user);
                     }
                 });
+                console.log("Online users updated:", onlineUsers.length);
                 updateOnlineUsersList();
             }, (error) => {
                 console.error("Error listening to online users:", error);
             });
+        }
+        
+        // ======================
+        // PROFILE FUNCTIONS
+        // ======================
+        function viewProfile() {
+            document.getElementById('userDropdown').classList.remove('show');
+            document.getElementById('viewProfileModal').style.display = 'flex';
+            
+            // Load profile data
+            const profileHTML = `
+                <div class="profile-avatar-large" style="background: ${getAvatarColor(currentUser.name)}">
+                    ${currentUser.avatar}
+                </div>
+                <div class="profile-info">
+                    <div class="profile-info-item">
+                        <span class="profile-label">Full Name</span>
+                        <span class="profile-value">${currentUser.name}</span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Username</span>
+                        <span class="profile-value">@${currentUser.username}</span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Faculty</span>
+                        <span class="profile-value">${currentUser.faculty}</span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Level</span>
+                        <span class="profile-value">${currentUser.level}</span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Joined</span>
+                        <span class="profile-value">${new Date(currentUser.joinedAt).toLocaleDateString()}</span>
+                    </div>
+                    <div class="profile-info-item">
+                        <span class="profile-label">Status</span>
+                        <span class="profile-value" style="color: var(--success);">● Online</span>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('profileViewContent').innerHTML = profileHTML;
+        }
+        
+        function closeViewProfileModal() {
+            document.getElementById('viewProfileModal').style.display = 'none';
+        }
+        
+        function editProfile() {
+            document.getElementById('userDropdown').classList.remove('show');
+            document.getElementById('viewProfileModal').style.display = 'none';
+            document.getElementById('editProfileModal').style.display = 'flex';
+            
+            // Load current data into form
+            document.getElementById('editName').value = currentUser.name;
+            document.getElementById('editUsername').value = currentUser.username;
+            document.getElementById('editFaculty').value = currentUser.faculty;
+            document.getElementById('editLevel').value = currentUser.level;
+            document.getElementById('editBio').value = currentUser.bio || '';
+            
+            // Set avatar preview
+            const avatarPreview = document.getElementById('avatarPreview');
+            avatarPreview.innerHTML = currentUser.avatar;
+            avatarPreview.style.background = getAvatarColor(currentUser.name);
+        }
+        
+        function closeEditProfileModal() {
+            document.getElementById('editProfileModal').style.display = 'none';
+        }
+        
+        function handleProfileImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (file.size > 5 * 1024 * 1024) {
+                alert("Image is too large! Please select an image under 5MB.");
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const avatarPreview = document.getElementById('avatarPreview');
+                avatarPreview.innerHTML = `<img src="${e.target.result}" alt="Profile">`;
+                avatarPreview.style.background = 'none';
+                
+                // Store image data for saving
+                currentUser.profileImage = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function checkUsernameAvailability(username) {
+            if (username === currentUser.username) {
+                document.getElementById('usernameAvailability').style.display = 'none';
+                return;
+            }
+            
+            // Get all users from localStorage
+            const users = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
+            const isTaken = users.some(user => user.username === username && user.id !== currentUser.id);
+            
+            const availabilityEl = document.getElementById('usernameAvailability');
+            availabilityEl.style.display = 'block';
+            
+            if (isTaken) {
+                availabilityEl.innerHTML = `<span class="username-taken">❌ Username already taken</span>`;
+                return false;
+            } else if (username.length < 3) {
+                availabilityEl.innerHTML = `<span class="username-taken">❌ Username must be at least 3 characters</span>`;
+                return false;
+            } else {
+                availabilityEl.innerHTML = `<span class="username-available">✅ Username available</span>`;
+                return true;
+            }
+        }
+        
+        function saveProfileChanges() {
+            const newName = document.getElementById('editName').value.trim();
+            const newUsername = document.getElementById('editUsername').value.trim();
+            const newFaculty = document.getElementById('editFaculty').value;
+            const newLevel = document.getElementById('editLevel').value;
+            const newBio = document.getElementById('editBio').value.trim();
+            
+            // Validate username
+            if (newUsername !== currentUser.username) {
+                if (!checkUsernameAvailability(newUsername)) {
+                    alert("Please choose an available username!");
+                    return;
+                }
+            }
+            
+            if (!newName || !newUsername || !newFaculty || !newLevel) {
+                alert("Please fill in all required fields!");
+                return;
+            }
+            
+            // Update current user
+            currentUser.name = newName;
+            currentUser.username = newUsername;
+            currentUser.faculty = newFaculty;
+            currentUser.level = newLevel;
+            currentUser.bio = newBio;
+            currentUser.avatar = newName.charAt(0).toUpperCase();
+            
+            // Update localStorage
+            localStorage.setItem('medsphere_chat_user', JSON.stringify(currentUser));
+            
+            // Update all users list
+            const users = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('medsphere_users', JSON.stringify(users));
+            }
+            
+            // Update Firebase online user data
+            if (userOnlineRef) {
+                userOnlineRef.update({
+                    name: newName,
+                    username: newUsername,
+                    faculty: newFaculty,
+                    level: newLevel,
+                    avatar: newName.charAt(0).toUpperCase()
+                });
+            }
+            
+            // Update UI
+            setupUserInfo();
+            
+            // Close modal
+            closeEditProfileModal();
+            
+            // Show success message
+            alert("Profile updated successfully!");
         }
         
         // ======================
@@ -1408,24 +1622,6 @@
         }
         
         // ======================
-        // PROFILE FUNCTIONS
-        // ======================
-        function viewProfile() {
-            document.getElementById('userDropdown').classList.remove('show');
-            alert(`Profile Information:\n\n` +
-                  `Name: ${currentUser.name}\n` +
-                  `Username: @${currentUser.username}\n` +
-                  `Faculty: ${currentUser.faculty}\n` +
-                  `Level: ${currentUser.level}\n` +
-                  `Joined: ${new Date(currentUser.joinedAt).toLocaleDateString()}`);
-        }
-        
-        function editProfile() {
-            document.getElementById('userDropdown').classList.remove('show');
-            alert("Profile editing feature coming soon!");
-        }
-        
-        // ======================
         // MESSAGE FUNCTIONS
         // ======================
         function sendMessage() {
@@ -1434,6 +1630,7 @@
             
             if (!text || !currentUser || !messagesRef) {
                 console.error("Cannot send message:", { text, currentUser, messagesRef });
+                alert("Cannot send message. Please check your connection.");
                 return;
             }
             
@@ -1448,6 +1645,8 @@
                 timestamp: firebase.database.ServerValue.TIMESTAMP,
                 type: 'text'
             };
+            
+            console.log("Sending message:", newMessage);
             
             // Push to Firebase
             messagesRef.push(newMessage)
@@ -1519,6 +1718,16 @@
             
             container.innerHTML = '';
             
+            if (messages.length === 0) {
+                container.innerHTML = `
+                    <div class="welcome-message">
+                        <h3>No messages yet</h3>
+                        <p>Be the first to say hello! 👋</p>
+                    </div>
+                `;
+                return;
+            }
+            
             messages.forEach(msg => {
                 const isCurrentUser = currentUser && msg.userId === currentUser.id;
                 const isSystem = msg.type === 'system';
@@ -1552,7 +1761,7 @@
                                 </div>
                                 <div class="message-text">${msg.text}</div>
                                 <img src="${msg.image}" alt="Shared image" 
-                                     class="message-image" onclick="previewImage('${msg.image}')">
+                                     class="message-image" onclick="previewImage('${msg.image.replace(/'/g, "\\'")}')">
                                 <div class="message-footer">
                                     <span>${msg.faculty} • Level ${msg.level}</span>
                                 </div>
@@ -1597,13 +1806,22 @@
             container.innerHTML = '';
             countElement.textContent = onlineUsers.length;
             
+            if (onlineUsers.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; color: var(--gray); padding: 20px;">
+                        No other users online
+                    </div>
+                `;
+                return;
+            }
+            
             onlineUsers.forEach(user => {
                 const isCurrentUser = currentUser && user.id === currentUser.id;
                 const color = getAvatarColor(user.name);
                 
                 const userHTML = `
                     <div class="user-item">
-                        <div class="user-status"></div>
+                        <div class="user-status-indicator ${user.status === 'away' ? 'away' : ''}"></div>
                         <div class="user-avatar-small" style="background: ${color}">
                             ${user.avatar}
                         </div>
@@ -1660,7 +1878,7 @@
         function autoResizeTextarea(textarea) {
             if (!textarea) return;
             textarea.style.height = 'auto';
-            textarea.style.height = Math.min(textarea.scrollHeight, 100) + 'px';
+            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
         }
         
         function previewImage(src) {
@@ -1690,7 +1908,7 @@
                 
                 const userHTML = `
                     <div class="user-item">
-                        <div class="user-status"></div>
+                        <div class="user-status-indicator ${user.status === 'away' ? 'away' : ''}"></div>
                         <div class="user-avatar-small" style="background: ${color}">
                             ${user.avatar}
                         </div>
@@ -1711,10 +1929,6 @@
         
         function showComingSoon() {
             alert("This feature is coming soon!");
-        }
-        
-        function showErrorMessage(message) {
-            alert(message);
         }
         
         // ======================
