@@ -654,6 +654,271 @@ body {
 }
 
 /* ===== ADVERTISE SECTION ===== */
+/* Sponsored Brands Section */
+.sponsored-brands {
+    padding: 60px 20px;
+    background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+    border-radius: 30px;
+    margin: 40px 0;
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.1);
+}
+
+.section-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.section-header h2 {
+    font-size: 36px;
+    color: #333;
+    margin-bottom: 10px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.section-header p {
+    color: #666;
+    font-size: 18px;
+}
+
+.brands-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.brand-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #e2e8ff;
+    position: relative;
+}
+
+.brand-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+}
+
+.brand-card.featured::before {
+    content: "⭐ FEATURED";
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: linear-gradient(135deg, #ffd700, #ffaa00);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.brand-image {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.brand-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s;
+}
+
+.brand-card:hover .brand-image img {
+    transform: scale(1.05);
+}
+
+.brand-content {
+    padding: 25px;
+}
+
+.brand-name {
+    font-size: 22px;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.brand-category {
+    color: #667eea;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 15px;
+}
+
+.brand-price {
+    color: #2d3748;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.brand-price::before {
+    content: "💰";
+    font-size: 16px;
+}
+
+.brand-info {
+    color: #666;
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.brand-location {
+    color: #718096;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #e2e8ff;
+}
+
+.brand-location::before {
+    content: "📍";
+}
+
+.promote-cta {
+    text-align: center;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+    border-radius: 20px;
+    padding: 40px;
+    border: 2px dashed #667eea;
+}
+
+.promote-cta h3 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.promote-cta p {
+    color: #666;
+    font-size: 18px;
+    margin-bottom: 25px;
+}
+
+.price-tag {
+    display: inline-flex;
+    align-items: baseline;
+    background: white;
+    padding: 10px 25px;
+    border-radius: 50px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.price {
+    font-size: 36px;
+    font-weight: 800;
+    color: #667eea;
+    margin-right: 5px;
+}
+
+.period {
+    font-size: 18px;
+    color: #718096;
+}
+
+.whatsapp-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: #25D366;
+    color: white;
+    text-decoration: none;
+    padding: 18px 35px;
+    border-radius: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    transition: all 0.3s;
+    box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+    margin-bottom: 15px;
+}
+
+.whatsapp-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(37, 211, 102, 0.4);
+    background: #1da851;
+}
+
+.small-note {
+    font-size: 14px;
+    color: #718096;
+    font-style: italic;
+}
+
+.loading {
+    text-align: center;
+    padding: 40px;
+    grid-column: 1 / -1;
+    color: #718096;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(102, 126, 234, 0.2);
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .brands-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .section-header h2 {
+        font-size: 28px;
+    }
+    
+    .promote-cta {
+        padding: 30px 20px;
+    }
+    
+    .whatsapp-btn {
+        padding: 15px 25px;
+        font-size: 16px;
+    }
+}
+
+
+
+
+
+
+
 .advertise-section {
     padding: 100px 0;
     background: var(--white);
