@@ -14,78 +14,126 @@
             --light: #f7fafc;
             --dark: #2d3748;
             --gray: #718096;
+            --chat-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --sent-bg: linear-gradient(135deg, var(--primary), var(--secondary));
+            --received-bg: linear-gradient(135deg, #ffffff, #f8f9fa);
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Poppins', sans-serif;
         }
         
         body {
-            background: #f8f9fa;
+            background: var(--chat-bg);
             height: 100vh;
             overflow: hidden;
         }
         
-        /* TOP NAVIGATION */
+        /* GRADIENT BACKGROUND EFFECT */
+        .gradient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            z-index: -1;
+        }
+        
+        /* TOP NAVIGATION - ENHANCED */
         .top-nav {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            height: 60px;
-            background: white;
+            height: 70px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98));
+            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 0 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             z-index: 1000;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
         }
         
         .nav-left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
         }
         
         .menu-btn {
-            background: none;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
             font-size: 20px;
             cursor: pointer;
-            padding: 5px;
-            color: var(--dark);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
         
         .logo {
             font-weight: bold;
             color: var(--primary);
-            font-size: 18px;
+            font-size: 20px;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 10px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .logo span {
+            font-size: 24px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
         
         .nav-right {
-            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         
         .user-toggle {
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: none;
+            gap: 12px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
             border: none;
-            padding: 5px;
+            padding: 8px 15px;
+            border-radius: 50px;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .user-toggle:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            transform: translateY(-2px);
         }
         
         .user-avatar-small {
-            width: 36px;
-            height: 36px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
@@ -93,8 +141,10 @@
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 16px;
             overflow: hidden;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
         .user-avatar-small img {
@@ -103,18 +153,26 @@
             object-fit: cover;
         }
         
-        /* SIDEBAR */
+        .user-toggle span {
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        /* SIDEBAR - ENHANCED */
         .sidebar {
             position: fixed;
-            top: 60px;
+            top: 70px;
             left: -100%;
-            width: 100%;
-            height: calc(100vh - 60px);
-            background: white;
+            width: 320px;
+            height: calc(100vh - 70px);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.95));
+            backdrop-filter: blur(20px);
             z-index: 999;
-            transition: left 0.3s ease;
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             flex-direction: column;
+            box-shadow: 5px 0 30px rgba(0,0,0,0.1);
+            border-right: 1px solid rgba(102, 126, 234, 0.1);
         }
         
         .sidebar.active {
@@ -122,32 +180,35 @@
         }
         
         .sidebar-header {
-            padding: 20px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 25px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
         }
         
         .sidebar-header h2 {
-            color: var(--dark);
-            font-size: 18px;
-            margin-bottom: 5px;
+            font-size: 22px;
+            margin-bottom: 8px;
+            font-family: 'Poppins', sans-serif;
         }
         
         .sidebar-header p {
-            color: var(--gray);
             font-size: 14px;
+            opacity: 0.9;
         }
         
         .user-profile {
-            padding: 20px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 25px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
+            background: rgba(102, 126, 234, 0.05);
         }
         
         .user-avatar {
-            width: 60px;
-            height: 60px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
@@ -155,8 +216,10 @@
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 20px;
+            font-size: 24px;
             overflow: hidden;
+            border: 4px solid white;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
         }
         
         .user-avatar img {
@@ -167,87 +230,114 @@
         
         .user-info h3 {
             color: var(--dark);
-            font-size: 16px;
-            margin-bottom: 3px;
+            font-size: 18px;
+            margin-bottom: 5px;
+            font-family: 'Poppins', sans-serif;
         }
         
         .user-info p {
             color: var(--gray);
-            font-size: 13px;
-            margin-bottom: 3px;
+            font-size: 14px;
+            margin-bottom: 5px;
         }
         
         .user-status {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--success);
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            font-weight: 600;
+        }
+        
+        .user-status span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            animation: pulse 2s infinite;
         }
         
         .online-section {
-            padding: 20px;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 25px;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
         }
         
         .section-title {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         .section-title h3 {
             color: var(--dark);
-            font-size: 16px;
+            font-size: 18px;
+            font-family: 'Poppins', sans-serif;
         }
         
         .online-count {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
+            padding: 6px 15px;
+            border-radius: 50px;
+            font-size: 13px;
             font-weight: bold;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
         
         .search-box {
             width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 14px;
-            margin-bottom: 15px;
+            padding: 14px 20px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            font-size: 15px;
+            margin-bottom: 20px;
+            background: rgba(102, 126, 234, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
         }
         
         .online-users {
             flex: 1;
             overflow-y: auto;
-            padding: 0 20px 20px;
+            padding: 0 25px 25px;
         }
         
         .user-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 10px;
-            margin-bottom: 8px;
-            background: #f8f9fa;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            background: rgba(102, 126, 234, 0.05);
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.3s;
+            border: 1px solid transparent;
         }
         
         .user-item:hover {
-            background: #e9ecef;
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateX(5px);
+            border-color: rgba(102, 126, 234, 0.2);
         }
         
         .user-status-indicator {
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             border-radius: 50%;
             background: var(--success);
             flex-shrink: 0;
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 2s infinite;
         }
         
         .user-details {
@@ -257,36 +347,49 @@
         .user-name {
             font-weight: 600;
             color: var(--dark);
-            font-size: 14px;
-            margin-bottom: 3px;
+            font-size: 15px;
+            margin-bottom: 4px;
         }
         
         .user-meta {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--gray);
         }
         
-        /* MAIN CHAT AREA */
+        /* MAIN CHAT AREA - ENHANCED */
         .chat-area {
-            margin-top: 60px;
-            height: calc(100vh - 130px);
+            margin-top: 70px;
+            height: calc(100vh - 140px);
             display: flex;
             flex-direction: column;
+            position: relative;
         }
         
         .messages-container {
             flex: 1;
-            padding: 15px;
+            padding: 25px;
             overflow-y: auto;
-            background: #f8f9fa;
+            background: transparent;
+            position: relative;
         }
         
+        /* ANIMATED MESSAGES */
         .message {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: flex;
-            gap: 10px;
-            max-width: 90%;
+            gap: 15px;
+            max-width: 85%;
             position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: messageAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        @keyframes messageAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         
         .message.received {
@@ -304,39 +407,55 @@
         }
         
         .message-content {
-            background: white;
-            padding: 12px;
-            border-radius: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            background: var(--received-bg);
+            padding: 18px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
             max-width: 85%;
             word-wrap: break-word;
             position: relative;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.3s;
         }
         
         .message.sent .message-content {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: var(--sent-bg);
             color: white;
+            border: none;
+            box-shadow: 0 5px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .message.sent .message-content:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
+        }
+        
+        .message.received .message-content:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
         }
         
         .message-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
         
         .message-user {
             font-weight: bold;
-            font-size: 13px;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
         }
         
         .message.sent .message-user {
-            color: white;
+            color: rgba(255,255,255,0.95);
         }
         
         .message-time {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--gray);
+            opacity: 0.8;
         }
         
         .message.sent .message-time {
@@ -344,28 +463,31 @@
         }
         
         .message-text {
-            font-size: 14px;
-            line-height: 1.4;
-            margin-bottom: 5px;
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 8px;
         }
         
         .message-footer {
-            font-size: 11px;
+            font-size: 12px;
             color: var(--gray);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding-top: 8px;
+            border-top: 1px solid rgba(102, 126, 234, 0.1);
         }
         
         .message.sent .message-footer {
             color: rgba(255,255,255,0.8);
+            border-top-color: rgba(255,255,255,0.2);
         }
         
         .message-actions {
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: opacity 0.3s;
             display: flex;
-            gap: 5px;
+            gap: 8px;
         }
         
         .message:hover .message-actions {
@@ -375,11 +497,13 @@
         .message-action-btn {
             background: rgba(0,0,0,0.1);
             border: none;
-            border-radius: 4px;
-            padding: 2px 6px;
-            font-size: 10px;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 11px;
             cursor: pointer;
             color: inherit;
+            transition: all 0.3s;
+            font-weight: 600;
         }
         
         .message.sent .message-action-btn {
@@ -388,146 +512,199 @@
         
         .message-action-btn:hover {
             background: rgba(0,0,0,0.2);
+            transform: translateY(-2px);
         }
         
         .message.sent .message-action-btn:hover {
             background: rgba(255,255,255,0.3);
         }
         
+        /* SWIPE TO REPLY CONTAINER */
+        .message-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .swipe-indicator {
+            position: absolute;
+            right: -80px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            opacity: 0;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .message-container.swiped .swipe-indicator {
+            opacity: 1;
+            right: 20px;
+        }
+        
         .system-message {
             text-align: center;
-            margin: 15px 0;
+            margin: 20px 0;
+            animation: none;
+            opacity: 1;
+            transform: none;
         }
         
         .system-message .message-content {
-            background: #e9ecef;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
             color: var(--dark);
             font-style: italic;
             display: inline-block;
-            padding: 10px 15px;
+            padding: 15px 25px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            max-width: 80%;
         }
         
-        /* STICKERS */
+        /* STICKERS - ENHANCED */
         .sticker {
-            font-size: 32px;
+            font-size: 36px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
             display: inline-block;
         }
         
         .sticker:hover {
-            transform: scale(1.2);
+            transform: scale(1.3) rotate(5deg);
         }
         
         .sticker-message {
-            font-size: 40px;
+            font-size: 48px;
             line-height: 1;
+            text-align: center;
+            display: block;
+            padding: 10px;
         }
         
-        /* STICKER SELECTOR */
+        /* STICKER SELECTOR - ENHANCED */
         .sticker-selector {
             position: absolute;
-            bottom: 70px;
-            left: 15px;
-            right: 15px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
-            padding: 15px;
+            bottom: 80px;
+            left: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.95));
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            padding: 20px;
             display: none;
             z-index: 1001;
+            border: 1px solid rgba(102, 126, 234, 0.2);
         }
         
         .sticker-selector.active {
             display: block;
-            animation: slideUp 0.3s ease;
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .sticker-category {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
         
         .sticker-category h4 {
             color: var(--dark);
-            font-size: 14px;
-            margin-bottom: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
             font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(102, 126, 234, 0.1);
         }
         
         .sticker-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
+            gap: 12px;
         }
         
         .sticker-item {
-            font-size: 24px;
+            font-size: 28px;
             text-align: center;
             cursor: pointer;
-            padding: 5px;
-            border-radius: 8px;
-            transition: background 0.2s;
+            padding: 12px;
+            border-radius: 12px;
+            transition: all 0.3s;
+            background: rgba(102, 126, 234, 0.05);
         }
         
         .sticker-item:hover {
-            background: #f8f9fa;
+            background: rgba(102, 126, 234, 0.15);
+            transform: translateY(-5px) scale(1.1);
         }
         
-        /* CHAT INPUT AREA */
+        /* CHAT INPUT AREA - ENHANCED */
         .chat-input-area {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: white;
-            padding: 10px 15px;
-            border-top: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98));
+            backdrop-filter: blur(20px);
+            padding: 15px 20px;
+            border-top: 1px solid rgba(102, 126, 234, 0.1);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
             z-index: 1000;
-            height: 70px;
+            height: 80px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.08);
         }
         
         .message-input {
             flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #e2e8f0;
-            border-radius: 25px;
-            font-size: 14px;
+            padding: 16px 20px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 50px;
+            font-size: 15px;
             resize: none;
-            max-height: 100px;
-            line-height: 1.4;
+            max-height: 120px;
+            line-height: 1.5;
             font-family: inherit;
+            background: rgba(102, 126, 234, 0.05);
+            transition: all 0.3s;
         }
         
         .message-input:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
         }
         
         .input-buttons {
             display: flex;
-            gap: 5px;
+            gap: 8px;
         }
         
         .input-btn {
-            background: none;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
             border: none;
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
-            padding: 8px;
-            color: var(--gray);
+            padding: 12px;
+            color: var(--primary);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s;
         }
         
         .input-btn:hover {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
         
         .send-btn {
@@ -535,37 +712,48 @@
             color: white;
             border: none;
             border-radius: 50%;
-            width: 44px;
-            height: 44px;
+            width: 52px;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 20px;
             flex-shrink: 0;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
         
         .send-btn:hover {
-            opacity: 0.9;
+            opacity: 0.95;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
         }
         
         /* OVERLAY */
         .overlay {
             display: none;
             position: fixed;
-            top: 60px;
+            top: 70px;
             left: 0;
             right: 0;
             bottom: 0;
             background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
             z-index: 998;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         .overlay.active {
             display: block;
         }
         
-        /* MODALS */
+        /* MODALS - ENHANCED */
         .modal {
             display: none;
             position: fixed;
@@ -573,11 +761,13 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
             z-index: 2000;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            animation: fadeIn 0.3s;
         }
         
         .modal.active {
@@ -585,73 +775,117 @@
         }
         
         .modal-content {
-            background: white;
-            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.95));
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             max-height: 90vh;
             overflow-y: auto;
-            animation: slideUp 0.3s ease;
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
         
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px) scale(0.95);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
         
-        /* LOGOUT MODAL */
-        .logout-modal .modal-content {
-            max-width: 300px;
-        }
-        
-        .modal-body {
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .modal-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        
-        .modal-btn-cancel {
-            background: #e9ecef;
-            color: var(--dark);
-        }
-        
-        .modal-btn-confirm {
-            background: var(--danger);
-            color: white;
-        }
-        
-        /* SCROLLBAR */
+        /* ENHANCED SCROLLBAR */
         ::-webkit-scrollbar {
-            width: 4px;
+            width: 8px;
         }
         
         ::-webkit-scrollbar-track {
-            background: #f1f1f1;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 10px;
         }
         
         ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+        }
+        
+        /* TYPING INDICATOR */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            opacity: 0.7;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
             background: var(--primary);
-            border-radius: 4px;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+        
+        /* REPLY PREVIEW */
+        .reply-preview {
+            background: rgba(102, 126, 234, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 12px 15px;
+            margin: 0 20px 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.3s;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .reply-info {
+            flex: 1;
+        }
+        
+        .reply-author {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 13px;
+        }
+        
+        .reply-text {
+            font-size: 14px;
+            color: var(--dark);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .cancel-reply {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px;
         }
         
         /* UTILITY CLASSES */
@@ -685,33 +919,53 @@
         }
         
         .loading-spinner {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid var(--primary);
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(102, 126, 234, 0.2);
+            border-top: 3px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-right: 10px;
+            margin-right: 15px;
         }
         
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        
+        /* DATE SEPARATOR */
+        .date-separator {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .date-separator span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
     </style>
 </head>
 <body>
+    <div class="gradient-bg"></div>
+    
     <!-- TOP NAVIGATION -->
     <nav class="top-nav">
         <div class="nav-left">
             <button class="menu-btn" onclick="toggleSidebar()">☰</button>
             <div class="logo">
-                <span>💬</span> MedSphere
+                <span>💬</span> MedSphere Chat
             </div>
         </div>
         <div class="nav-right">
             <button class="user-toggle" onclick="toggleUserMenu()">
-                <div class="user-avatar-small" id="navAvatar">M</div>
+                <div class="user-avatar-small" id="navAvatar">U</div>
+                <span id="navUsername">User</span>
             </button>
         </div>
     </nav>
@@ -720,17 +974,17 @@
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2>General Chat Room</h2>
-            <p>All campus conversations</p>
+            <p>Live campus conversations</p>
         </div>
         
         <div class="user-profile">
-            <div class="user-avatar" id="profileAvatar">M</div>
+            <div class="user-avatar" id="profileAvatar">U</div>
             <div class="user-info">
-                <h3 id="profileName">Modex</h3>
-                <p id="profileUsername">@Modex</p>
-                <p id="profileDetails">Community Health • Level 100</p>
+                <h3 id="profileName">User</h3>
+                <p id="profileUsername">@username</p>
+                <p id="profileDetails">Faculty • Level 100</p>
                 <div class="user-status">
-                    <span>●</span> Online
+                    <span></span> Online
                 </div>
             </div>
         </div>
@@ -738,9 +992,9 @@
         <div class="online-section">
             <div class="section-title">
                 <h3>Online Students</h3>
-                <span class="online-count" id="onlineCount">2</span>
+                <span class="online-count" id="onlineCount">1</span>
             </div>
-            <input type="text" class="search-box" placeholder="Search users..." id="searchUsers">
+            <input type="text" class="search-box" placeholder="Search students..." id="searchUsers">
             
             <div class="online-users" id="onlineUsersList">
                 <!-- Online users will be loaded here -->
@@ -759,12 +1013,6 @@
                 <div class="sticker-item" onclick="sendSticker('😎')">😎</div>
                 <div class="sticker-item" onclick="sendSticker('🤔')">🤔</div>
                 <div class="sticker-item" onclick="sendSticker('🙌')">🙌</div>
-                <div class="sticker-item" onclick="sendSticker('👍')">👍</div>
-                <div class="sticker-item" onclick="sendSticker('👋')">👋</div>
-                <div class="sticker-item" onclick="sendSticker('💪')">💪</div>
-                <div class="sticker-item" onclick="sendSticker('🎉')">🎉</div>
-                <div class="sticker-item" onclick="sendSticker('🙏')">🙏</div>
-                <div class="sticker-item" onclick="sendSticker('❤️')">❤️</div>
             </div>
         </div>
         <div class="sticker-category">
@@ -776,12 +1024,6 @@
                 <div class="sticker-item" onclick="sendSticker('🔥')">🔥</div>
                 <div class="sticker-item" onclick="sendSticker('⭐')">⭐</div>
                 <div class="sticker-item" onclick="sendSticker('💬')">💬</div>
-                <div class="sticker-item" onclick="sendSticker('📱')">📱</div>
-                <div class="sticker-item" onclick="sendSticker('💡')">💡</div>
-                <div class="sticker-item" onclick="sendSticker('🎵')">🎵</div>
-                <div class="sticker-item" onclick="sendSticker('🏆')">🏆</div>
-                <div class="sticker-item" onclick="sendSticker('✨')">✨</div>
-                <div class="sticker-item" onclick="sendSticker('🚀')">🚀</div>
             </div>
         </div>
     </div>
@@ -791,6 +1033,15 @@
     
     <!-- MAIN CHAT AREA -->
     <div class="chat-area">
+        <!-- REPLY PREVIEW -->
+        <div class="reply-preview" id="replyPreview" style="display: none;">
+            <div class="reply-info">
+                <div class="reply-author" id="replyAuthor">Replying to User</div>
+                <div class="reply-text" id="replyText">Message text</div>
+            </div>
+            <button class="cancel-reply" onclick="cancelReply()">×</button>
+        </div>
+        
         <div class="messages-container" id="messagesContainer">
             <!-- Messages will be loaded here -->
         </div>
@@ -811,36 +1062,41 @@
     <div class="modal" id="profileModal">
         <div class="modal-content">
             <div class="p-20">
-                <h3 style="margin-bottom: 20px;">My Profile</h3>
+                <h3 style="margin-bottom: 20px; font-family: 'Poppins', sans-serif;">My Profile</h3>
                 <div class="text-center">
-                    <div class="user-avatar" style="margin: 0 auto 20px; width: 80px; height: 80px; font-size: 24px;" id="modalAvatar">M</div>
-                    <h4 id="modalName">Modex</h4>
-                    <p id="modalUsername" style="color: var(--gray); margin-bottom: 20px;">@Modex</p>
+                    <div class="user-avatar" style="margin: 0 auto 20px; width: 90px; height: 90px; font-size: 28px;" id="modalAvatar">U</div>
+                    <h4 style="font-family: 'Poppins', sans-serif;" id="modalName">User</h4>
+                    <p id="modalUsername" style="color: var(--gray); margin-bottom: 20px;">@username</p>
                 </div>
-                <div style="background: #f8f9fa; border-radius: 10px; padding: 15px;">
-                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e2e8f0;">
+                <div style="background: rgba(102, 126, 234, 0.05); border-radius: 15px; padding: 20px; border: 1px solid rgba(102, 126, 234, 0.1);">
+                    <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(102, 126, 234, 0.1);">
                         <span style="color: var(--gray);">Faculty</span>
-                        <span id="modalFaculty">Community Health</span>
+                        <span id="modalFaculty" style="font-weight: 600;">Faculty</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e2e8f0;">
+                    <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid rgba(102, 126, 234, 0.1);">
                         <span style="color: var(--gray);">Level</span>
-                        <span id="modalLevel">100</span>
+                        <span id="modalLevel" style="font-weight: 600;">100</span>
                     </div>
-                    <div style="display: flex; justify-content: space-between; padding: 10px 0;">
+                    <div style="display: flex; justify-content: space-between; padding: 12px 0;">
                         <span style="color: var(--gray);">Status</span>
-                        <span style="color: var(--success);">Online</span>
+                        <span style="color: var(--success); font-weight: 600;">● Online</span>
                     </div>
                 </div>
-                <div style="margin-top: 20px; display: flex; gap: 10px;">
-                    <button style="flex: 1; padding: 12px; background: #e9ecef; border: none; border-radius: 8px; cursor: pointer;" onclick="closeProfileModal()">
+                <div style="margin-top: 25px; display: flex; gap: 12px;">
+                    <button style="flex: 1; padding: 14px; background: rgba(102, 126, 234, 0.1); border: none; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s;" 
+                            onclick="closeProfileModal()" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
                         Close
                     </button>
-                    <button style="flex: 1; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;" onclick="editProfile()">
+                    <button style="flex: 1; padding: 14px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s;" 
+                            onclick="editProfile()" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(102, 126, 234, 0.4)';" 
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                         Edit Profile
                     </button>
                 </div>
                 <div style="margin-top: 15px;">
-                    <button style="width: 100%; padding: 12px; background: var(--danger); color: white; border: none; border-radius: 8px; cursor: pointer;" onclick="showLogoutModal()">
+                    <button style="width: 100%; padding: 14px; background: linear-gradient(135deg, var(--danger), #e53e3e); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s;" 
+                            onclick="showLogoutModal()" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(245, 101, 101, 0.4)';" 
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                         🚪 Logout
                     </button>
                 </div>
@@ -852,39 +1108,47 @@
     <div class="modal" id="editProfileModal">
         <div class="modal-content">
             <div class="p-20">
-                <h3 style="margin-bottom: 20px;">Edit Profile</h3>
+                <h3 style="margin-bottom: 20px; font-family: 'Poppins', sans-serif;">Edit Profile</h3>
                 <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
                 
                 <div style="text-align: center; margin-bottom: 20px;">
-                    <div class="user-avatar" style="margin: 0 auto; width: 80px; height: 80px; font-size: 24px; cursor: pointer;" 
-                         onclick="document.getElementById('imageUpload').click()" id="editAvatar">M</div>
-                    <p style="color: var(--gray); font-size: 14px; margin-top: 5px;">Tap to change photo (max 1MB)</p>
+                    <div class="user-avatar" style="margin: 0 auto; width: 90px; height: 90px; font-size: 28px; cursor: pointer; transition: all 0.3s;" 
+                         onclick="document.getElementById('imageUpload').click()" 
+                         onmouseover="this.style.transform='scale(1.05)';" 
+                         onmouseout="this.style.transform='scale(1)';"
+                         id="editAvatar">U</div>
+                    <p style="color: var(--gray); font-size: 14px; margin-top: 8px;">Tap to change photo (max 1MB)</p>
                 </div>
                 
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; color: var(--dark); margin-bottom: 5px; font-weight: 500;">Full Name</label>
-                    <input type="text" id="editName" style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;" value="Modex">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; color: var(--dark); margin-bottom: 8px; font-weight: 600;">Full Name</label>
+                    <input type="text" id="editName" style="width: 100%; padding: 14px; border: 2px solid rgba(102, 126, 234, 0.2); border-radius: 12px; background: rgba(102, 126, 234, 0.05); transition: all 0.3s;" 
+                           value="User" onfocus="this.style.borderColor='var(--primary)'; this.style.background='white';">
                 </div>
                 
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; color: var(--dark); margin-bottom: 5px; font-weight: 500;">Username</label>
-                    <input type="text" id="editUsername" style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;" value="Modex">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; color: var(--dark); margin-bottom: 8px; font-weight: 600;">Username</label>
+                    <input type="text" id="editUsername" style="width: 100%; padding: 14px; border: 2px solid rgba(102, 126, 234, 0.2); border-radius: 12px; background: rgba(102, 126, 234, 0.05); transition: all 0.3s;" 
+                           value="username" onfocus="this.style.borderColor='var(--primary)'; this.style.background='white';">
                 </div>
                 
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; color: var(--dark); margin-bottom: 5px; font-weight: 500;">Faculty</label>
-                    <select id="editFaculty" style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; color: var(--dark); margin-bottom: 8px; font-weight: 600;">Faculty</label>
+                    <select id="editFaculty" style="width: 100%; padding: 14px; border: 2px solid rgba(102, 126, 234, 0.2); border-radius: 12px; background: rgba(102, 126, 234, 0.05); transition: all 0.3s;" 
+                            onfocus="this.style.borderColor='var(--primary)'; this.style.background='white';">
                         <option value="Community Health">Community Health</option>
                         <option value="Clinicals">Clinicals</option>
                         <option value="Dentistry">Dentistry</option>
                         <option value="Nursing">Nursing</option>
                         <option value="Pharmacy">Pharmacy</option>
+                        <option value="Sciences">Sciences</option>
                     </select>
                 </div>
                 
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; color: var(--dark); margin-bottom: 5px; font-weight: 500;">Level</label>
-                    <select id="editLevel" style="width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px;">
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; color: var(--dark); margin-bottom: 8px; font-weight: 600;">Level</label>
+                    <select id="editLevel" style="width: 100%; padding: 14px; border: 2px solid rgba(102, 126, 234, 0.2); border-radius: 12px; background: rgba(102, 126, 234, 0.05); transition: all 0.3s;" 
+                            onfocus="this.style.borderColor='var(--primary)'; this.style.background='white';">
                         <option value="100">100 Level</option>
                         <option value="200">200 Level</option>
                         <option value="300">300 Level</option>
@@ -893,12 +1157,15 @@
                     </select>
                 </div>
                 
-                <div style="display: flex; gap: 10px;">
-                    <button style="flex: 1; padding: 12px; background: #e9ecef; border: none; border-radius: 8px; cursor: pointer;" onclick="closeEditModal()">
+                <div style="display: flex; gap: 12px;">
+                    <button style="flex: 1; padding: 14px; background: rgba(102, 126, 234, 0.1); border: none; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s;" 
+                            onclick="closeEditModal()" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
                         Cancel
                     </button>
-                    <button style="flex: 1; padding: 12px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;" onclick="saveProfile()">
-                        Save
+                    <button style="flex: 1; padding: 14px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s;" 
+                            onclick="saveProfile()" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(102, 126, 234, 0.4)';" 
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        Save Changes
                     </button>
                 </div>
             </div>
@@ -908,18 +1175,26 @@
     <!-- LOGOUT MODAL -->
     <div class="modal logout-modal" id="logoutModal">
         <div class="modal-content">
-            <div class="modal-body">
-                <div style="font-size: 48px; margin-bottom: 20px;">🚪</div>
-                <h3 style="margin-bottom: 10px;">Logout from Chat?</h3>
-                <p style="color: var(--gray); margin-bottom: 20px;">
-                    You will be removed from online users and will need to login again to continue chatting.
+            <div class="modal-body" style="padding: 30px;">
+                <div style="font-size: 60px; margin-bottom: 20px; text-align: center;">🚪</div>
+                <h3 style="margin-bottom: 15px; text-align: center; font-family: 'Poppins', sans-serif;">Logout from Chat?</h3>
+                <p style="color: var(--gray); margin-bottom: 25px; text-align: center; line-height: 1.6;">
+                    You will be removed from online users and redirected to the login page.
                 </p>
-                <div class="modal-actions">
-                    <button class="modal-btn modal-btn-cancel" onclick="closeLogoutModal()">
-                        Cancel
+                <div style="background: rgba(102, 126, 234, 0.05); padding: 15px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(102, 126, 234, 0.1);">
+                    <p style="margin: 0; color: var(--dark); font-size: 14px; text-align: center;">
+                        <strong>Note:</strong> You can login again anytime with your username.
+                    </p>
+                </div>
+                <div style="display: flex; gap: 12px;">
+                    <button style="flex: 1; padding: 14px; background: rgba(102, 126, 234, 0.1); border: none; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s;" 
+                            onclick="closeLogoutModal()" onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
+                        Stay Online
                     </button>
-                    <button class="modal-btn modal-btn-confirm" onclick="logout()">
-                        Logout
+                    <button style="flex: 1; padding: 14px; background: linear-gradient(135deg, var(--danger), #e53e3e); color: white; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; transition: all 0.3s;" 
+                            onclick="logout()" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 20px rgba(245, 101, 101, 0.4)';" 
+                            onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                        Yes, Logout
                     </button>
                 </div>
             </div>
@@ -931,7 +1206,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     
     <script>
-        // Firebase Configuration
+        // ========== FIREBASE CONFIG ==========
         const firebaseConfig = {
             apiKey: "AIzaSyA2pkU1z1e5pTpULhd6sgup8lbwXbr03BY",
             authDomain: "themedsphere-6eb04.firebaseapp.com",
@@ -943,378 +1218,90 @@
             measurementId: "G-P6W5RN5CSS"
         };
         
-        // Global variables
+        // ========== GLOBAL VARIABLES ==========
         let database, messagesRef, onlineUsersRef, userOnlineRef;
-        let currentUser = {
-            id: localStorage.getItem('medsphere_user_id') || 'user_' + Date.now(),
-            name: 'Modex',
-            username: 'Modex',
-            faculty: 'Community Health',
-            level: '100',
-            avatar: 'M',
-            profileImage: null
-        };
+        let currentUser = null;
         let stickersVisible = false;
+        let replyingTo = null;
+        let processedMessages = new Set(); // To prevent duplicate messages
         
-        // Save user ID for persistence
-        if (!localStorage.getItem('medsphere_user_id')) {
-            localStorage.setItem('medsphere_user_id', currentUser.id);
+        // ========== INITIALIZATION ==========
+        function initializeChat() {
+            // Load user from localStorage
+            loadCurrentUser();
+            
+            // Initialize Firebase
+            initFirebase();
+            
+            // Setup UI event listeners
+            setupEventListeners();
+            
+            // Setup swipe functionality
+            setupSwipeToReply();
         }
         
-        // ========== PROFILE PICTURE FUNCTIONS ==========
-        
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            // Check file size (max 1MB)
-            if (file.size > 1024 * 1024) {
-                alert('❌ Image must be less than 1MB');
-                return;
-            }
-            
-            // Check file type
-            if (!file.type.startsWith('image/')) {
-                alert('❌ Please select an image file (JPG, PNG, GIF)');
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                // Save image data to currentUser object
-                currentUser.profileImage = e.target.result;
-                
-                // Update all avatar displays immediately
-                updateAllAvatars(e.target.result);
-                
-                // Save to localStorage
-                saveUserToLocalStorage();
-                
-                // Update in Firebase (if online)
-                updateUserInFirebase();
-                
-                alert('✅ Profile picture updated!');
-            };
-            
-            reader.onerror = function() {
-                alert('❌ Error reading image file');
-            };
-            
-            reader.readAsDataURL(file);
-        }
-        
-        function updateAllAvatars(imageData) {
-            // Update all avatar displays
-            const avatars = [
-                'navAvatar',
-                'profileAvatar', 
-                'modalAvatar',
-                'editAvatar'
-            ];
-            
-            avatars.forEach(id => {
-                const element = document.getElementById(id);
-                if (element) {
-                    element.innerHTML = `<img src="${imageData}" alt="Profile" 
-                        style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-                }
-            });
-        }
-        
-        function saveUserToLocalStorage() {
-            // Save user to localStorage for persistence
-            localStorage.setItem('medsphere_user', JSON.stringify(currentUser));
-            
-            // Also save to users list
-            const users = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
-            const userIndex = users.findIndex(u => u.id === currentUser.id);
-            if (userIndex !== -1) {
-                users[userIndex] = currentUser;
-            } else {
-                users.push(currentUser);
-            }
-            localStorage.setItem('medsphere_users', JSON.stringify(users));
-        }
-        
-        function updateUserInFirebase() {
-            if (!onlineUsersRef) return;
-            
-            // Update user data in Firebase
-            const userUpdate = {
-                name: currentUser.name,
-                username: currentUser.username,
-                faculty: currentUser.faculty,
-                level: currentUser.level,
-                avatar: currentUser.avatar || currentUser.name.charAt(0).toUpperCase(),
-                lastSeen: Date.now(),
-                status: 'online',
-                hasProfileImage: !!currentUser.profileImage
-            };
-            
-            onlineUsersRef.child(currentUser.id).update(userUpdate)
-                .then(() => console.log('✅ User updated in Firebase'))
-                .catch(error => console.error('❌ Firebase update error:', error));
-        }
-        
-        function loadSavedUser() {
-            // Try to load user from localStorage
-            const savedUser = localStorage.getItem('medsphere_user');
-            
-            if (savedUser) {
-                try {
-                    const parsedUser = JSON.parse(savedUser);
-                    currentUser = { ...currentUser, ...parsedUser };
-                    
-                    // If user has saved profile image, update avatars
-                    if (currentUser.profileImage) {
-                        updateAllAvatars(currentUser.profileImage);
-                    }
-                    
-                    console.log('✅ Loaded saved user:', currentUser.name);
-                } catch (error) {
-                    console.error('❌ Error loading user:', error);
-                }
-            }
-            
-            // Update UI with user data
-            updateUserUI();
-        }
-        
-        // ========== UI FUNCTIONS ==========
-        
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('overlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        }
-        
-        function toggleUserMenu() {
-            document.getElementById('profileModal').classList.add('active');
-        }
-        
-        function closeProfileModal() {
-            document.getElementById('profileModal').classList.remove('active');
-        }
-        
-        function editProfile() {
-            closeProfileModal();
-            document.getElementById('editProfileModal').classList.add('active');
-            
-            // Fill current values
-            document.getElementById('editName').value = currentUser.name;
-            document.getElementById('editUsername').value = currentUser.username;
-            document.getElementById('editFaculty').value = currentUser.faculty;
-            document.getElementById('editLevel').value = currentUser.level;
-            
-            // Update avatar preview
-            const editAvatar = document.getElementById('editAvatar');
-            if (currentUser.profileImage) {
-                editAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
-                    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-            } else {
-                editAvatar.textContent = currentUser.avatar;
-            }
-        }
-        
-        function closeEditModal() {
-            document.getElementById('editProfileModal').classList.remove('active');
-        }
-        
-        function saveProfile() {
-            const newName = document.getElementById('editName').value.trim();
-            const newUsername = document.getElementById('editUsername').value.trim();
-            const newFaculty = document.getElementById('editFaculty').value;
-            const newLevel = document.getElementById('editLevel').value;
-            const newAvatar = newName.charAt(0).toUpperCase();
-            
-            // Update current user
-            currentUser = {
-                ...currentUser,
-                name: newName,
-                username: newUsername,
-                faculty: newFaculty,
-                level: newLevel,
-                avatar: newAvatar
-            };
-            
-            // Update UI
-            updateUserUI();
-            
-            // Save to localStorage
-            saveUserToLocalStorage();
-            
-            // Update Firebase
-            updateUserInFirebase();
-            
-            closeEditModal();
-            alert('✅ Profile updated successfully!');
-        }
-        
-        function updateUserUI() {
-            // Update nav avatar
-            const navAvatar = document.getElementById('navAvatar');
-            if (currentUser.profileImage) {
-                navAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
-                    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-            } else {
-                navAvatar.textContent = currentUser.avatar;
-            }
-            
-            // Update profile section
-            document.getElementById('profileName').textContent = currentUser.name;
-            document.getElementById('profileUsername').textContent = '@' + currentUser.username;
-            document.getElementById('profileDetails').textContent = `${currentUser.faculty} • Level ${currentUser.level}`;
-            
-            const profileAvatar = document.getElementById('profileAvatar');
-            if (currentUser.profileImage) {
-                profileAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
-                    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-            } else {
-                profileAvatar.textContent = currentUser.avatar;
-            }
-            
-            // Update modal
-            document.getElementById('modalName').textContent = currentUser.name;
-            document.getElementById('modalUsername').textContent = '@' + currentUser.username;
-            document.getElementById('modalFaculty').textContent = currentUser.faculty;
-            document.getElementById('modalLevel').textContent = currentUser.level;
-            
-            const modalAvatar = document.getElementById('modalAvatar');
-            if (currentUser.profileImage) {
-                modalAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
-                    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-            } else {
-                modalAvatar.textContent = currentUser.avatar;
-            }
-        }
-        
-        // ========== LOGOUT FUNCTION ==========
-        
-        function showLogoutModal() {
-            closeProfileModal();
-            document.getElementById('logoutModal').classList.add('active');
-        }
-        
-        function closeLogoutModal() {
-            document.getElementById('logoutModal').classList.remove('active');
-        }
-        
-        function logout() {
-            console.log("Logging out user:", currentUser.username);
-            
-            // Remove user from online list in Firebase
-            if (userOnlineRef) {
-                userOnlineRef.remove()
-                    .then(() => {
-                        console.log("User removed from online list");
-                    })
-                    .catch((error) => {
-                        console.error("Error removing user from online list:", error);
-                    });
-            }
-            
-            // Clear localStorage
-            localStorage.removeItem('medsphere_user');
-            localStorage.removeItem('medsphere_user_id');
-            
-            // Send logout system message
-            const logoutMessage = {
-                type: 'system',
-                text: `👋 ${currentUser.name} has left the chat.`,
-                name: 'System',
-                timestamp: Date.now()
-            };
-            
-            if (messagesRef) {
-                messagesRef.push(logoutMessage);
-            }
-            
-            // Close modal
-            closeLogoutModal();
-            
-            // Redirect to login/register page
-            setTimeout(() => {
-                window.location.href = 'index.html'; // Change to your login page
-                // If no login page, refresh to reset
-                // window.location.reload();
-            }, 1000);
-        }
-        
-        // ========== STICKER FUNCTIONS ==========
-        
-        function toggleStickers() {
-            stickersVisible = !stickersVisible;
-            const stickerSelector = document.getElementById('stickerSelector');
-            const overlay = document.getElementById('overlay');
-            
-            if (stickersVisible) {
-                stickerSelector.classList.add('active');
-                overlay.classList.add('active');
-                overlay.onclick = closeStickers;
-            } else {
-                closeStickers();
-            }
-        }
-        
-        function closeStickers() {
-            stickersVisible = false;
-            document.getElementById('stickerSelector').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-            document.getElementById('overlay').onclick = toggleSidebar;
-        }
-        
-        function sendSticker(sticker) {
-            closeStickers();
-            
-            const message = {
-                userId: currentUser.id,
-                name: currentUser.name,
-                username: currentUser.username,
-                avatar: currentUser.avatar,
-                faculty: currentUser.faculty,
-                level: currentUser.level,
-                text: sticker,
-                timestamp: Date.now(),
-                type: 'sticker'
-            };
-            
-            if (messagesRef) {
-                messagesRef.push(message);
-            }
-            
-            // Add to UI immediately
-            addMessageToUI({...message, userId: currentUser.id});
-        }
-        
-        // ========== MESSAGE FUNCTIONS ==========
-        
-        function initApp() {
+        function loadCurrentUser() {
             try {
+                // Try to get user from localStorage
+                const userData = localStorage.getItem('medsphere_chat_user');
+                
+                if (!userData) {
+                    // Redirect to register page if no user found
+                    window.location.href = 'chat-register.html';
+                    return;
+                }
+                
+                currentUser = JSON.parse(userData);
+                
+                // Ensure user has unique ID if not present
+                if (!currentUser.id) {
+                    currentUser.id = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('medsphere_chat_user', JSON.stringify(currentUser));
+                }
+                
+                // Update UI with user data
+                updateUserUI();
+                
+            } catch (error) {
+                console.error('Error loading user:', error);
+                window.location.href = 'chat-register.html';
+            }
+        }
+        
+        function initFirebase() {
+            try {
+                // Initialize Firebase
                 firebase.initializeApp(firebaseConfig);
                 database = firebase.database();
                 messagesRef = database.ref('messages');
                 onlineUsersRef = database.ref('onlineUsers');
-                userOnlineRef = onlineUsersRef.child(currentUser.id);
                 
-                console.log('✅ Firebase initialized');
+                if (currentUser && currentUser.id) {
+                    userOnlineRef = onlineUsersRef.child(currentUser.id);
+                    markUserOnline();
+                }
                 
-                // Mark user online
-                markUserOnline();
+                console.log('✅ Firebase initialized successfully');
                 
-                // Load messages
+                // Load existing messages
                 loadMessages();
                 
                 // Listen for new messages
                 messagesRef.on('child_added', (snapshot) => {
                     const message = snapshot.val();
                     message.id = snapshot.key;
-                    addMessageToUI(message);
+                    
+                    // Prevent duplicate messages
+                    if (!processedMessages.has(message.id)) {
+                        processedMessages.add(message.id);
+                        addMessageToUI(message);
+                    }
                 });
                 
                 // Listen for message removal
                 messagesRef.on('child_removed', (snapshot) => {
                     const messageId = snapshot.key;
+                    processedMessages.delete(messageId);
                     removeMessageFromUI(messageId);
                 });
                 
@@ -1328,109 +1315,32 @@
             }
         }
         
-        function markUserOnline() {
-            if (!onlineUsersRef) return;
-            
-            const userData = {
-                ...currentUser,
-                lastSeen: Date.now(),
-                status: 'online'
-            };
-            
-            // Remove profileImage from Firebase data (too large)
-            delete userData.profileImage;
-            
-            userOnlineRef.set(userData);
-            
-            // Remove on disconnect
-            userOnlineRef.onDisconnect().remove();
-        }
-        
-        function updateOnlineUsers(users) {
-            const onlineUsersList = document.getElementById('onlineUsersList');
-            const onlineCount = document.getElementById('onlineCount');
-            
-            if (!users) {
-                onlineCount.textContent = '1';
-                onlineUsersList.innerHTML = '<div class="loading">No other users online</div>';
-                return;
-            }
-            
-            let count = 0;
-            let html = '';
-            
-            Object.values(users).forEach(user => {
-                // Skip if offline (more than 2 minutes)
-                if (Date.now() - user.lastSeen > 120000) return;
-                
-                count++;
-                const isCurrentUser = user.id === currentUser.id;
-                
-                html += `
-                    <div class="user-item" ${isCurrentUser ? '' : 'onclick="startChatWithUser(\'' + user.username + '\')"'}>
-                        <div class="user-status-indicator"></div>
-                        <div class="user-avatar-small">${user.avatar}</div>
-                        <div class="user-details">
-                            <div class="user-name">${user.name} ${isCurrentUser ? '(You)' : ''}</div>
-                            <div class="user-meta">@${user.username} • ${user.faculty}</div>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            onlineUsersList.innerHTML = html || '<div class="loading">No other users online</div>';
-            onlineCount.textContent = count;
-        }
-        
-        function startChatWithUser(username) {
-            toggleSidebar();
-            alert('Starting chat with ' + username + '...');
-        }
-        
-        function loadMessages() {
-            if (!messagesRef) return;
-            
-            messagesRef.limitToLast(50).once('value', (snapshot) => {
-                const messages = snapshot.val();
-                if (!messages) {
-                    // Add welcome message if no messages exist
-                    addWelcomeMessage();
-                    return;
-                }
-                
-                Object.entries(messages).forEach(([id, message]) => {
-                    message.id = id;
-                    addMessageToUI(message);
-                });
-            });
-        }
-        
-        function addWelcomeMessage() {
-            const welcomeMessage = {
-                id: 'welcome_' + Date.now(),
-                type: 'system',
-                text: '🎉 Welcome to MedSphere Chat! Start chatting with fellow students.',
-                name: 'System',
-                timestamp: Date.now()
-            };
-            
-            if (messagesRef) {
-                messagesRef.push(welcomeMessage);
-            }
-        }
-        
+        // ========== PREVENT DUPLICATE MESSAGES ==========
         function addMessageToUI(message) {
             const container = document.getElementById('messagesContainer');
             const isCurrentUser = message.userId === currentUser.id;
             const isSystem = message.type === 'system';
             const isSticker = message.type === 'sticker';
             
-            // Check if message already exists
+            // Check if message already exists (additional safety)
             if (document.getElementById(`message-${message.id}`)) return;
+            
+            // Create message element with swipe container
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'message-container';
+            messageContainer.dataset.messageId = message.id;
             
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${isCurrentUser ? 'sent' : 'received'} ${isSystem ? 'system-message' : ''}`;
             messageDiv.id = `message-${message.id}`;
+            
+            // Add swipe indicator for received messages
+            if (!isCurrentUser && !isSystem) {
+                const swipeIndicator = document.createElement('div');
+                swipeIndicator.className = 'swipe-indicator';
+                swipeIndicator.textContent = 'Swipe to reply';
+                messageContainer.appendChild(swipeIndicator);
+            }
             
             let messageContent = '';
             
@@ -1489,37 +1399,122 @@
             }
             
             messageDiv.innerHTML = messageContent;
-            container.appendChild(messageDiv);
+            messageContainer.appendChild(messageDiv);
+            container.appendChild(messageContainer);
             container.scrollTop = container.scrollHeight;
         }
         
-        function removeMessageFromUI(messageId) {
-            const messageElement = document.getElementById(`message-${messageId}`);
-            if (messageElement) {
-                messageElement.remove();
-            }
+        // ========== SWIPE TO REPLY FUNCTIONALITY ==========
+        function setupSwipeToReply() {
+            let startX, startY;
+            let currentMessage = null;
+            
+            document.addEventListener('touchstart', (e) => {
+                const messageContainer = e.target.closest('.message-container');
+                if (!messageContainer) return;
+                
+                const messageDiv = messageContainer.querySelector('.message');
+                if (messageDiv.classList.contains('sent')) return; // Can't reply to own messages
+                if (messageDiv.classList.contains('system-message')) return; // Can't reply to system messages
+                
+                currentMessage = messageContainer;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+            }, { passive: true });
+            
+            document.addEventListener('touchmove', (e) => {
+                if (!currentMessage) return;
+                
+                const touch = e.touches[0];
+                const deltaX = startX - touch.clientX;
+                const deltaY = startY - touch.clientY;
+                
+                // Only trigger swipe if horizontal movement is significant and vertical movement is minimal
+                if (Math.abs(deltaX) > 50 && Math.abs(deltaY) < 30) {
+                    e.preventDefault();
+                    currentMessage.classList.add('swiped');
+                }
+            });
+            
+            document.addEventListener('touchend', (e) => {
+                if (!currentMessage) return;
+                
+                if (currentMessage.classList.contains('swiped')) {
+                    const messageId = currentMessage.dataset.messageId;
+                    const messageElement = document.getElementById(`message-${messageId}`);
+                    
+                    if (messageElement) {
+                        const userName = messageElement.querySelector('.message-user').textContent;
+                        const messageText = messageElement.querySelector('.message-text').textContent;
+                        
+                        setReplyTo(messageId, userName, messageText);
+                    }
+                }
+                
+                // Reset swipe state
+                setTimeout(() => {
+                    currentMessage.classList.remove('swiped');
+                    currentMessage = null;
+                }, 300);
+            });
         }
         
-        // ========== DELETE MESSAGE FUNCTION ==========
-        
-        function deleteMessage(messageId) {
-            if (!confirm('Are you sure you want to delete this message?')) return;
+        function setReplyTo(messageId, userName, messageText) {
+            replyingTo = messageId;
             
-            if (messagesRef) {
-                messagesRef.child(messageId).remove()
+            document.getElementById('replyAuthor').textContent = `Replying to ${userName}`;
+            document.getElementById('replyText').textContent = messageText.length > 50 ? messageText.substring(0, 50) + '...' : messageText;
+            document.getElementById('replyPreview').style.display = 'flex';
+            
+            // Focus on input
+            document.getElementById('messageInput').focus();
+        }
+        
+        function cancelReply() {
+            replyingTo = null;
+            document.getElementById('replyPreview').style.display = 'none';
+        }
+        
+        // ========== ENHANCED LOGOUT FUNCTION ==========
+        function logout() {
+            console.log("Logging out user:", currentUser.username);
+            
+            // Remove user from online list in Firebase
+            if (userOnlineRef) {
+                userOnlineRef.remove()
                     .then(() => {
-                        console.log('✅ Message deleted');
+                        console.log("User removed from online list");
                     })
                     .catch((error) => {
-                        console.error('❌ Error deleting message:', error);
-                        alert('Failed to delete message: ' + error.message);
+                        console.error("Error removing user from online list:", error);
                     });
-            } else {
-                // If Firebase not available, remove from UI only
-                removeMessageFromUI(messageId);
             }
+            
+            // Clear localStorage
+            localStorage.removeItem('medsphere_chat_user');
+            
+            // Send logout system message
+            const logoutMessage = {
+                type: 'system',
+                text: `👋 ${currentUser.name} has left the chat.`,
+                name: 'System',
+                timestamp: Date.now()
+            };
+            
+            if (messagesRef) {
+                messagesRef.push(logoutMessage);
+            }
+            
+            // Close modal
+            closeLogoutModal();
+            
+            // Redirect to register page (FIXED)
+            setTimeout(() => {
+                window.location.href = 'chat-register.html';
+            }, 800);
         }
         
+        // ========== ENHANCED SEND MESSAGE ==========
         function sendMessage() {
             const input = document.getElementById('messageInput');
             const text = input.value.trim();
@@ -1538,18 +1533,274 @@
                 type: 'text'
             };
             
+            // Add reply info if replying to a message
+            if (replyingTo) {
+                message.replyTo = replyingTo;
+                const replyElement = document.getElementById(`message-${replyingTo}`);
+                if (replyElement) {
+                    message.replyToName = replyElement.querySelector('.message-user').textContent;
+                    message.replyText = replyElement.querySelector('.message-text').textContent.substring(0, 100);
+                }
+            }
+            
             if (messagesRef) {
                 messagesRef.push(message);
             }
             
-            // Clear input
+            // Clear input and reset reply
             input.value = '';
             input.style.height = 'auto';
-            
-            // Add to UI immediately (will also be added by Firebase listener)
-            addMessageToUI({...message, id: 'temp_' + Date.now(), userId: currentUser.id});
+            cancelReply();
         }
         
+        // ========== OTHER FUNCTIONS (from original code) ==========
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+        
+        function toggleUserMenu() {
+            document.getElementById('profileModal').classList.add('active');
+        }
+        
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('active');
+        }
+        
+        function showLogoutModal() {
+            closeProfileModal();
+            document.getElementById('logoutModal').classList.add('active');
+        }
+        
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').classList.remove('active');
+        }
+        
+        function editProfile() {
+            closeProfileModal();
+            document.getElementById('editProfileModal').classList.add('active');
+            
+            // Fill current values
+            document.getElementById('editName').value = currentUser.name;
+            document.getElementById('editUsername').value = currentUser.username;
+            document.getElementById('editFaculty').value = currentUser.faculty;
+            document.getElementById('editLevel').value = currentUser.level;
+            
+            // Update avatar preview
+            const editAvatar = document.getElementById('editAvatar');
+            if (currentUser.profileImage) {
+                editAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
+                    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                editAvatar.textContent = currentUser.avatar;
+            }
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editProfileModal').classList.remove('active');
+        }
+        
+        function saveProfile() {
+            const newName = document.getElementById('editName').value.trim();
+            const newUsername = document.getElementById('editUsername').value.trim();
+            const newFaculty = document.getElementById('editFaculty').value;
+            const newLevel = document.getElementById('editLevel').value;
+            const newAvatar = newName.charAt(0).toUpperCase();
+            
+            // Check if username already exists (excluding current user)
+            const users = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
+            const usernameTaken = users.some(user => 
+                user.username === newUsername && user.id !== currentUser.id
+            );
+            
+            if (usernameTaken) {
+                alert('❌ Username already taken! Please choose another one.');
+                return;
+            }
+            
+            // Update current user
+            currentUser = {
+                ...currentUser,
+                name: newName,
+                username: newUsername,
+                faculty: newFaculty,
+                level: newLevel,
+                avatar: newAvatar
+            };
+            
+            // Update UI
+            updateUserUI();
+            
+            // Save to localStorage
+            localStorage.setItem('medsphere_chat_user', JSON.stringify(currentUser));
+            
+            // Update in users list
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+            } else {
+                users.push(currentUser);
+            }
+            localStorage.setItem('medsphere_users', JSON.stringify(users));
+            
+            // Update Firebase
+            updateUserInFirebase();
+            
+            closeEditModal();
+            alert('✅ Profile updated successfully!');
+        }
+        
+        function updateUserUI() {
+            // Update nav
+            const navAvatar = document.getElementById('navAvatar');
+            if (currentUser.profileImage) {
+                navAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
+                    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                navAvatar.textContent = currentUser.avatar;
+            }
+            
+            document.getElementById('navUsername').textContent = currentUser.name;
+            
+            // Update profile section
+            document.getElementById('profileName').textContent = currentUser.name;
+            document.getElementById('profileUsername').textContent = '@' + currentUser.username;
+            document.getElementById('profileDetails').textContent = `${currentUser.faculty} • Level ${currentUser.level}`;
+            
+            const profileAvatar = document.getElementById('profileAvatar');
+            if (currentUser.profileImage) {
+                profileAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
+                    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                profileAvatar.textContent = currentUser.avatar;
+            }
+            
+            // Update modal
+            document.getElementById('modalName').textContent = currentUser.name;
+            document.getElementById('modalUsername').textContent = '@' + currentUser.username;
+            document.getElementById('modalFaculty').textContent = currentUser.faculty;
+            document.getElementById('modalLevel').textContent = currentUser.level;
+            
+            const modalAvatar = document.getElementById('modalAvatar');
+            if (currentUser.profileImage) {
+                modalAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
+                    style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+            } else {
+                modalAvatar.textContent = currentUser.avatar;
+            }
+        }
+        
+        function markUserOnline() {
+            if (!onlineUsersRef) return;
+            
+            const userData = {
+                ...currentUser,
+                lastSeen: Date.now(),
+                status: 'online'
+            };
+            
+            // Remove profileImage from Firebase data (too large)
+            delete userData.profileImage;
+            
+            userOnlineRef.set(userData);
+            userOnlineRef.onDisconnect().remove();
+        }
+        
+        function loadMessages() {
+            if (!messagesRef) return;
+            
+            messagesRef.limitToLast(50).once('value', (snapshot) => {
+                const messages = snapshot.val();
+                if (!messages) {
+                    addWelcomeMessage();
+                    return;
+                }
+                
+                Object.entries(messages).forEach(([id, message]) => {
+                    message.id = id;
+                    processedMessages.add(id);
+                    addMessageToUI(message);
+                });
+            });
+        }
+        
+        function updateOnlineUsers(users) {
+            const onlineUsersList = document.getElementById('onlineUsersList');
+            const onlineCount = document.getElementById('onlineCount');
+            
+            if (!users) {
+                onlineCount.textContent = '1';
+                onlineUsersList.innerHTML = '<div class="loading">No other users online</div>';
+                return;
+            }
+            
+            let count = 0;
+            let html = '';
+            
+            Object.values(users).forEach(user => {
+                if (Date.now() - user.lastSeen > 120000) return;
+                
+                count++;
+                const isCurrentUser = user.id === currentUser.id;
+                
+                html += `
+                    <div class="user-item" ${isCurrentUser ? '' : 'onclick="startChatWithUser(\'' + user.username + '\')"'}>
+                        <div class="user-status-indicator"></div>
+                        <div class="user-avatar-small">${user.avatar}</div>
+                        <div class="user-details">
+                            <div class="user-name">${user.name} ${isCurrentUser ? '(You)' : ''}</div>
+                            <div class="user-meta">@${user.username} • ${user.faculty}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            onlineUsersList.innerHTML = html || '<div class="loading">No other users online</div>';
+            onlineCount.textContent = count;
+        }
+        
+        function setupEventListeners() {
+            const input = document.getElementById('messageInput');
+            
+            // Auto-resize textarea
+            input.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+            
+            // Send on Enter (but allow Shift+Enter for new line)
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // Search users
+            document.getElementById('searchUsers').addEventListener('input', function(e) {
+                const searchTerm = e.target.value.toLowerCase();
+                const userItems = document.querySelectorAll('.user-item');
+                
+                userItems.forEach(item => {
+                    const name = item.querySelector('.user-name').textContent.toLowerCase();
+                    const meta = item.querySelector('.user-meta').textContent.toLowerCase();
+                    if (name.includes(searchTerm) || meta.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Set initial textarea height and focus
+            input.style.height = 'auto';
+            input.style.height = input.scrollHeight + 'px';
+            setTimeout(() => input.focus(), 500);
+        }
+        
+        // Format time function
         function formatTime(timestamp) {
             const date = new Date(timestamp);
             const now = new Date();
@@ -1561,72 +1812,8 @@
             return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
         }
         
-        // ========== SEARCH USERS ==========
-        
-        document.getElementById('searchUsers').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const userItems = document.querySelectorAll('.user-item');
-            
-            userItems.forEach(item => {
-                const name = item.querySelector('.user-name').textContent.toLowerCase();
-                const meta = item.querySelector('.user-meta').textContent.toLowerCase();
-                if (name.includes(searchTerm) || meta.includes(searchTerm)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        });
-        
-        // ========== INITIALIZATION ==========
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load saved user first
-            loadSavedUser();
-            
-            // Initialize Firebase app
-            initApp();
-            
-            // Auto-resize textarea
-            const input = document.getElementById('messageInput');
-            input.addEventListener('input', function() {
-                this.style.height = 'auto';
-                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
-            });
-            
-            // Send on Enter (but allow Shift+Enter for new line)
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-            
-            // Set initial textarea height
-            input.style.height = 'auto';
-            input.style.height = input.scrollHeight + 'px';
-            
-            // Focus on input
-            setTimeout(() => input.focus(), 500);
-        });
-        
-        // Handle page unload
-        window.addEventListener('beforeunload', function() {
-            if (userOnlineRef) {
-                userOnlineRef.remove();
-            }
-        });
-        
-        // Handle tab visibility change
-        document.addEventListener('visibilitychange', function() {
-            if (userOnlineRef) {
-                if (document.hidden) {
-                    userOnlineRef.update({ status: 'away', lastSeen: Date.now() });
-                } else {
-                    userOnlineRef.update({ status: 'online', lastSeen: Date.now() });
-                }
-            }
-        });
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initializeChat);
     </script>
 </body>
 </html>
