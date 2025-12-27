@@ -13,8 +13,6 @@ class LiveChat {
         // Initialize Firebase (Example - you would replace with your config)
         /*
         const firebaseConfig = {
-            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
   apiKey: "AIzaSyA2pkU1z1e5pTpULhd6sgup8lbwXbr03BY",
   authDomain: "themedsphere-6eb04.firebaseapp.com",
   databaseURL: "https://themedsphere-6eb04-default-rtdb.firebaseio.com",
