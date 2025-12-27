@@ -382,182 +382,183 @@
     </div>
 
     <script>
-        let avatarData = null;
+<script>
+    let avatarData = null;
+    
+    function showTab(tabName) {
+        // Update tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
         
-        function showTab(tabName) {
-            // Update tabs
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            if (tabName === 'register') {
-                document.querySelector('.tab:nth-child(1)').classList.add('active');
-                document.getElementById('registerForm').classList.add('active');
-                document.getElementById('loginForm').classList.remove('active');
-            } else {
-                document.querySelector('.tab:nth-child(2)').classList.add('active');
-                document.getElementById('loginForm').classList.add('active');
-                document.getElementById('registerForm').classList.remove('active');
-            }
-            
-            // Load saved users for login
-            loadSavedUsers();
+        if (tabName === 'register') {
+            document.querySelector('.tab:nth-child(1)').classList.add('active');
+            document.getElementById('registerForm').classList.add('active');
+            document.getElementById('loginForm').classList.remove('active');
+        } else {
+            document.querySelector('.tab:nth-child(2)').classList.add('active');
+            document.getElementById('loginForm').classList.add('active');
+            document.getElementById('registerForm').classList.remove('active');
         }
         
-        function previewAvatar(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            // Check file size (max 1MB)
-            if (file.size > 1024 * 1024) {
-                showMessage('register', '❌ Image must be less than 1MB', 'error');
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                avatarData = e.target.result;
-                const preview = document.getElementById('avatarPreview');
-                preview.innerHTML = `<img src="${avatarData}" alt="Avatar">`;
-                preview.style.background = 'none';
-            };
-            reader.readAsDataURL(file);
+        // Load saved users for login
+        loadSavedUsers();
+    }
+    
+    function previewAvatar(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        // Check file size (max 1MB)
+        if (file.size > 1024 * 1024) {
+            showMessage('register', '❌ Image must be less than 1MB', 'error');
+            return;
         }
         
-        function registerUser() {
-            const name = document.getElementById('registerName').value.trim();
-            const username = document.getElementById('registerUsername').value.trim();
-            const faculty = document.getElementById('registerFaculty').value;
-            const level = document.getElementById('registerLevel').value;
-            
-            // Validation
-            if (!name || !username || !faculty || !level) {
-                showMessage('register', '❌ Please fill in all fields', 'error');
-                return;
-            }
-            
-            if (username.length < 3) {
-                showMessage('register', '❌ Username must be at least 3 characters', 'error');
-                return;
-            }
-            
-            // Check if username already exists
-            const existingUsers = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
-            const isTaken = existingUsers.some(user => user.username.toLowerCase() === username.toLowerCase());
-            
-            if (isTaken) {
-                showMessage('register', '❌ Username already taken', 'error');
-                return;
-            }
-            
-            // Create user object
-            const user = {
-                id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-                name: name,
-                username: username,
-                faculty: faculty,
-                level: level,
-                avatar: name.charAt(0).toUpperCase(),
-                profileImage: avatarData,
-                createdAt: Date.now(),
-                lastLogin: Date.now()
-            };
-            
-            // Save to localStorage
-            existingUsers.push(user);
-            localStorage.setItem('medsphere_users', JSON.stringify(existingUsers));
-            
-            // Set as current user
-            localStorage.setItem('medsphere_current_user', JSON.stringify(user));
-            
-            showMessage('register', '✅ Account created! Redirecting to chat...', 'success');
-            
-            // Redirect to chat
-            setTimeout(() => {
-                window.location.href = 'chat.html';
-            }, 1500);
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            avatarData = e.target.result;
+            const preview = document.getElementById('avatarPreview');
+            preview.innerHTML = `<img src="${avatarData}" alt="Avatar">`;
+            preview.style.background = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+    
+    function registerUser() {
+        const name = document.getElementById('registerName').value.trim();
+        const username = document.getElementById('registerUsername').value.trim();
+        const faculty = document.getElementById('registerFaculty').value;
+        const level = document.getElementById('registerLevel').value;
+        
+        // Validation
+        if (!name || !username || !faculty || !level) {
+            showMessage('register', '❌ Please fill in all fields', 'error');
+            return;
         }
         
-        function loadSavedUsers() {
-            const usersList = document.getElementById('usersList');
-            const existingUsers = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
-            
-            if (existingUsers.length === 0) {
-                usersList.innerHTML = '<div style="text-align: center; color: #718096; padding: 20px;">No saved users found</div>';
-                return;
-            }
-            
-            usersList.innerHTML = '';
-            
-            existingUsers.forEach(user => {
-                const userDiv = document.createElement('div');
-                userDiv.className = 'user-item';
-                userDiv.onclick = () => selectUser(user.username);
-                
-                userDiv.innerHTML = `
-                    <div class="user-avatar-small">
-                        ${user.profileImage ? 
-                            `<img src="${user.profileImage}" alt="${user.name}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` : 
-                            user.avatar}
-                    </div>
-                    <div class="user-info">
-                        <h4>${user.name}</h4>
-                        <p>@${user.username} • ${user.faculty} • Level ${user.level}</p>
-                    </div>
-                `;
-                
-                usersList.appendChild(userDiv);
-            });
+        if (username.length < 3) {
+            showMessage('register', '❌ Username must be at least 3 characters', 'error');
+            return;
         }
         
-        function selectUser(username) {
-            document.getElementById('loginUsername').value = username;
+        // Check if username already exists
+        const existingUsers = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
+        const isTaken = existingUsers.some(user => user.username.toLowerCase() === username.toLowerCase());
+        
+        if (isTaken) {
+            showMessage('register', '❌ Username already taken', 'error');
+            return;
         }
         
-        function loginUser() {
-            const username = document.getElementById('loginUsername').value.trim();
-            
-            if (!username) {
-                showMessage('login', '❌ Please enter username', 'error');
-                return;
-            }
-            
-            const existingUsers = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
-            const user = existingUsers.find(u => u.username.toLowerCase() === username.toLowerCase());
-            
-            if (!user) {
-                showMessage('login', '❌ User not found', 'error');
-                return;
-            }
-            
-            // Update last login
-            user.lastLogin = Date.now();
-            localStorage.setItem('medsphere_users', JSON.stringify(existingUsers));
-            
-            // Set as current user
-            localStorage.setItem('medsphere_current_user', JSON.stringify(user));
-            
-            showMessage('login', '✅ Welcome back! Redirecting...', 'success');
-            
-            // Redirect to chat
-            setTimeout(() => {
-                window.location.href = 'chat.html';
-            }, 1000);
+        // Create user object
+        const user = {
+            id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+            name: name,
+            username: username,
+            faculty: faculty,
+            level: level,
+            avatar: name.charAt(0).toUpperCase(),
+            profileImage: avatarData,
+            createdAt: Date.now(),
+            lastLogin: Date.now()
+        };
+        
+        // Save to localStorage
+        existingUsers.push(user);
+        localStorage.setItem('medsphere_users', JSON.stringify(existingUsers));
+        
+        // Set as current user
+        localStorage.setItem('medsphere_current_user', JSON.stringify(user));
+        
+        showMessage('register', '✅ Account created! Redirecting to chat...', 'success');
+        
+        // CORRECTED: Redirect to chat-room.html (not chat.html)
+        setTimeout(() => {
+            window.location.href = 'chat-room.html';
+        }, 1500);
+    }
+    
+    function loadSavedUsers() {
+        const usersList = document.getElementById('usersList');
+        const existingUsers = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
+        
+        if (existingUsers.length === 0) {
+            usersList.innerHTML = '<div style="text-align: center; color: #718096; padding: 20px;">No saved users found</div>';
+            return;
         }
         
-        function showMessage(form, text, type) {
-            const messageDiv = document.getElementById(form + 'Message');
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type}`;
+        usersList.innerHTML = '';
+        
+        existingUsers.forEach(user => {
+            const userDiv = document.createElement('div');
+            userDiv.className = 'user-item';
+            userDiv.onclick = () => selectUser(user.username);
             
-            // Clear message after 3 seconds
-            setTimeout(() => {
-                messageDiv.className = 'message';
-            }, 3000);
+            userDiv.innerHTML = `
+                <div class="user-avatar-small">
+                    ${user.profileImage ? 
+                        `<img src="${user.profileImage}" alt="${user.name}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` : 
+                        user.avatar}
+                </div>
+                <div class="user-info">
+                    <h4>${user.name}</h4>
+                    <p>@${user.username} • ${user.faculty} • Level ${user.level}</p>
+                </div>
+            `;
+            
+            usersList.appendChild(userDiv);
+        });
+    }
+    
+    function selectUser(username) {
+        document.getElementById('loginUsername').value = username;
+    }
+    
+    function loginUser() {
+        const username = document.getElementById('loginUsername').value.trim();
+        
+        if (!username) {
+            showMessage('login', '❌ Please enter username', 'error');
+            return;
         }
         
-        // Load saved users on page load
-        document.addEventListener('DOMContentLoaded', loadSavedUsers);
-    </script>
+        const existingUsers = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
+        const user = existingUsers.find(u => u.username.toLowerCase() === username.toLowerCase());
+        
+        if (!user) {
+            showMessage('login', '❌ User not found', 'error');
+            return;
+        }
+        
+        // Update last login
+        user.lastLogin = Date.now();
+        localStorage.setItem('medsphere_users', JSON.stringify(existingUsers));
+        
+        // Set as current user
+        localStorage.setItem('medsphere_current_user', JSON.stringify(user));
+        
+        showMessage('login', '✅ Welcome back! Redirecting...', 'success');
+        
+        // CORRECTED: Redirect to chat-room.html (not chat.html)
+        setTimeout(() => {
+            window.location.href = 'chat-room.html';
+        }, 1000);
+    }
+    
+    function showMessage(form, text, type) {
+        const messageDiv = document.getElementById(form + 'Message');
+        messageDiv.textContent = text;
+        messageDiv.className = `message ${type}`;
+        
+        // Clear message after 3 seconds
+        setTimeout(() => {
+            messageDiv.className = 'message';
+        }, 3000);
+    }
+    
+    // Load saved users on page load
+    document.addEventListener('DOMContentLoaded', loadSavedUsers);
+</script>
 </body>
 </html>
