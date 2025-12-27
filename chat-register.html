@@ -158,6 +158,7 @@
         
         .form-group {
             margin-bottom: 25px;
+            position: relative;
         }
         
         .form-group label {
@@ -182,6 +183,74 @@
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
+        .password-wrapper {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #718096;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .username-check {
+            position: absolute;
+            right: 10px;
+            top: 45px;
+            font-size: 14px;
+            display: none;
+        }
+        
+        .username-check.available {
+            color: #48bb78;
+        }
+        
+        .username-check.taken {
+            color: #f56565;
+        }
+        
+        .password-strength {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+        
+        .strength-meter.weak {
+            background: #f56565;
+            width: 33%;
+        }
+        
+        .strength-meter.fair {
+            background: #ed8936;
+            width: 66%;
+        }
+        
+        .strength-meter.strong {
+            background: #48bb78;
+            width: 100%;
+        }
+        
+        .password-hint {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 5px;
+        }
+        
         .auth-btn {
             background: #667eea;
             color: white;
@@ -200,6 +269,13 @@
             background: #5a67d8;
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .auth-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
         
         .forgot-password {
@@ -272,6 +348,17 @@
             display: none;
             font-size: 14px;
         }
+        
+        .demo-note {
+            background: #e6fffa;
+            color: #234e52;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 15px;
+            border: 1px solid #81e6d9;
+        }
     </style>
 </head>
 <body>
@@ -315,10 +402,22 @@
                     <input type="text" id="loginUsername" placeholder="Enter your username" required>
                 </div>
                 
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                        <button type="button" class="toggle-password" onclick="togglePassword('loginPassword')">👁️</button>
+                    </div>
+                </div>
+                
                 <button type="button" class="auth-btn" onclick="login()">
                     Login to Chat Room
                 </button>
             </form>
+            
+            <div class="demo-note">
+                Demo: Try username "demo" with password "password123"
+            </div>
             
             <div class="forgot-password">
                 <a href="#" onclick="switchTab('register')">Don't have an account? Register</a>
@@ -329,7 +428,7 @@
         <div class="auth-form" id="registerForm">
             <div class="auth-header">
                 <h1>Join Campus Chat 🎓</h1>
-                <p>Create your account in 30 seconds</p>
+                <p>Create your secure account</p>
             </div>
             
             <form id="registerFormElement">
@@ -356,7 +455,8 @@
                 
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" placeholder="Choose a username" required>
+                    <input type="text" id="username" placeholder="Choose a username" required oninput="checkUsernameAvailability()">
+                    <div class="username-check" id="usernameCheck"></div>
                 </div>
                 
                 <div class="form-group">
@@ -372,10 +472,35 @@
                     </select>
                 </div>
                 
-                <button type="button" class="auth-btn" onclick="register()">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" placeholder="Create a password" required oninput="checkPasswordStrength()">
+                        <button type="button" class="toggle-password" onclick="togglePassword('password')">👁️</button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-meter" id="passwordStrength"></div>
+                    </div>
+                    <div class="password-hint">Use at least 8 characters with letters and numbers</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirmPassword" placeholder="Re-enter your password" required oninput="checkPasswordMatch()">
+                        <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">👁️</button>
+                    </div>
+                    <div class="password-hint" id="passwordMatch"></div>
+                </div>
+                
+                <button type="button" class="auth-btn" id="registerBtn" onclick="register()">
                     Create Account & Join Chat
                 </button>
             </form>
+            
+            <div class="demo-note">
+                Note: All data is stored locally in your browser. Register once and stay logged in.
+            </div>
             
             <div class="forgot-password">
                 <a href="#" onclick="switchTab('login')">Already have an account? Login</a>
@@ -390,8 +515,8 @@
                     <p>Real-time messaging</p>
                 </div>
                 <div class="feature-item">
-                    <span>📷</span>
-                    <p>Share images & files</p>
+                    <span>🔒</span>
+                    <p>Secure with password</p>
                 </div>
                 <div class="feature-item">
                     <span>👥</span>
@@ -408,11 +533,41 @@
 <script>
     // User data management
     const STORAGE_KEY = 'medsphere_users';
+    const CURRENT_USER_KEY = 'medsphere_chat_user';
+    
+    // Password hashing function (simple but effective for local storage)
+    function hashPassword(password) {
+        // Simple hash for demo - in production use bcrypt or similar
+        let hash = 0;
+        for (let i = 0; i < password.length; i++) {
+            const char = password.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32bit integer
+        }
+        return hash.toString();
+    }
     
     // Initialize users storage if empty
     function initStorage() {
         if (!localStorage.getItem(STORAGE_KEY)) {
             localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+            
+            // Create demo user
+            const demoUsers = [
+                {
+                    id: 'demo_' + Date.now(),
+                    name: "Demo User",
+                    faculty: "Clinicals",
+                    username: "demo",
+                    level: "300",
+                    avatar: "D",
+                    passwordHash: hashPassword("password123"),
+                    joinedAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                }
+            ];
+            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(demoUsers));
         }
     }
     
@@ -443,6 +598,102 @@
         hideMessages();
     }
     
+    // Toggle password visibility
+    function togglePassword(fieldId) {
+        const field = document.getElementById(fieldId);
+        const button = field.parentElement.querySelector('.toggle-password');
+        
+        if (field.type === 'password') {
+            field.type = 'text';
+            button.textContent = '🙈';
+        } else {
+            field.type = 'password';
+            button.textContent = '👁️';
+        }
+    }
+    
+    // Check username availability
+    function checkUsernameAvailability() {
+        const username = document.getElementById('username').value.trim();
+        const usernameCheck = document.getElementById('usernameCheck');
+        
+        if (username.length < 3) {
+            usernameCheck.style.display = 'none';
+            return;
+        }
+        
+        const users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const isTaken = users.some(user => user.username === username);
+        
+        if (isTaken) {
+            usernameCheck.textContent = '❌ Username taken';
+            usernameCheck.className = 'username-check taken';
+            usernameCheck.style.display = 'block';
+        } else {
+            usernameCheck.textContent = '✅ Username available';
+            usernameCheck.className = 'username-check available';
+            usernameCheck.style.display = 'block';
+        }
+    }
+    
+    // Check password strength
+    function checkPasswordStrength() {
+        const password = document.getElementById('password').value;
+        const strengthMeter = document.getElementById('passwordStrength');
+        
+        // Reset
+        strengthMeter.className = 'strength-meter';
+        
+        if (password.length === 0) return;
+        
+        let strength = 0;
+        
+        // Length check
+        if (password.length >= 8) strength += 1;
+        if (password.length >= 12) strength += 1;
+        
+        // Complexity checks
+        if (/[A-Z]/.test(password)) strength += 1;
+        if (/[a-z]/.test(password)) strength += 1;
+        if (/[0-9]/.test(password)) strength += 1;
+        if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+        
+        // Update strength meter
+        if (strength <= 2) {
+            strengthMeter.className = 'strength-meter weak';
+        } else if (strength <= 4) {
+            strengthMeter.className = 'strength-meter fair';
+        } else {
+            strengthMeter.className = 'strength-meter strong';
+        }
+        
+        checkPasswordMatch();
+    }
+    
+    // Check password match
+    function checkPasswordMatch() {
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        const matchElement = document.getElementById('passwordMatch');
+        const registerBtn = document.getElementById('registerBtn');
+        
+        if (confirmPassword.length === 0) {
+            matchElement.textContent = '';
+            registerBtn.disabled = false;
+            return;
+        }
+        
+        if (password === confirmPassword) {
+            matchElement.textContent = '✅ Passwords match';
+            matchElement.style.color = '#48bb78';
+            registerBtn.disabled = false;
+        } else {
+            matchElement.textContent = '❌ Passwords do not match';
+            matchElement.style.color = '#f56565';
+            registerBtn.disabled = true;
+        }
+    }
+    
     // Show error message
     function showError(message) {
         const errorEl = document.getElementById('errorMessage');
@@ -471,15 +722,34 @@
         return users.some(user => user.username === username);
     }
     
+    // Validate password strength
+    function validatePassword(password) {
+        if (password.length < 8) {
+            return "Password must be at least 8 characters long";
+        }
+        
+        if (!/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
+            return "Password must contain both uppercase and lowercase letters";
+        }
+        
+        if (!/[0-9]/.test(password)) {
+            return "Password must contain at least one number";
+        }
+        
+        return null; // No error
+    }
+    
     // Register new user
     function register() {
         const name = document.getElementById('name').value.trim();
         const faculty = document.getElementById('faculty').value;
         const username = document.getElementById('username').value.trim();
         const level = document.getElementById('level').value;
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
         
         // Validation
-        if (!name || !faculty || !username || !level) {
+        if (!name || !faculty || !username || !level || !password || !confirmPassword) {
             showError("Please fill in all fields!");
             return;
         }
@@ -489,25 +759,38 @@
             return;
         }
         
+        // Check password strength
+        const passwordError = validatePassword(password);
+        if (passwordError) {
+            showError(passwordError);
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            showError("Passwords do not match!");
+            return;
+        }
+        
         if (usernameExists(username)) {
             showError("Username already taken! Please choose another one.");
             return;
         }
         
-        // Create user object
+        // Create user object with hashed password
         const userData = {
-            id: Date.now(),
+            id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
             name: name,
             faculty: faculty,
             username: username,
             level: level,
             avatar: name.charAt(0).toUpperCase(),
+            passwordHash: hashPassword(password), // Store hashed password
             joinedAt: new Date().toISOString(),
             lastLogin: new Date().toISOString()
         };
         
         // Get existing users
-        const users = JSON.parse(lStorage.getItem(STORAGE_KEY) || '[]');
+        const users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
         
         // Add new user
         users.push(userData);
@@ -515,8 +798,10 @@
         // Save to localStorage
         localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
         
-        // Also save as current user
-        localStorage.setItem('medsphere_chat_user', JSON.stringify(userData));
+        // Also save as current user (without password hash for security)
+        const userForSession = { ...userData };
+        delete userForSession.passwordHash; // Remove password hash from session
+        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userForSession));
         
         // Show success message
         showSuccess("Account created successfully! Opening chat room...");
@@ -526,24 +811,22 @@
         document.getElementById('faculty').value = '';
         document.getElementById('username').value = '';
         document.getElementById('level').value = '';
+        document.getElementById('password').value = '';
+        document.getElementById('confirmPassword').value = '';
         
-        // OPEN CHAT ROOM IMMEDIATELY (FIXED)
+        // Redirect to chat room
         setTimeout(() => {
-            const chatWindow = window.open('chat-room.html', '_blank');
-            if (!chatWindow || chatWindow.closed) {
-                showError("Popup blocked! Please allow popups for this site.");
-                // Alternative: Redirect current window
-                window.location.href = 'chat-room.html';
-            }
-        }, 500);
+            window.location.href = 'chat-room.html';
+        }, 1500);
     }
     
     // Login existing user
     function login() {
         const username = document.getElementById('loginUsername').value.trim();
+        const password = document.getElementById('loginPassword').value;
         
-        if (!username) {
-            showError("Please enter your username!");
+        if (!username || !password) {
+            showError("Please enter both username and password!");
             return;
         }
         
@@ -558,74 +841,43 @@
             return;
         }
         
+        // Verify password
+        const hashedPassword = hashPassword(password);
+        if (user.passwordHash !== hashedPassword) {
+            showError("Incorrect password! Please try again.");
+            return;
+        }
+        
         // Update last login time
         user.lastLogin = new Date().toISOString();
         localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
         
-        // Save as current user
-        localStorage.setItem('medsphere_chat_user', JSON.stringify(user));
+        // Save as current user (without password hash for security)
+        const userForSession = { ...user };
+        delete userForSession.passwordHash; // Remove password hash from session
+        localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userForSession));
         
         // Show success message
         showSuccess(`Welcome back, ${user.name}! Opening chat room...`);
         
         // Clear login form
         document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
         
-        // OPEN CHAT ROOM IMMEDIATELY (FIXED)
+        // Redirect to chat room
         setTimeout(() => {
-            const chatWindow = window.open('chat-room.html', '_blank');
-            if (!chatWindow || chatWindow.closed) {
-                showError("Popup blocked! Please allow popups for this site.");
-                // Alternative: Redirect current window
-                window.location.href = 'chat-room.html';
-            }
-        }, 500);
+            window.location.href = 'chat-room.html';
+        }, 1000);
     }
     
     // Check if user is already logged in
     function checkExistingLogin() {
-        const currentUser = localStorage.getItem('medsphere_chat_user');
+        const currentUser = localStorage.getItem(CURRENT_USER_KEY);
         if (currentUser) {
             showSuccess("You're already logged in! Opening chat...");
             setTimeout(() => {
-                const chatWindow = window.open('chat-room.html', '_blank');
-                if (!chatWindow || chatWindow.closed) {
-                    window.location.href = 'chat-room.html';
-                }
+                window.location.href = 'chat-room.html';
             }, 1000);
-        }
-    }
-    
-    // Auto-login for demo users (optional)
-    function setupDemoUsers() {
-        const users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        
-        if (users.length === 0) {
-            // Create some demo users
-            const demoUsers = [
-                {
-                    id: 1,
-                    name: "Alex Johnson",
-                    faculty: "Clinicals",
-                    username: "alexj",
-                    level: "300",
-                    avatar: "A",
-                    joinedAt: new Date().toISOString(),
-                    lastLogin: new Date().toISOString()
-                },
-                {
-                    id: 2,
-                    name: "Sarah Miller",
-                    faculty: "Nursing",
-                    username: "sarah_m",
-                    level: "400",
-                    avatar: "S",
-                    joinedAt: new Date().toISOString(),
-                    lastLogin: new Date().toISOString()
-                }
-            ];
-            
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(demoUsers));
         }
     }
     
@@ -644,7 +896,6 @@
     // Initialize on page load
     window.addEventListener('DOMContentLoaded', function() {
         initStorage();
-        setupDemoUsers();
         checkExistingLogin();
         
         // Auto-focus appropriate field
@@ -654,9 +905,6 @@
         } else {
             document.getElementById('name').focus();
         }
-        
-        // Test if we can open windows
-        console.log("Page loaded - chat system ready");
     });
 </script>
 </body>
