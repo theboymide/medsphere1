@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedSphere Chat - Register/Login</title>
+    <title>MedSphere Chat - Login Required</title>
     <style>
         * {
             margin: 0;
@@ -12,97 +12,43 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        /* NAVIGATION BAR */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
-        
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 70px;
-        }
-        
-        .nav-logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .nav-logo span {
-            font-size: 28px;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: #4a5568;
-            font-weight: 500;
-            transition: color 0.3s;
-            padding: 8px 15px;
-            border-radius: 8px;
-        }
-        
-        .nav-links a:hover {
-            color: #667eea;
-            background: #f7fafc;
-        }
-        
-        .nav-links a.active {
-            color: #667eea;
-            background: rgba(102, 126, 234, 0.1);
-        }
-        
-        .back-to-site {
-            background: #667eea;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background 0.3s;
-        }
-        
-        .back-to-site:hover {
-            background: #5a67d8;
-        }
-        
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 90px 20px 20px;
+            padding: 20px;
         }
         
-        .auth-container {
+        .login-container {
             background: white;
             border-radius: 20px;
             width: 100%;
             max-width: 450px;
             padding: 40px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo h1 {
+            color: #667eea;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .logo p {
+            color: #718096;
+            font-size: 16px;
         }
         
         .auth-tabs {
@@ -141,24 +87,10 @@
             display: block;
         }
         
-        .auth-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .auth-header h1 {
-            color: #4a5568;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-        
-        .auth-header p {
-            color: #718096;
-        }
-        
         .form-group {
             margin-bottom: 25px;
             position: relative;
+            text-align: left;
         }
         
         .form-group label {
@@ -215,42 +147,6 @@
             color: #f56565;
         }
         
-        .password-strength {
-            height: 4px;
-            background: #e2e8f0;
-            border-radius: 2px;
-            margin-top: 5px;
-            overflow: hidden;
-        }
-        
-        .strength-meter {
-            height: 100%;
-            width: 0;
-            border-radius: 2px;
-            transition: all 0.3s;
-        }
-        
-        .strength-meter.weak {
-            background: #f56565;
-            width: 33%;
-        }
-        
-        .strength-meter.fair {
-            background: #ed8936;
-            width: 66%;
-        }
-        
-        .strength-meter.strong {
-            background: #48bb78;
-            width: 100%;
-        }
-        
-        .password-hint {
-            font-size: 12px;
-            color: #718096;
-            margin-top: 5px;
-        }
-        
         .auth-btn {
             background: #667eea;
             color: white;
@@ -271,26 +167,24 @@
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
         
-        .auth-btn:disabled {
-            background: #a0aec0;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .forgot-password {
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .forgot-password a {
-            color: #667eea;
-            text-decoration: none;
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
             font-size: 14px;
         }
         
-        .forgot-password a:hover {
-            text-decoration: underline;
+        .success-message {
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            font-size: 14px;
         }
         
         .features {
@@ -328,74 +222,26 @@
             font-size: 14px;
             color: #4a5568;
         }
-        
-        .error-message {
-            background: #fed7d7;
-            color: #c53030;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-            font-size: 14px;
-        }
-        
-        .success-message {
-            background: #c6f6d5;
-            color: #22543d;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-            font-size: 14px;
-        }
-        
-        .demo-note {
-            background: #e6fffa;
-            color: #234e52;
-            padding: 10px;
-            border-radius: 8px;
-            font-size: 13px;
-            text-align: center;
-            margin-top: 15px;
-            border: 1px solid #81e6d9;
-        }
     </style>
 </head>
 <body>
-    <!-- NAVIGATION BAR -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="nav-logo">
-                <span>💬</span> MedSphere Chat
-            </a>
-            
-            <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="chat-register.html" class="active">Chat Login</a>
-                <a href="events.html">Events</a>
-                <a href="about.html">About</a>
-                <a href="index.html" class="back-to-site">← Back to Site</a>
-            </div>
-        </div>
-    </nav>
-    
-    <div class="auth-container">
-        <div class="auth-tabs">
-            <button class="auth-tab active" onclick="switchTab('login')">Login</button>
-            <button class="auth-tab" onclick="switchTab('register')">Register</button>
+    <div class="login-container">
+        <div class="logo">
+            <h1><span>💬</span> MedSphere Chat</h1>
+            <p>Login to join campus conversations</p>
         </div>
         
         <!-- ERROR/SUCCESS MESSAGES -->
         <div class="error-message" id="errorMessage"></div>
         <div class="success-message" id="successMessage"></div>
         
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchTab('login')">Login</button>
+            <button class="auth-tab" onclick="switchTab('register')">Register</button>
+        </div>
+        
         <!-- LOGIN FORM -->
         <div class="auth-form active" id="loginForm">
-            <div class="auth-header">
-                <h1>Welcome Back! 👋</h1>
-                <p>Login to join the campus chat</p>
-            </div>
-            
             <form id="loginFormElement">
                 <div class="form-group">
                     <label for="loginUsername">Username</label>
@@ -414,23 +260,10 @@
                     Login to Chat Room
                 </button>
             </form>
-            
-            <div class="demo-note">
-                Demo: Try username "demo" with password "password123"
-            </div>
-            
-            <div class="forgot-password">
-                <a href="#" onclick="switchTab('register')">Don't have an account? Register</a>
-            </div>
         </div>
         
         <!-- REGISTER FORM -->
         <div class="auth-form" id="registerForm">
-            <div class="auth-header">
-                <h1>Join Campus Chat 🎓</h1>
-                <p>Create your secure account</p>
-            </div>
-            
             <form id="registerFormElement">
                 <div class="form-group">
                     <label for="name">Full Name</label>
@@ -475,56 +308,43 @@
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="password" placeholder="Create a password" required oninput="checkPasswordStrength()">
+                        <input type="password" id="password" placeholder="Create a password (min 6 chars)" required>
                         <button type="button" class="toggle-password" onclick="togglePassword('password')">👁️</button>
                     </div>
-                    <div class="password-strength">
-                        <div class="strength-meter" id="passwordStrength"></div>
-                    </div>
-                    <div class="password-hint">Use at least 8 characters with letters and numbers</div>
                 </div>
                 
                 <div class="form-group">
                     <label for="confirmPassword">Confirm Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="confirmPassword" placeholder="Re-enter your password" required oninput="checkPasswordMatch()">
+                        <input type="password" id="confirmPassword" placeholder="Re-enter your password" required>
                         <button type="button" class="toggle-password" onclick="togglePassword('confirmPassword')">👁️</button>
                     </div>
-                    <div class="password-hint" id="passwordMatch"></div>
                 </div>
                 
-                <button type="button" class="auth-btn" id="registerBtn" onclick="register()">
+                <button type="button" class="auth-btn" onclick="register()">
                     Create Account & Join Chat
                 </button>
             </form>
-            
-            <div class="demo-note">
-                Note: All data is stored locally in your browser. Register once and stay logged in.
-            </div>
-            
-            <div class="forgot-password">
-                <a href="#" onclick="switchTab('login')">Already have an account? Login</a>
-            </div>
         </div>
         
         <div class="features">
-            <h3>Chat Features:</h3>
+            <h3>Live Chat Features:</h3>
             <div class="feature-list">
                 <div class="feature-item">
                     <span>💬</span>
                     <p>Real-time messaging</p>
                 </div>
                 <div class="feature-item">
-                    <span>🔒</span>
-                    <p>Secure with password</p>
-                </div>
-                <div class="feature-item">
                     <span>👥</span>
                     <p>See online students</p>
                 </div>
                 <div class="feature-item">
+                    <span>🔒</span>
+                    <p>Secure login</p>
+                </div>
+                <div class="feature-item">
                     <span>🎓</span>
-                    <p>Filter by faculty</p>
+                    <p>Campus network</p>
                 </div>
             </div>
         </div>
@@ -535,39 +355,21 @@
     const STORAGE_KEY = 'medsphere_users';
     const CURRENT_USER_KEY = 'medsphere_chat_user';
     
-    // Password hashing function (simple but effective for local storage)
+    // Simple password hashing for demo
     function hashPassword(password) {
-        // Simple hash for demo - in production use bcrypt or similar
         let hash = 0;
         for (let i = 0; i < password.length; i++) {
             const char = password.charCodeAt(i);
             hash = ((hash << 5) - hash) + char;
-            hash = hash & hash; // Convert to 32bit integer
+            hash = hash & hash;
         }
         return hash.toString();
     }
     
-    // Initialize users storage if empty
+    // Initialize storage
     function initStorage() {
         if (!localStorage.getItem(STORAGE_KEY)) {
             localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
-            
-            // Create demo user
-            const demoUsers = [
-                {
-                    id: 'demo_' + Date.now(),
-                    name: "Demo User",
-                    faculty: "Clinicals",
-                    username: "demo",
-                    level: "300",
-                    avatar: "D",
-                    passwordHash: hashPassword("password123"),
-                    joinedAt: new Date().toISOString(),
-                    lastLogin: new Date().toISOString()
-                }
-            ];
-            
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(demoUsers));
         }
     }
     
@@ -636,64 +438,6 @@
         }
     }
     
-    // Check password strength
-    function checkPasswordStrength() {
-        const password = document.getElementById('password').value;
-        const strengthMeter = document.getElementById('passwordStrength');
-        
-        // Reset
-        strengthMeter.className = 'strength-meter';
-        
-        if (password.length === 0) return;
-        
-        let strength = 0;
-        
-        // Length check
-        if (password.length >= 8) strength += 1;
-        if (password.length >= 12) strength += 1;
-        
-        // Complexity checks
-        if (/[A-Z]/.test(password)) strength += 1;
-        if (/[a-z]/.test(password)) strength += 1;
-        if (/[0-9]/.test(password)) strength += 1;
-        if (/[^A-Za-z0-9]/.test(password)) strength += 1;
-        
-        // Update strength meter
-        if (strength <= 2) {
-            strengthMeter.className = 'strength-meter weak';
-        } else if (strength <= 4) {
-            strengthMeter.className = 'strength-meter fair';
-        } else {
-            strengthMeter.className = 'strength-meter strong';
-        }
-        
-        checkPasswordMatch();
-    }
-    
-    // Check password match
-    function checkPasswordMatch() {
-        const password = document.getElementById('password').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-        const matchElement = document.getElementById('passwordMatch');
-        const registerBtn = document.getElementById('registerBtn');
-        
-        if (confirmPassword.length === 0) {
-            matchElement.textContent = '';
-            registerBtn.disabled = false;
-            return;
-        }
-        
-        if (password === confirmPassword) {
-            matchElement.textContent = '✅ Passwords match';
-            matchElement.style.color = '#48bb78';
-            registerBtn.disabled = false;
-        } else {
-            matchElement.textContent = '❌ Passwords do not match';
-            matchElement.style.color = '#f56565';
-            registerBtn.disabled = true;
-        }
-    }
-    
     // Show error message
     function showError(message) {
         const errorEl = document.getElementById('errorMessage');
@@ -716,29 +460,6 @@
         document.getElementById('successMessage').style.display = 'none';
     }
     
-    // Check if username exists
-    function usernameExists(username) {
-        const users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        return users.some(user => user.username === username);
-    }
-    
-    // Validate password strength
-    function validatePassword(password) {
-        if (password.length < 8) {
-            return "Password must be at least 8 characters long";
-        }
-        
-        if (!/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
-            return "Password must contain both uppercase and lowercase letters";
-        }
-        
-        if (!/[0-9]/.test(password)) {
-            return "Password must contain at least one number";
-        }
-        
-        return null; // No error
-    }
-    
     // Register new user
     function register() {
         const name = document.getElementById('name').value.trim();
@@ -759,10 +480,8 @@
             return;
         }
         
-        // Check password strength
-        const passwordError = validatePassword(password);
-        if (passwordError) {
-            showError(passwordError);
+        if (password.length < 6) {
+            showError("Password must be at least 6 characters!");
             return;
         }
         
@@ -771,12 +490,16 @@
             return;
         }
         
-        if (usernameExists(username)) {
+        // Check if username exists
+        const users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        const isTaken = users.some(user => user.username === username);
+        
+        if (isTaken) {
             showError("Username already taken! Please choose another one.");
             return;
         }
         
-        // Create user object with hashed password
+        // Create user object
         const userData = {
             id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
             name: name,
@@ -784,27 +507,21 @@
             username: username,
             level: level,
             avatar: name.charAt(0).toUpperCase(),
-            passwordHash: hashPassword(password), // Store hashed password
+            passwordHash: hashPassword(password),
             joinedAt: new Date().toISOString(),
             lastLogin: new Date().toISOString()
         };
         
-        // Get existing users
-        const users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        
-        // Add new user
+        // Add to users list
         users.push(userData);
-        
-        // Save to localStorage
         localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
         
-        // Also save as current user (without password hash for security)
+        // Save as current user (without password hash)
         const userForSession = { ...userData };
-        delete userForSession.passwordHash; // Remove password hash from session
+        delete userForSession.passwordHash;
         localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userForSession));
         
-        // Show success message
-        showSuccess("Account created successfully! Opening chat room...");
+        showSuccess("✅ Account created! Redirecting to chat...");
         
         // Clear form
         document.getElementById('name').value = '';
@@ -814,7 +531,7 @@
         document.getElementById('password').value = '';
         document.getElementById('confirmPassword').value = '';
         
-        // Redirect to chat room
+        // Redirect to chat
         setTimeout(() => {
             window.location.href = 'chat-room.html';
         }, 1500);
@@ -826,59 +543,40 @@
         const password = document.getElementById('loginPassword').value;
         
         if (!username || !password) {
-            showError("Please enter both username and password!");
+            showError("Please enter username and password!");
             return;
         }
         
-        // Get all users
         const users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-        
-        // Find user
         const user = users.find(u => u.username === username);
         
         if (!user) {
-            showError("Username not found! Please register first.");
+            showError("Username not found!");
             return;
         }
         
         // Verify password
         const hashedPassword = hashPassword(password);
         if (user.passwordHash !== hashedPassword) {
-            showError("Incorrect password! Please try again.");
+            showError("Incorrect password!");
             return;
         }
         
-        // Update last login time
+        // Update last login
         user.lastLogin = new Date().toISOString();
         localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
         
-        // Save as current user (without password hash for security)
+        // Save as current user (without password hash)
         const userForSession = { ...user };
-        delete userForSession.passwordHash; // Remove password hash from session
+        delete userForSession.passwordHash;
         localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(userForSession));
         
-        // Show success message
-        showSuccess(`Welcome back, ${user.name}! Opening chat room...`);
+        showSuccess(`✅ Welcome back, ${user.name}!`);
         
-        // Clear login form
-        document.getElementById('loginUsername').value = '';
-        document.getElementById('loginPassword').value = '';
-        
-        // Redirect to chat room
+        // Redirect to chat
         setTimeout(() => {
             window.location.href = 'chat-room.html';
         }, 1000);
-    }
-    
-    // Check if user is already logged in
-    function checkExistingLogin() {
-        const currentUser = localStorage.getItem(CURRENT_USER_KEY);
-        if (currentUser) {
-            showSuccess("You're already logged in! Opening chat...");
-            setTimeout(() => {
-                window.location.href = 'chat-room.html';
-            }, 1000);
-        }
     }
     
     // Handle Enter key
@@ -896,15 +594,9 @@
     // Initialize on page load
     window.addEventListener('DOMContentLoaded', function() {
         initStorage();
-        checkExistingLogin();
         
-        // Auto-focus appropriate field
-        const activeForm = document.querySelector('.auth-form.active');
-        if (activeForm.id === 'loginForm') {
-            document.getElementById('loginUsername').focus();
-        } else {
-            document.getElementById('name').focus();
-        }
+        // Auto-focus
+        document.getElementById('loginUsername').focus();
     });
 </script>
 </body>
