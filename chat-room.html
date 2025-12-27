@@ -979,6 +979,40 @@ body {
             transform: translateY(-3px);
             box-shadow: 0 12px 30px rgba(102, 126, 234, 0.5);
         }
+        /* SIDEBAR FOOTER */
+.sidebar-footer {
+    padding: 20px 25px;
+    border-top: 1px solid rgba(102, 126, 234, 0.1);
+    margin-top: auto;
+}
+
+.home-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    text-decoration: none;
+    padding: 16px 20px;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    justify-content: center;
+}
+
+.home-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.home-btn:active {
+    transform: translateY(-1px);
+}
     </style>
 </head>
 <body>
@@ -1006,6 +1040,7 @@ body {
         <div class="sidebar-header">
             <h2>Live Campus Chat</h2>
             <p>Connect with fellow students</p>
+            
         </div>
         
         <div class="user-profile">
@@ -1031,6 +1066,12 @@ body {
                 <div class="loading">
                     <div class="loading-spinner"></div>
                     Loading online users...
+                    <!-- Add this right after the online-section div ends -->
+<div class="sidebar-footer">
+    <a href="index.html" class="home-btn">
+        <span>🏠</span> Back to Home
+    </a>
+</div>
                 </div>
             </div>
         </div>
