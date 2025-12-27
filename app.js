@@ -13,14 +13,17 @@ class LiveChat {
         // Initialize Firebase (Example - you would replace with your config)
         /*
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-        
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyA2pkU1z1e5pTpULhd6sgup8lbwXbr03BY",
+  authDomain: "themedsphere-6eb04.firebaseapp.com",
+  databaseURL: "https://themedsphere-6eb04-default-rtdb.firebaseio.com",
+  projectId: "themedsphere-6eb04",
+  storageBucket: "themedsphere-6eb04.firebasestorage.app",
+  messagingSenderId: "473174812224",
+  appId: "1:473174812224:web:29141fe8c80f34b456a1a5",
+  measurementId: "G-P6W5RN5CSS"
+};
         firebase.initializeApp(firebaseConfig);
         this.db = firebase.firestore();
         this.auth = firebase.auth();
