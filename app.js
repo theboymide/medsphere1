@@ -346,6 +346,160 @@ function initAnimations() {
     });
 }
 
+
+
+
+
+
+// BRANDS MANAGEMENT SYSTEM
+class BrandManager {
+    constructor() {
+        this.brandsKey = 'medsphere_brands';
+        this.init();
+    }
+    
+    init() {
+        // Sample brands for demo (you'll remove this)
+        if (!localStorage.getItem(this.brandsKey)) {
+            const sampleBrands = [
+                {
+                    id: 1,
+                    name: "Campus Food Hub",
+                    category: "Food & Drinks",
+                    price: "₦500 - ₦3,000",
+                    info: "Delicious meals delivered to your hostel. Breakfast, lunch, and dinner available.",
+                    location: "Near Main Gate",
+                    image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&h=300&fit=crop",
+                    featured: true
+                },
+                {
+                    id: 2,
+                    name: "Study Buddy Tutors",
+                    category: "Education",
+                    price: "₦2,000/hour",
+                    info: "Professional tutoring for all courses. Group discounts available.",
+                    location: "Online & Library",
+                    image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w-400&h=300&fit=crop",
+                    featured: true
+                },
+                {
+                    id: 3,
+                    name: "Dorm Essentials",
+                    category: "Shopping",
+                    price: "₦1,500 - ₦15,000",
+                    info: "Everything you need for your dorm room. Delivery in 2 hours.",
+                    location: "Student Mall",
+                    image: "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=400&h=300&fit=crop",
+                    featured: false
+                }
+            ];
+            localStorage.setItem(this.brandsKey, JSON.stringify(sampleBrands));
+        }
+    }
+    
+    getAllBrands() {
+        return JSON.parse(localStorage.getItem(this.brandsKey) || '[]');
+    }
+    
+    getFeaturedBrands() {
+        const brands = this.getAllBrands();
+        return brands.filter(brand => brand.featured);
+    }
+    
+    addBrand(brand) {
+        const brands = this.getAllBrands();
+        brand.id = Date.now();
+        brand.featured = true;
+        brands.push(brand);
+        localStorage.setItem(this.brandsKey, JSON.stringify(brands));
+        this.displayBrands();
+    }
+    
+    displayBrands() {
+        const brands = this.getAllBrands();
+        const container = document.getElementById('brandsGrid');
+        
+        if (!container) return;
+        
+        if (brands.length === 0) {
+            container.innerHTML = `
+                <div class="no-brands">
+                    <div style="font-size: 60px; margin-bottom: 20px;">🏪</div>
+                    <h3>No Sponsored Brands Yet</h3>
+                    <p>Be the first to promote your business!</p>
+                    <a href="https://wa.me/message/ASKFQBQND5AHJ1" class="whatsapp-btn" style="margin-top: 20px;">
+                        <span>💬</span> Contact to Feature Your Business
+                    </a>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = brands.map(brand => `
+            <div class="brand-card ${brand.featured ? 'featured' : ''}">
+                <div class="brand-image">
+                    <img src="${brand.image}" alt="${brand.name}" onerror="this.src='https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(brand.name)}'">
+                </div>
+                <div class="brand-content">
+                    <div class="brand-category">${brand.category}</div>
+                    <h3 class="brand-name">${brand.name}</h3>
+                    <div class="brand-price">${brand.price}</div>
+                    <p class="brand-info">${brand.info}</p>
+                    <div class="brand-location">${brand.location}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Admin functions (for you to manage brands)
+    removeBrand(id) {
+        const brands = this.getAllBrands();
+        const filtered = brands.filter(brand => brand.id !== id);
+        localStorage.setItem(this.brandsKey, JSON.stringify(filtered));
+        this.displayBrands();
+    }
+    
+    clearAllBrands() {
+        if (confirm('Remove all sponsored brands?')) {
+            localStorage.removeItem(this.brandsKey);
+            this.displayBrands();
+        }
+    }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    const brandManager = new BrandManager();
+    brandManager.displayBrands();
+    
+    // For you to add new brands (admin access)
+    window.addNewBrand = function() {
+        const newBrand = {
+            name: prompt("Business Name:"),
+            category: prompt("Category:"),
+            price: prompt("Price Range:"),
+            info: prompt("Description:"),
+            location: prompt("Location:"),
+            image: prompt("Image URL (optional):")
+        };
+        
+        if (newBrand.name && newBrand.category && newBrand.price) {
+            brandManager.addBrand(newBrand);
+            alert('Brand added successfully!');
+        }
+    };
+    
+    // For you to clear all brands
+    window.clearAllBrands = function() {
+        brandManager.clearAllBrands();
+    };
+});
+
+
+
+
+
+
 // Export for use in chat.html
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { LiveChat };
