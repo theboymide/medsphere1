@@ -3,562 +3,661 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedSphere - Join Chat</title>
+    <title>MedSphere Chat - Register/Login</title>
     <style>
-        :root {
-            --primary: #667eea;
-            --secondary: #764ba2;
-            --success: #48bb78;
-            --danger: #f56565;
-            --light: #f7fafc;
-            --dark: #2d3748;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        body {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
+        /* NAVIGATION BAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 400px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            animation: slideUp 0.5s ease;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
         }
         
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
         }
         
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .logo h1 {
-            color: var(--dark);
-            font-size: 28px;
+        .nav-logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+            text-decoration: none;
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 10px;
         }
         
-        .logo p {
-            color: #718096;
-            margin-top: 10px;
+        .nav-logo span {
+            font-size: 28px;
         }
         
-        .tabs {
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 8px 15px;
+            border-radius: 8px;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+            background: #f7fafc;
+        }
+        
+        .nav-links a.active {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .back-to-site {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        .back-to-site:hover {
+            background: #5a67d8;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 90px 20px 20px;
+        }
+        
+        .auth-container {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+        
+        .auth-tabs {
             display: flex;
             margin-bottom: 30px;
-            border-bottom: 2px solid #e2e8f0;
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 5px;
         }
         
-        .tab {
+        .auth-tab {
             flex: 1;
             padding: 15px;
             text-align: center;
-            background: none;
             border: none;
+            background: none;
             font-size: 16px;
             font-weight: 600;
-            color: #718096;
             cursor: pointer;
-            position: relative;
+            border-radius: 8px;
+            transition: all 0.3s;
+            color: #4a5568;
         }
         
-        .tab.active {
-            color: var(--primary);
+        .auth-tab.active {
+            background: white;
+            color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
         }
         
-        .tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--primary);
-        }
-        
-        .form {
+        .auth-form {
             display: none;
         }
         
-        .form.active {
+        .auth-form.active {
             display: block;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-header h1 {
+            color: #4a5568;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .auth-header p {
+            color: #718096;
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
-        label {
+        .form-group label {
             display: block;
-            color: var(--dark);
+            color: #4a5568;
             margin-bottom: 8px;
-            font-weight: 500;
+            font-weight: 600;
         }
         
-        input, select {
+        .form-group input, .form-group select {
             width: 100%;
-            padding: 14px;
+            padding: 15px;
             border: 2px solid #e2e8f0;
             border-radius: 10px;
             font-size: 16px;
             transition: all 0.3s;
         }
         
-        input:focus, select:focus {
+        .form-group input:focus, .form-group select:focus {
+            border-color: #667eea;
             outline: none;
-            border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
         
-        .avatar-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 36px;
-            font-weight: bold;
-            color: white;
-            overflow: hidden;
-            border: 4px solid white;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            cursor: pointer;
-        }
-        
-        .avatar-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .avatar-input {
-            display: none;
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        .auth-btn {
+            background: #667eea;
             color: white;
             border: none;
+            padding: 18px;
             border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            width: 100%;
             margin-top: 10px;
         }
         
-        .btn:hover {
-            opacity: 0.9;
+        .auth-btn:hover {
+            background: #5a67d8;
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
         }
         
-        .btn-secondary {
-            background: #e2e8f0;
-            color: var(--dark);
+        .forgot-password {
+            text-align: center;
+            margin-top: 20px;
         }
         
-        .message {
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        .features {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+        }
+        
+        .features h3 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .feature-item {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .feature-item span {
+            font-size: 24px;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .feature-item p {
+            font-size: 14px;
+            color: #4a5568;
+        }
+        
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
             padding: 12px;
             border-radius: 8px;
             margin-bottom: 20px;
-            text-align: center;
-            font-size: 14px;
             display: none;
+            font-size: 14px;
         }
         
-        .message.success {
-            background: rgba(72, 187, 120, 0.1);
-            color: var(--success);
-            display: block;
-        }
-        
-        .message.error {
-            background: rgba(245, 101, 101, 0.1);
-            color: var(--danger);
-            display: block;
-        }
-        
-        .switch-text {
-            text-align: center;
-            margin-top: 20px;
-            color: #718096;
-        }
-        
-        .switch-text a {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        
-        .users-list {
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 10px;
+        .success-message {
+            background: #c6f6d5;
+            color: #22543d;
+            padding: 12px;
+            border-radius: 8px;
             margin-bottom: 20px;
-        }
-        
-        .user-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            border-bottom: 1px solid #e2e8f0;
-            cursor: pointer;
-        }
-        
-        .user-item:last-child {
-            border-bottom: none;
-        }
-        
-        .user-item:hover {
-            background: #f8f9fa;
-        }
-        
-        .user-avatar-small {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
+            display: none;
             font-size: 14px;
-            overflow: hidden;
-        }
-        
-        .user-avatar-small img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .user-info h4 {
-            color: var(--dark);
-            font-size: 14px;
-            margin-bottom: 2px;
-        }
-        
-        .user-info p {
-            color: #718096;
-            font-size: 12px;
-        }
-        
-        @media (max-width: 480px) {
-            .container {
-                padding: 30px 20px;
-            }
-            
-            input, select {
-                padding: 12px;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <h1><span>💬</span> MedSphere</h1>
-            <p>Live Campus Chat</p>
+    <!-- NAVIGATION BAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <span>💬</span> MedSphere Chat
+            </a>
+            
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="chat-register.html" class="active">Chat Login</a>
+                <a href="events.html">Events</a>
+                <a href="about.html">About</a>
+                <a href="index.html" class="back-to-site">← Back to Site</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="auth-container">
+        <div class="auth-tabs">
+            <button class="auth-tab active" onclick="switchTab('login')">Login</button>
+            <button class="auth-tab" onclick="switchTab('register')">Register</button>
         </div>
         
-        <div class="tabs">
-            <button class="tab active" onclick="showTab('register')">Register</button>
-            <button class="tab" onclick="showTab('login')">Login</button>
+        <!-- ERROR/SUCCESS MESSAGES -->
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+        
+        <!-- LOGIN FORM -->
+        <div class="auth-form active" id="loginForm">
+            <div class="auth-header">
+                <h1>Welcome Back! 👋</h1>
+                <p>Login to join the campus chat</p>
+            </div>
+            
+            <form id="loginFormElement">
+                <div class="form-group">
+                    <label for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" placeholder="Enter your username" required>
+                </div>
+                
+                <button type="button" class="auth-btn" onclick="login()">
+                    Login to Chat Room
+                </button>
+            </form>
+            
+            <div class="forgot-password">
+                <a href="#" onclick="switchTab('register')">Don't have an account? Register</a>
+            </div>
         </div>
         
         <!-- REGISTER FORM -->
-        <div class="form active" id="registerForm">
-            <div class="message" id="registerMessage"></div>
-            
-            <input type="file" id="avatarInput" class="avatar-input" accept="image/*" onchange="previewAvatar(event)">
-            <div class="avatar-preview" onclick="document.getElementById('avatarInput').click()" id="avatarPreview">
-                ?
+        <div class="auth-form" id="registerForm">
+            <div class="auth-header">
+                <h1>Join Campus Chat 🎓</h1>
+                <p>Create your account in 30 seconds</p>
             </div>
             
-            <div class="form-group">
-                <label for="registerName">Full Name</label>
-                <input type="text" id="registerName" placeholder="Enter your full name" required>
+            <form id="registerFormElement">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" placeholder="Enter your full name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="faculty">Faculty</label>
+                    <select id="faculty" required>
+                        <option value="">Select Faculty</option>
+                        <option value="Clinicals">Clinicals</option>
+                        <option value="Dentistry">Dentistry</option>
+                        <option value="Medical Rehabilitation">Medical Rehabilitation</option>
+                        <option value="Nursing">Nursing</option>
+                        <option value="Allied Health">Allied Health</option>
+                        <option value="Community Health">Community Health</option>
+                        <option value="Pharmacy">Pharmacy</option>
+                        <option value="Sciences">Sciences</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Choose a username" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="level">Level/Year</label>
+                    <select id="level" required>
+                        <option value="">Select Level</option>
+                        <option value="100">100 Level</option>
+                        <option value="200">200 Level</option>
+                        <option value="300">300 Level</option>
+                        <option value="400">400 Level</option>
+                        <option value="500">500 Level</option>
+                        <option value="600">600 Level</option>
+                    </select>
+                </div>
+                
+                <button type="button" class="auth-btn" onclick="register()">
+                    Create Account & Join Chat
+                </button>
+            </form>
+            
+            <div class="forgot-password">
+                <a href="#" onclick="switchTab('login')">Already have an account? Login</a>
             </div>
-            
-            <div class="form-group">
-                <label for="registerUsername">Username</label>
-                <input type="text" id="registerUsername" placeholder="Choose a username" required>
-                <small style="color: #718096; font-size: 12px;">Username must be unique</small>
-            </div>
-            
-            <div class="form-group">
-                <label for="registerFaculty">Faculty</label>
-                <select id="registerFaculty" required>
-                    <option value="">Select Faculty</option>
-                    <option value="Community Health">Community Health</option>
-                    <option value="Clinicals">Clinicals</option>
-                    <option value="Dentistry">Dentistry</option>
-                    <option value="Medical Rehabilitation">Medical Rehabilitation</option>
-                    <option value="Nursing">Nursing</option>
-                    <option value="Allied Health">Allied Health</option>
-                    <option value="Pharmacy">Pharmacy</option>
-                    <option value="Sciences">Sciences</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="registerLevel">Level/Year</label>
-                <select id="registerLevel" required>
-                    <option value="">Select Level</option>
-                    <option value="100">100 Level</option>
-                    <option value="200">200 Level</option>
-                    <option value="300">300 Level</option>
-                    <option value="400">400 Level</option>
-                    <option value="500">500 Level</option>
-                    <option value="600">600 Level</option>
-                </select>
-            </div>
-            
-            <button class="btn" onclick="registerUser()">Create Account & Join Chat</button>
-            
-            <p class="switch-text">
-                Already have an account? <a onclick="showTab('login')">Login here</a>
-            </p>
         </div>
         
-        <!-- LOGIN FORM -->
-        <div class="form" id="loginForm">
-            <div class="message" id="loginMessage"></div>
-            
-            <div class="users-list" id="usersList">
-                <!-- Saved users will appear here -->
+        <div class="features">
+            <h3>Chat Features:</h3>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <span>💬</span>
+                    <p>Real-time messaging</p>
+                </div>
+                <div class="feature-item">
+                    <span>📷</span>
+                    <p>Share images & files</p>
+                </div>
+                <div class="feature-item">
+                    <span>👥</span>
+                    <p>See online students</p>
+                </div>
+                <div class="feature-item">
+                    <span>🎓</span>
+                    <p>Filter by faculty</p>
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label for="loginUsername">Username</label>
-                <input type="text" id="loginUsername" placeholder="Enter your username" required>
-            </div>
-            
-            <button class="btn" onclick="loginUser()">Login to Chat</button>
-            
-            <p class="switch-text">
-                New user? <a onclick="showTab('register')">Register here</a>
-            </p>
         </div>
     </div>
 
-    <script>
 <script>
-    let avatarData = null;
+    // User data management
+    const STORAGE_KEY = 'medsphere_users';
     
-    function showTab(tabName) {
+    // Initialize users storage if empty
+    function initStorage() {
+        if (!localStorage.getItem(STORAGE_KEY)) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+        }
+    }
+    
+    // Switch between login and register tabs
+    function switchTab(tab) {
         // Update tabs
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.classList.remove('active');
+        document.querySelectorAll('.auth-tab').forEach(t => {
+            t.classList.remove('active');
+            if (t.textContent.toLowerCase().includes(tab)) {
+                t.classList.add('active');
+            }
         });
         
-        if (tabName === 'register') {
-            document.querySelector('.tab:nth-child(1)').classList.add('active');
-            document.getElementById('registerForm').classList.add('active');
-            document.getElementById('loginForm').classList.remove('active');
-        } else {
-            document.querySelector('.tab:nth-child(2)').classList.add('active');
+        // Update forms
+        document.querySelectorAll('.auth-form').forEach(form => {
+            form.classList.remove('active');
+        });
+        
+        if (tab === 'login') {
             document.getElementById('loginForm').classList.add('active');
-            document.getElementById('registerForm').classList.remove('active');
+            document.getElementById('loginUsername').focus();
+        } else {
+            document.getElementById('registerForm').classList.add('active');
+            document.getElementById('name').focus();
         }
         
-        // Load saved users for login
-        loadSavedUsers();
+        // Clear messages
+        hideMessages();
     }
     
-    function previewAvatar(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-        
-        // Check file size (max 1MB)
-        if (file.size > 1024 * 1024) {
-            showMessage('register', '❌ Image must be less than 1MB', 'error');
-            return;
-        }
-        
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            avatarData = e.target.result;
-            const preview = document.getElementById('avatarPreview');
-            preview.innerHTML = `<img src="${avatarData}" alt="Avatar">`;
-            preview.style.background = 'none';
-        };
-        reader.readAsDataURL(file);
+    // Show error message
+    function showError(message) {
+        const errorEl = document.getElementById('errorMessage');
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+        document.getElementById('successMessage').style.display = 'none';
     }
     
-    function registerUser() {
-        const name = document.getElementById('registerName').value.trim();
-        const username = document.getElementById('registerUsername').value.trim();
-        const faculty = document.getElementById('registerFaculty').value;
-        const level = document.getElementById('registerLevel').value;
+    // Show success message
+    function showSuccess(message) {
+        const successEl = document.getElementById('successMessage');
+        successEl.textContent = message;
+        successEl.style.display = 'block';
+        document.getElementById('errorMessage').style.display = 'none';
+    }
+    
+    // Hide all messages
+    function hideMessages() {
+        document.getElementById('errorMessage').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'none';
+    }
+    
+    // Check if username exists
+    function usernameExists(username) {
+        const users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        return users.some(user => user.username === username);
+    }
+    
+    // Register new user
+    function register() {
+        const name = document.getElementById('name').value.trim();
+        const faculty = document.getElementById('faculty').value;
+        const username = document.getElementById('username').value.trim();
+        const level = document.getElementById('level').value;
         
         // Validation
-        if (!name || !username || !faculty || !level) {
-            showMessage('register', '❌ Please fill in all fields', 'error');
+        if (!name || !faculty || !username || !level) {
+            showError("Please fill in all fields!");
             return;
         }
         
         if (username.length < 3) {
-            showMessage('register', '❌ Username must be at least 3 characters', 'error');
+            showError("Username must be at least 3 characters!");
             return;
         }
         
-        // Check if username already exists
-        const existingUsers = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
-        const isTaken = existingUsers.some(user => user.username.toLowerCase() === username.toLowerCase());
-        
-        if (isTaken) {
-            showMessage('register', '❌ Username already taken', 'error');
+        if (usernameExists(username)) {
+            showError("Username already taken! Please choose another one.");
             return;
         }
         
         // Create user object
-        const user = {
-            id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+        const userData = {
+            id: Date.now(),
             name: name,
-            username: username,
             faculty: faculty,
+            username: username,
             level: level,
             avatar: name.charAt(0).toUpperCase(),
-            profileImage: avatarData,
-            createdAt: Date.now(),
-            lastLogin: Date.now()
+            joinedAt: new Date().toISOString(),
+            lastLogin: new Date().toISOString()
         };
         
+        // Get existing users
+        const users = JSON.parse(lStorage.getItem(STORAGE_KEY) || '[]');
+        
+        // Add new user
+        users.push(userData);
+        
         // Save to localStorage
-        existingUsers.push(user);
-        localStorage.setItem('medsphere_users', JSON.stringify(existingUsers));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
         
-        // Set as current user
-        localStorage.setItem('medsphere_current_user', JSON.stringify(user));
+        // Also save as current user
+        localStorage.setItem('medsphere_chat_user', JSON.stringify(userData));
         
-        showMessage('register', '✅ Account created! Redirecting to chat...', 'success');
+        // Show success message
+        showSuccess("Account created successfully! Opening chat room...");
         
-        // CORRECTED: Redirect to chat-room.html (not chat.html)
+        // Clear form
+        document.getElementById('name').value = '';
+        document.getElementById('faculty').value = '';
+        document.getElementById('username').value = '';
+        document.getElementById('level').value = '';
+        
+        // OPEN CHAT ROOM IMMEDIATELY (FIXED)
         setTimeout(() => {
-            window.location.href = 'chat-room.html';
-        }, 1500);
+            const chatWindow = window.open('chat-room.html', '_blank');
+            if (!chatWindow || chatWindow.closed) {
+                showError("Popup blocked! Please allow popups for this site.");
+                // Alternative: Redirect current window
+                window.location.href = 'chat-room.html';
+            }
+        }, 500);
     }
     
-    function loadSavedUsers() {
-        const usersList = document.getElementById('usersList');
-        const existingUsers = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
-        
-        if (existingUsers.length === 0) {
-            usersList.innerHTML = '<div style="text-align: center; color: #718096; padding: 20px;">No saved users found</div>';
-            return;
-        }
-        
-        usersList.innerHTML = '';
-        
-        existingUsers.forEach(user => {
-            const userDiv = document.createElement('div');
-            userDiv.className = 'user-item';
-            userDiv.onclick = () => selectUser(user.username);
-            
-            userDiv.innerHTML = `
-                <div class="user-avatar-small">
-                    ${user.profileImage ? 
-                        `<img src="${user.profileImage}" alt="${user.name}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` : 
-                        user.avatar}
-                </div>
-                <div class="user-info">
-                    <h4>${user.name}</h4>
-                    <p>@${user.username} • ${user.faculty} • Level ${user.level}</p>
-                </div>
-            `;
-            
-            usersList.appendChild(userDiv);
-        });
-    }
-    
-    function selectUser(username) {
-        document.getElementById('loginUsername').value = username;
-    }
-    
-    function loginUser() {
+    // Login existing user
+    function login() {
         const username = document.getElementById('loginUsername').value.trim();
         
         if (!username) {
-            showMessage('login', '❌ Please enter username', 'error');
+            showError("Please enter your username!");
             return;
         }
         
-        const existingUsers = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
-        const user = existingUsers.find(u => u.username.toLowerCase() === username.toLowerCase());
+        // Get all users
+        const users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        
+        // Find user
+        const user = users.find(u => u.username === username);
         
         if (!user) {
-            showMessage('login', '❌ User not found', 'error');
+            showError("Username not found! Please register first.");
             return;
         }
         
-        // Update last login
-        user.lastLogin = Date.now();
-        localStorage.setItem('medsphere_users', JSON.stringify(existingUsers));
+        // Update last login time
+        user.lastLogin = new Date().toISOString();
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(users));
         
-        // Set as current user
-        localStorage.setItem('medsphere_current_user', JSON.stringify(user));
+        // Save as current user
+        localStorage.setItem('medsphere_chat_user', JSON.stringify(user));
         
-        showMessage('login', '✅ Welcome back! Redirecting...', 'success');
+        // Show success message
+        showSuccess(`Welcome back, ${user.name}! Opening chat room...`);
         
-        // CORRECTED: Redirect to chat-room.html (not chat.html)
+        // Clear login form
+        document.getElementById('loginUsername').value = '';
+        
+        // OPEN CHAT ROOM IMMEDIATELY (FIXED)
         setTimeout(() => {
-            window.location.href = 'chat-room.html';
-        }, 1000);
+            const chatWindow = window.open('chat-room.html', '_blank');
+            if (!chatWindow || chatWindow.closed) {
+                showError("Popup blocked! Please allow popups for this site.");
+                // Alternative: Redirect current window
+                window.location.href = 'chat-room.html';
+            }
+        }, 500);
     }
     
-    function showMessage(form, text, type) {
-        const messageDiv = document.getElementById(form + 'Message');
-        messageDiv.textContent = text;
-        messageDiv.className = `message ${type}`;
-        
-        // Clear message after 3 seconds
-        setTimeout(() => {
-            messageDiv.className = 'message';
-        }, 3000);
+    // Check if user is already logged in
+    function checkExistingLogin() {
+        const currentUser = localStorage.getItem('medsphere_chat_user');
+        if (currentUser) {
+            showSuccess("You're already logged in! Opening chat...");
+            setTimeout(() => {
+                const chatWindow = window.open('chat-room.html', '_blank');
+                if (!chatWindow || chatWindow.closed) {
+                    window.location.href = 'chat-room.html';
+                }
+            }, 1000);
+        }
     }
     
-    // Load saved users on page load
-    document.addEventListener('DOMContentLoaded', loadSavedUsers);
+    // Auto-login for demo users (optional)
+    function setupDemoUsers() {
+        const users = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        
+        if (users.length === 0) {
+            // Create some demo users
+            const demoUsers = [
+                {
+                    id: 1,
+                    name: "Alex Johnson",
+                    faculty: "Clinicals",
+                    username: "alexj",
+                    level: "300",
+                    avatar: "A",
+                    joinedAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                },
+                {
+                    id: 2,
+                    name: "Sarah Miller",
+                    faculty: "Nursing",
+                    username: "sarah_m",
+                    level: "400",
+                    avatar: "S",
+                    joinedAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                }
+            ];
+            
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(demoUsers));
+        }
+    }
+    
+    // Handle Enter key
+    document.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const activeForm = document.querySelector('.auth-form.active');
+            if (activeForm.id === 'loginForm') {
+                login();
+            } else {
+                register();
+            }
+        }
+    });
+    
+    // Initialize on page load
+    window.addEventListener('DOMContentLoaded', function() {
+        initStorage();
+        setupDemoUsers();
+        checkExistingLogin();
+        
+        // Auto-focus appropriate field
+        const activeForm = document.querySelector('.auth-form.active');
+        if (activeForm.id === 'loginForm') {
+            document.getElementById('loginUsername').focus();
+        } else {
+            document.getElementById('name').focus();
+        }
+        
+        // Test if we can open windows
+        console.log("Page loaded - chat system ready");
+    });
 </script>
 </body>
 </html>
