@@ -605,41 +605,6 @@
             }
         }
         
-        /* LOGOUT MODAL */
-        .logout-modal .modal-content {
-            max-width: 300px;
-        }
-        
-        .modal-body {
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .modal-btn {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-        
-        .modal-btn-cancel {
-            background: #e9ecef;
-            color: var(--dark);
-        }
-        
-        .modal-btn-confirm {
-            background: var(--danger);
-            color: white;
-        }
-        
         /* SCROLLBAR */
         ::-webkit-scrollbar {
             width: 4px;
@@ -839,10 +804,18 @@
                         Edit Profile
                     </button>
                 </div>
-                <div style="margin-top: 15px;">
-                    <button style="width: 100%; padding: 12px; background: var(--danger); color: white; border: none; border-radius: 8px; cursor: pointer;" onclick="showLogoutModal()">
+
+                <!-- LOGOUT SECTION -->
+                <div style="margin-top: 15px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
+                    <button onclick="manualLogout()" 
+                            style="width: 100%; padding: 12px; background: #f8f9fa; 
+                                   color: var(--danger); border: 1px solid #e2e8f0; 
+                                   border-radius: 8px; cursor: pointer; font-weight: 600;">
                         🚪 Logout
                     </button>
+                    <p style="color: var(--gray); font-size: 12px; text-align: center; margin-top: 5px;">
+                        Auto-logout after 30 minutes of inactivity
+                    </p>
                 </div>
             </div>
         </div>
@@ -904,27 +877,6 @@
             </div>
         </div>
     </div>
-    
-    <!-- LOGOUT MODAL -->
-    <div class="modal logout-modal" id="logoutModal">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div style="font-size: 48px; margin-bottom: 20px;">🚪</div>
-                <h3 style="margin-bottom: 10px;">Logout from Chat?</h3>
-                <p style="color: var(--gray); margin-bottom: 20px;">
-                    You will be removed from online users and will need to login again to continue chatting.
-                </p>
-                <div class="modal-actions">
-                    <button class="modal-btn modal-btn-cancel" onclick="closeLogoutModal()">
-                        Cancel
-                    </button>
-                    <button class="modal-btn modal-btn-confirm" onclick="logout()">
-                        Logout
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -943,37 +895,142 @@
             measurementId: "G-P6W5RN5CSS"
         };
         
-        // Global variables
-        let database, messagesRef, onlineUsersRef, userOnlineRef;
-        let currentUser = {
-            id: localStorage.getItem('medsphere_user_id') || 'user_' + Date.now(),
-            name: 'Modex',
-            username: 'Modex',
-            faculty: 'Community Health',
-            level: '100',
-            avatar: 'M',
-            profileImage: null
-        };
-        let stickersVisible = false;
+        // ========== AUTHENTICATION CHECK ==========
+        function checkAuthentication() {
+            const savedUser = localStorage.getItem('medsphere_current_user');
+            
+            if (!savedUser) {
+                window.location.href = 'register.html';
+                return false;
+            }
+            
+            try {
+                const user = JSON.parse(savedUser);
+                if (!user.id || !user.name || !user.username) {
+                    localStorage.removeItem('medsphere_current_user');
+                    window.location.href = 'register.html';
+                    return false;
+                }
+                return user;
+            } catch (error) {
+                console.error('Error parsing user data:', error);
+                localStorage.removeItem('medsphere_current_user');
+                window.location.href = 'register.html';
+                return false;
+            }
+        }
         
-        // Save user ID for persistence
-        if (!localStorage.getItem('medsphere_user_id')) {
-            localStorage.setItem('medsphere_user_id', currentUser.id);
+        // Load current user
+        let currentUser = checkAuthentication();
+        if (!currentUser) {
+            throw new Error('User not authenticated');
+        }
+        
+        // Initialize user properties
+        currentUser = {
+            id: currentUser.id,
+            name: currentUser.name || 'User',
+            username: currentUser.username || 'user',
+            faculty: currentUser.faculty || 'Community Health',
+            level: currentUser.level || '100',
+            avatar: currentUser.avatar || (currentUser.name || 'U').charAt(0).toUpperCase(),
+            profileImage: currentUser.profileImage || null
+        };
+        
+        // Global Firebase variables
+        let database, messagesRef, onlineUsersRef, userOnlineRef;
+        
+        // ========== AUTO-LOGOUT FEATURES ==========
+        let inactivityTimer;
+        
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+                autoLogout('inactivity');
+            }, 30 * 60 * 1000);
+        }
+        
+        function setupAutoLogout() {
+            const events = ['mousemove', 'keypress', 'click', 'scroll', 'touchstart'];
+            events.forEach(event => {
+                document.addEventListener(event, resetInactivityTimer);
+            });
+            
+            resetInactivityTimer();
+            
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) {
+                    setTimeout(() => {
+                        if (document.hidden && !inactivityTimer._destroyed) {
+                            autoLogout('tab_switch');
+                        }
+                    }, 10 * 60 * 1000);
+                } else {
+                    resetInactivityTimer();
+                }
+            });
+        }
+        
+        function autoLogout(reason) {
+            console.log('Auto-logout due to:', reason);
+            
+            if (inactivityTimer) inactivityTimer._destroyed = true;
+            
+            if (userOnlineRef) {
+                userOnlineRef.remove();
+            }
+            
+            localStorage.removeItem('medsphere_current_user');
+            
+            if (reason !== 'tab_switch') {
+                alert('You have been logged out due to inactivity (30 minutes).');
+            }
+            
+            setTimeout(() => {
+                window.location.href = 'register.html';
+            }, 500);
+        }
+        
+        function manualLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                if (inactivityTimer) {
+                    clearTimeout(inactivityTimer);
+                    inactivityTimer._destroyed = true;
+                }
+                
+                if (userOnlineRef) {
+                    userOnlineRef.remove();
+                }
+                
+                localStorage.removeItem('medsphere_current_user');
+                
+                const logoutMessage = {
+                    type: 'system',
+                    text: `👋 ${currentUser.name} has left the chat.`,
+                    name: 'System',
+                    timestamp: Date.now()
+                };
+                
+                if (messagesRef) {
+                    messagesRef.push(logoutMessage);
+                }
+                
+                setTimeout(() => {
+                    window.location.href = 'register.html';
+                }, 300);
+            }
         }
         
         // ========== PROFILE PICTURE FUNCTIONS ==========
-        
         function handleImageUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
             
-            // Check file size (max 1MB)
             if (file.size > 1024 * 1024) {
                 alert('❌ Image must be less than 1MB');
                 return;
             }
             
-            // Check file type
             if (!file.type.startsWith('image/')) {
                 alert('❌ Please select an image file (JPG, PNG, GIF)');
                 return;
@@ -981,18 +1038,10 @@
             
             const reader = new FileReader();
             reader.onload = function(e) {
-                // Save image data to currentUser object
                 currentUser.profileImage = e.target.result;
-                
-                // Update all avatar displays immediately
                 updateAllAvatars(e.target.result);
-                
-                // Save to localStorage
                 saveUserToLocalStorage();
-                
-                // Update in Firebase (if online)
                 updateUserInFirebase();
-                
                 alert('✅ Profile picture updated!');
             };
             
@@ -1004,14 +1053,7 @@
         }
         
         function updateAllAvatars(imageData) {
-            // Update all avatar displays
-            const avatars = [
-                'navAvatar',
-                'profileAvatar', 
-                'modalAvatar',
-                'editAvatar'
-            ];
-            
+            const avatars = ['navAvatar', 'profileAvatar', 'modalAvatar', 'editAvatar'];
             avatars.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {
@@ -1022,10 +1064,8 @@
         }
         
         function saveUserToLocalStorage() {
-            // Save user to localStorage for persistence
-            localStorage.setItem('medsphere_user', JSON.stringify(currentUser));
+            localStorage.setItem('medsphere_current_user', JSON.stringify(currentUser));
             
-            // Also save to users list
             const users = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
             const userIndex = users.findIndex(u => u.id === currentUser.id);
             if (userIndex !== -1) {
@@ -1039,7 +1079,6 @@
         function updateUserInFirebase() {
             if (!onlineUsersRef) return;
             
-            // Update user data in Firebase
             const userUpdate = {
                 name: currentUser.name,
                 username: currentUser.username,
@@ -1057,15 +1096,13 @@
         }
         
         function loadSavedUser() {
-            // Try to load user from localStorage
-            const savedUser = localStorage.getItem('medsphere_user');
+            const savedUser = localStorage.getItem('medsphere_current_user');
             
             if (savedUser) {
                 try {
                     const parsedUser = JSON.parse(savedUser);
                     currentUser = { ...currentUser, ...parsedUser };
                     
-                    // If user has saved profile image, update avatars
                     if (currentUser.profileImage) {
                         updateAllAvatars(currentUser.profileImage);
                     }
@@ -1076,12 +1113,10 @@
                 }
             }
             
-            // Update UI with user data
             updateUserUI();
         }
         
         // ========== UI FUNCTIONS ==========
-        
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('overlay');
@@ -1101,13 +1136,11 @@
             closeProfileModal();
             document.getElementById('editProfileModal').classList.add('active');
             
-            // Fill current values
             document.getElementById('editName').value = currentUser.name;
             document.getElementById('editUsername').value = currentUser.username;
             document.getElementById('editFaculty').value = currentUser.faculty;
             document.getElementById('editLevel').value = currentUser.level;
             
-            // Update avatar preview
             const editAvatar = document.getElementById('editAvatar');
             if (currentUser.profileImage) {
                 editAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
@@ -1128,7 +1161,6 @@
             const newLevel = document.getElementById('editLevel').value;
             const newAvatar = newName.charAt(0).toUpperCase();
             
-            // Update current user
             currentUser = {
                 ...currentUser,
                 name: newName,
@@ -1138,13 +1170,19 @@
                 avatar: newAvatar
             };
             
-            // Update UI
             updateUserUI();
             
             // Save to localStorage
-            saveUserToLocalStorage();
+            localStorage.setItem('medsphere_current_user', JSON.stringify(currentUser));
             
-            // Update Firebase
+            // Update in users list
+            const users = JSON.parse(localStorage.getItem('medsphere_users') || '[]');
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            if (userIndex !== -1) {
+                users[userIndex] = currentUser;
+                localStorage.setItem('medsphere_users', JSON.stringify(users));
+            }
+            
             updateUserInFirebase();
             
             closeEditModal();
@@ -1152,7 +1190,6 @@
         }
         
         function updateUserUI() {
-            // Update nav avatar
             const navAvatar = document.getElementById('navAvatar');
             if (currentUser.profileImage) {
                 navAvatar.innerHTML = `<img src="${currentUser.profileImage}" alt="Profile" 
@@ -1161,7 +1198,6 @@
                 navAvatar.textContent = currentUser.avatar;
             }
             
-            // Update profile section
             document.getElementById('profileName').textContent = currentUser.name;
             document.getElementById('profileUsername').textContent = '@' + currentUser.username;
             document.getElementById('profileDetails').textContent = `${currentUser.faculty} • Level ${currentUser.level}`;
@@ -1174,7 +1210,6 @@
                 profileAvatar.textContent = currentUser.avatar;
             }
             
-            // Update modal
             document.getElementById('modalName').textContent = currentUser.name;
             document.getElementById('modalUsername').textContent = '@' + currentUser.username;
             document.getElementById('modalFaculty').textContent = currentUser.faculty;
@@ -1189,59 +1224,8 @@
             }
         }
         
-        // ========== LOGOUT FUNCTION ==========
-        
-        function showLogoutModal() {
-            closeProfileModal();
-            document.getElementById('logoutModal').classList.add('active');
-        }
-        
-        function closeLogoutModal() {
-            document.getElementById('logoutModal').classList.remove('active');
-        }
-        
-        function logout() {
-            console.log("Logging out user:", currentUser.username);
-            
-            // Remove user from online list in Firebase
-            if (userOnlineRef) {
-                userOnlineRef.remove()
-                    .then(() => {
-                        console.log("User removed from online list");
-                    })
-                    .catch((error) => {
-                        console.error("Error removing user from online list:", error);
-                    });
-            }
-            
-            // Clear localStorage
-            localStorage.removeItem('medsphere_user');
-            localStorage.removeItem('medsphere_user_id');
-            
-            // Send logout system message
-            const logoutMessage = {
-                type: 'system',
-                text: `👋 ${currentUser.name} has left the chat.`,
-                name: 'System',
-                timestamp: Date.now()
-            };
-            
-            if (messagesRef) {
-                messagesRef.push(logoutMessage);
-            }
-            
-            // Close modal
-            closeLogoutModal();
-            
-            // Redirect to login/register page
-            setTimeout(() => {
-                window.location.href = 'index.html'; // Change to your login page
-                // If no login page, refresh to reset
-                // window.location.reload();
-            }, 1000);
-        }
-        
         // ========== STICKER FUNCTIONS ==========
+        let stickersVisible = false;
         
         function toggleStickers() {
             stickersVisible = !stickersVisible;
@@ -1283,12 +1267,10 @@
                 messagesRef.push(message);
             }
             
-            // Add to UI immediately
             addMessageToUI({...message, userId: currentUser.id});
         }
         
         // ========== MESSAGE FUNCTIONS ==========
-        
         function initApp() {
             try {
                 firebase.initializeApp(firebaseConfig);
@@ -1299,26 +1281,20 @@
                 
                 console.log('✅ Firebase initialized');
                 
-                // Mark user online
                 markUserOnline();
-                
-                // Load messages
                 loadMessages();
                 
-                // Listen for new messages
                 messagesRef.on('child_added', (snapshot) => {
                     const message = snapshot.val();
                     message.id = snapshot.key;
                     addMessageToUI(message);
                 });
                 
-                // Listen for message removal
                 messagesRef.on('child_removed', (snapshot) => {
                     const messageId = snapshot.key;
                     removeMessageFromUI(messageId);
                 });
                 
-                // Listen for online users
                 onlineUsersRef.on('value', (snapshot) => {
                     updateOnlineUsers(snapshot.val());
                 });
@@ -1337,12 +1313,9 @@
                 status: 'online'
             };
             
-            // Remove profileImage from Firebase data (too large)
             delete userData.profileImage;
             
             userOnlineRef.set(userData);
-            
-            // Remove on disconnect
             userOnlineRef.onDisconnect().remove();
         }
         
@@ -1360,7 +1333,6 @@
             let html = '';
             
             Object.values(users).forEach(user => {
-                // Skip if offline (more than 2 minutes)
                 if (Date.now() - user.lastSeen > 120000) return;
                 
                 count++;
@@ -1393,7 +1365,6 @@
             messagesRef.limitToLast(50).once('value', (snapshot) => {
                 const messages = snapshot.val();
                 if (!messages) {
-                    // Add welcome message if no messages exist
                     addWelcomeMessage();
                     return;
                 }
@@ -1425,7 +1396,6 @@
             const isSystem = message.type === 'system';
             const isSticker = message.type === 'sticker';
             
-            // Check if message already exists
             if (document.getElementById(`message-${message.id}`)) return;
             
             const messageDiv = document.createElement('div');
@@ -1500,8 +1470,6 @@
             }
         }
         
-        // ========== DELETE MESSAGE FUNCTION ==========
-        
         function deleteMessage(messageId) {
             if (!confirm('Are you sure you want to delete this message?')) return;
             
@@ -1515,7 +1483,6 @@
                         alert('Failed to delete message: ' + error.message);
                     });
             } else {
-                // If Firebase not available, remove from UI only
                 removeMessageFromUI(messageId);
             }
         }
@@ -1542,11 +1509,8 @@
                 messagesRef.push(message);
             }
             
-            // Clear input
             input.value = '';
             input.style.height = 'auto';
-            
-            // Add to UI immediately (will also be added by Firebase listener)
             addMessageToUI({...message, id: 'temp_' + Date.now(), userId: currentUser.id});
         }
         
@@ -1560,8 +1524,6 @@
             if (diff < 86400000) return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
         }
-        
-        // ========== SEARCH USERS ==========
         
         document.getElementById('searchUsers').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
@@ -1578,23 +1540,17 @@
             });
         });
         
-        // ========== INITIALIZATION ==========
-        
         document.addEventListener('DOMContentLoaded', function() {
-            // Load saved user first
             loadSavedUser();
-            
-            // Initialize Firebase app
             initApp();
+            setupAutoLogout();
             
-            // Auto-resize textarea
             const input = document.getElementById('messageInput');
             input.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = Math.min(this.scrollHeight, 100) + 'px';
             });
             
-            // Send on Enter (but allow Shift+Enter for new line)
             input.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
@@ -1602,22 +1558,17 @@
                 }
             });
             
-            // Set initial textarea height
             input.style.height = 'auto';
             input.style.height = input.scrollHeight + 'px';
-            
-            // Focus on input
             setTimeout(() => input.focus(), 500);
         });
         
-        // Handle page unload
         window.addEventListener('beforeunload', function() {
             if (userOnlineRef) {
                 userOnlineRef.remove();
             }
         });
         
-        // Handle tab visibility change
         document.addEventListener('visibilitychange', function() {
             if (userOnlineRef) {
                 if (document.hidden) {
