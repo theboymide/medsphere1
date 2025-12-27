@@ -13,7 +13,7 @@ class LiveChat {
         // Initialize Firebase (Example - you would replace with your config)
         /*
         const firebaseConfig = {
-    apiKey: "AIzaSyA8XaUNfLDq6PYJu-LC0y_5ClAkGNfrLaw",
+    apiKey: "API KEY",
     authDomain: "medsphere-c73e4.firebaseapp.com",
     projectId: "medsphere-c73e4",
     storageBucket: "medsphere-c73e4.firebasestorage.app",
