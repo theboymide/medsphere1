@@ -350,11 +350,13 @@
             </div>
         </div>
         <!-- Add this somewhere at the bottom of your homepage -->
-<div style="text-align: center; margin-top: 40px; font-size: 14px;">
-    <a href="admin-brands.html" style="color: #667eea; text-decoration: none;">
-        🔧 Admin Access
-    </a>
-</div>
+<a href="events-admin.html">Admin Dashboard</a>
+<!-- Simple Admin Link -->
+<a href="events-admin.html" class="admin-link" style="display: inline-block; margin: 20px; text-decoration: none;">
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 24px; border-radius: 8px; font-weight: 500; text-align: center;">
+        <span style="font-size: 18px;">⚙️</span> Admin Dashboard
+    </div>
+</a>
     </footer>
     
 
@@ -413,78 +415,6 @@
             behavior: 'smooth'
         });
     }
-</script>
-<script>
-// SPONSORED BRANDS SYSTEM
-function loadSponsoredBrands() {
-    const brands = JSON.parse(localStorage.getItem('medsphere_brands') || '[]');
-    const container = document.getElementById('brandsGrid');
-    
-    if (!container) return;
-    
-    // Remove expired brands automatically
-    const today = new Date().toISOString().split('T')[0];
-    const activeBrands = brands.filter(brand => {
-        if (!brand.expiry) return true;
-        return brand.expiry >= today;
-    });
-    
-    // Save only active brands
-    if (activeBrands.length < brands.length) {
-        localStorage.setItem('medsphere_brands', JSON.stringify(activeBrands));
-    }
-    
-    // Display brands
-    if (activeBrands.length === 0) {
-        container.innerHTML = `
-            <div style="grid-column: 1 / -1; text-align: center; padding: 60px;">
-                <div style="font-size: 80px; margin-bottom: 20px;">🏪</div>
-                <h3>No Sponsored Brands Yet</h3>
-                <p>Be the first to promote your business!</p>
-                <div style="margin-top: 30px;">
-            </div>
-        `;
-        return;
-    }
-    
-    // Show brands in grid
-    container.innerHTML = activeBrands.map(brand => `
-        <div class="brand-card">
-            <div class="brand-image">
-                <img src="${brand.image}" alt="${brand.name}" 
-                     onerror="this.src='https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(brand.name)}'">
-            </div>
-            <div class="brand-content">
-                ${brand.featured ? '<div class="featured-badge">⭐ FEATURED</div>' : ''}
-                <div class="brand-category">${brand.category}</div>
-                <h3 class="brand-name">${brand.name}</h3>
-                <div class="brand-price">${brand.price}</div>
-                <p class="brand-info">${brand.description}</p>
-                
-                <div class="brand-contact">
-                    <div class="brand-location">📍 ${brand.location}</div>
-                    <div class="brand-phone">📞 ${brand.phone}</div>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-// Initialize when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    loadSponsoredBrands();
-});
-
-// Auto-check for expired brands daily
-setInterval(function() {
-    const lastCheck = localStorage.getItem('last_expiry_check');
-    const today = new Date().toISOString().split('T')[0];
-    
-    if (!lastCheck || lastCheck !== today) {
-        loadSponsoredBrands();
-        localStorage.setItem('last_expiry_check', today);
-    }
-}, 60000); // Check every minute
 </script>
 </body>
 </html>
