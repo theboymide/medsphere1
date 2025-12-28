@@ -583,17 +583,23 @@
 </div>
 
 <script>
+// Add this at the TOP of your script
+localStorage.removeItem('admin_session'); // Force password every time
 // Password protection
 function checkAdminPassword() {
     const password = document.getElementById('admin-password').value;
     const correctPassword = localStorage.getItem('admin_password') || 'campus123';
     
     if (password === correctPassword) {
+        // Hide password screen
         document.getElementById('password-protection').style.display = 'none';
-        // Save password for future sessions (24 hours)
-        const expiry = new Date();
-        expiry.setTime(expiry.getTime() + (24 * 60 * 60 * 1000));
-        document.cookie = `admin_auth=true; expires=${expiry.toUTCString()}; path=/`;
+        
+        // Create session in localStorage (24 hours)
+        const session = {
+            loggedIn: true,
+            expiry: new Date().getTime() + (24 * 60 * 60 * 1000)
+        };
+        localStorage.setItem('admin_session', JSON.stringify(session));
     } else {
         alert('❌ Incorrect password!');
     }
@@ -601,14 +607,25 @@ function checkAdminPassword() {
 
 // Check if already authenticated
 document.addEventListener('DOMContentLoaded', function() {
-    const cookies = document.cookie.split(';');
-    const adminAuth = cookies.find(cookie => cookie.trim().startsWith('admin_auth='));
+    // ALWAYS show password screen first
+    document.getElementById('password-protection').style.display = 'flex';
     
-    if (adminAuth && adminAuth.includes('true')) {
-        document.getElementById('password-protection').style.display = 'none';
+    // Then check if we have valid session
+    const session = localStorage.getItem('admin_session');
+    if (session) {
+        const sessionData = JSON.parse(session);
+        const now = new Date().getTime();
+        
+        if (now < sessionData.expiry) {
+            // Session is valid, hide password screen
+            document.getElementById('password-protection').style.display = 'none';
+        } else {
+            // Session expired, remove it
+            localStorage.removeItem('admin_session');
+        }
     }
     
-    // You can change the default password here
+    // Set default password if not set
     if (!localStorage.getItem('admin_password')) {
         localStorage.setItem('admin_password', 'campus123');
     }
