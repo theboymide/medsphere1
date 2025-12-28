@@ -5,112 +5,1387 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Campus Management</title>
     <style>
-        /* ... keep all your existing CSS ... */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .admin-header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .header-left p {
+            color: #666;
+            font-size: 16px;
+        }
+        
+        .header-right {
+            text-align: right;
+        }
+        
+        .stats-summary {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .admin-panel {
+            background: white;
+            padding: 30px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-top: 2px;
+        }
+        
+        /* Navigation Tabs */
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            background: #f5f5f5;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn:hover {
+            background: #e9e9e9;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Form Containers */
+        .form-container {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        /* Image Preview */
+        .image-preview-container {
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .image-preview {
+            max-width: 300px;
+            max-height: 200px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            margin-top: 10px;
+        }
+        
+        /* Category Badges */
+        .category-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .category-option {
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .category-option:hover {
+            background: #e0e0e0;
+        }
+        
+        .category-option.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+        
+        /* Form Buttons */
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+        
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        
+        /* Items List */
+        .items-list {
+            margin-top: 30px;
+        }
+        
+        .items-list h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .item-card {
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            transition: all 0.3s ease;
+        }
+        
+        .item-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.1);
+        }
+        
+        .item-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .item-info {
+            flex: 1;
+        }
+        
+        .item-info h4 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+        
+        .item-info p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .item-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .date-badge {
+            background: #f0f5ff;
+            color: #667eea;
+        }
+        
+        .type-badge {
+            background: #f0fff4;
+            color: #52c41a;
+        }
+        
+        .featured-badge {
+            background: #fff7e6;
+            color: #fa8c16;
+        }
+        
+        .item-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        
+        .btn-small {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-edit {
+            background: #e8f4ff;
+            color: #1890ff;
+        }
+        
+        .btn-delete {
+            background: #ffe8e8;
+            color: #ff4d4f;
+        }
+        
+        .btn-edit:hover {
+            background: #d0e8ff;
+        }
+        
+        .btn-delete:hover {
+            background: #ffd0d0;
+        }
+        
+        /* Brands Grid */
+        .brands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .brand-card {
+            border: 2px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .brand-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .brand-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .brand-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .brand-content {
+            padding: 20px;
+        }
+        
+        .brand-name {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .brand-category {
+            display: inline-block;
+            background: #f0f5ff;
+            color: #667eea;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .brand-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #52c41a;
+            margin-bottom: 10px;
+        }
+        
+        .brand-info {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .brand-contact {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        
+        .brand-location,
+        .brand-phone {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        /* Checkbox Styles */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            transform: scale(1.2);
+        }
+        
+        /* Preview */
+        .preview-container {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .preview-container h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .preview-event {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #eee;
+        }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .dashboard-card {
+            background: white;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            padding: 25px;
+        }
+        
+        .dashboard-card h3 {
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Image Placeholder */
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+        
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+        }
+        
+        .empty-state-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .item-card {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .item-image {
+                width: 100%;
+                height: 200px;
+                margin-right: 0;
+            }
+            
+            .item-actions {
+                align-self: flex-end;
+            }
+            
+            .stats-summary {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .admin-header {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .header-right {
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Password Protection Screen -->
-    <div id="password-protection" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: none; align-items: center; justify-content: center; z-index: 9999;">
-        <div style="background: white; padding: 40px; border-radius: 15px; text-align: center; width: 90%; max-width: 400px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-            <div style="font-size: 50px; margin-bottom: 20px; color: #667eea;">
-                🔒
+    <div class="admin-container">
+        <div class="admin-header">
+            <div class="header-left">
+                <h1>🏫 Campus Management Dashboard</h1>
+                <p>Manage events and sponsored brands in one place</p>
             </div>
-            <h2 style="color: #333; margin-bottom: 10px;">Admin Access Required</h2>
-            <p style="color: #666; margin-bottom: 25px;">Enter password to access dashboard</p>
-            
-            <input type="password" id="admin-password" 
-                   placeholder="Enter admin password" 
-                   style="width: 100%; padding: 12px 15px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 20px;"
-                   onkeypress="if(event.key === 'Enter') checkAdminPassword()">
-            
-            <button onclick="checkAdminPassword()" 
-                    style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
-                Enter Dashboard
-            </button>
-            
-            <p style="color: #999; font-size: 12px; margin-top: 20px;">
-                Default password: campus123<br>
-                <button onclick="resetPassword()" style="background: none; border: none; color: #667eea; cursor: pointer; font-size: 12px; margin-top: 10px;">
-                    Reset to default password
-                </button>
-            </p>
+            <div class="header-right">
+                <div class="stats-summary">
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-events">0</div>
+                        <div class="stat-label">Events</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-brands">0</div>
+                        <div class="stat-label">Sponsored Brands</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="featured-items">0</div>
+                        <div class="stat-label">Featured</div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- Your existing admin container -->
-    <div class="admin-container" style="display: none;">
-        <!-- ... keep all your existing admin content ... -->
+        
+        <div class="admin-panel">
+            <!-- Navigation Tabs -->
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="switchTab('dashboard')">📊 Dashboard</button>
+                <button class="tab-btn" onclick="switchTab('add-event')">📅 Add Event</button>
+                <button class="tab-btn" onclick="switchTab('manage-events')">🗓️ Manage Events</button>
+                <button class="tab-btn" onclick="switchTab('add-brand')">🏪 Add Brand</button>
+                <button class="tab-btn" onclick="switchTab('manage-brands')">🏬 Manage Brands</button>
+            </div>
+            
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>📈 Quick Stats</h3>
+                        <div class="form-group">
+                            <label>Total Events:</label>
+                            <div id="stat-total-events" style="font-size: 32px; color: #667eea; font-weight: bold;">0</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Active Brands:</label>
+                            <div id="stat-active-brands" style="font-size: 32px; color: #52c41a; font-weight: bold;">0</div>
+                        </div>
+                        <div class="form-group">
+                            <label>Upcoming Events:</label>
+                            <div id="stat-upcoming-events" style="font-size: 32px; color: #fa8c16; font-weight: bold;">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <h3>⏰ Recent Activity</h3>
+                        <div id="recent-activity" style="color: #666;">
+                            <p>Loading recent activity...</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <h3>🚀 Quick Actions</h3>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="btn btn-primary" onclick="switchTab('add-event')">
+                                ➕ Add New Event
+                            </button>
+                            <button class="btn btn-primary" onclick="switchTab('add-brand')">
+                                ➕ Add New Brand
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearAllData()">
+                                🗑️ Clear All Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h3>📋 Upcoming Events</h3>
+                    <div id="dashboard-events">
+                        <p style="color: #666;">Loading upcoming events...</p>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card">
+                    <h3>🏢 Active Brands</h3>
+                    <div id="dashboard-brands">
+                        <p style="color: #666;">Loading active brands...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add Event Tab -->
+            <div id="add-event" class="tab-content">
+                <div class="form-container">
+                    <h2 style="color: #333; margin-bottom: 20px;">Add New Campus Event</h2>
+                    
+                    <div class="form-group">
+                        <label>Event Title</label>
+                        <input type="text" id="event-title" placeholder="e.g., Annual Career Fair 2025">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Event Date (Optional)</label>
+                            <input type="date" id="event-date">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Event Type (Optional)</label>
+                            <select id="event-type">
+                                <option value="">Select type (Optional)</option>
+                                <option value="career">Career</option>
+                                <option value="technology">Technology</option>
+                                <option value="academic">Academic</option>
+                                <option value="social">Social</option>
+                                <option value="sports">Sports</option>
+                                <option value="cultural">Cultural</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Location (Optional)</label>
+                            <input type="text" id="event-location" placeholder="e.g., Main Auditorium">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Time (Optional)</label>
+                            <input type="text" id="event-time" placeholder="e.g., 10:00 AM – 4:00 PM">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Event Image URL (Optional)</label>
+                        <input type="url" id="event-image" placeholder="https://example.com/event-image.jpg" 
+                               oninput="showImagePreview(this.value, 'event-preview-image')">
+                        <div class="image-preview-container" id="event-image-preview">
+                            <small style="color: #666;">Image Preview:</small>
+                            <img id="event-preview-image" class="image-preview" src="" alt="Preview" 
+                                 onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Category (Optional)</label>
+                        <div class="category-options">
+                            <div class="category-option" onclick="selectCategory(this, 'event')" data-category="regular">Regular</div>
+                            <div class="category-option" onclick="selectCategory(this, 'event')" data-category="featured">Featured</div>
+                        </div>
+                        <input type="hidden" id="event-category" value="regular">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Event Description (Optional)</label>
+                        <textarea id="event-description" rows="4" placeholder="Describe the event..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Button Text (Optional)</label>
+                        <input type="text" id="event-button" placeholder="e.g., Register Now, Join Workshop">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="clearEventForm()">Clear Form</button>
+                        <button type="button" class="btn btn-primary" onclick="addEvent()">Add Event</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Manage Events Tab -->
+            <div id="manage-events" class="tab-content">
+                <div class="items-list">
+                    <h3>Upcoming Events</h3>
+                    <div id="events-container">
+                        <!-- Events will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Add Brand Tab -->
+            <div id="add-brand" class="tab-content">
+                <div class="form-container">
+                    <h2 style="color: #333; margin-bottom: 20px;">Add Sponsored Brand</h2>
+                    
+                    <div class="form-group">
+                        <label>Brand/Business Name</label>
+                        <input type="text" id="brand-name" placeholder="e.g., Tech Solutions Inc.">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Category (Optional)</label>
+                            <select id="brand-category">
+                                <option value="">Select category (Optional)</option>
+                                <option value="food">Food & Dining</option>
+                                <option value="retail">Retail</option>
+                                <option value="services">Services</option>
+                                <option value="technology">Technology</option>
+                                <option value="health">Health & Wellness</option>
+                                <option value="education">Education</option>
+                                <option value="entertainment">Entertainment</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Price/Plan (Optional)</label>
+                            <input type="text" id="brand-price" placeholder="e.g., $99/month, Free Trial">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Contact Phone (Optional)</label>
+                            <input type="tel" id="brand-phone" placeholder="e.g., (123) 456-7890">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Location (Optional)</label>
+                            <input type="text" id="brand-location" placeholder="e.g., 123 Main St, Campus">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Brand Image URL (Optional)</label>
+                        <input type="url" id="brand-image" placeholder="https://example.com/brand-logo.jpg"
+                               oninput="showImagePreview(this.value, 'brand-preview-image')">
+                        <div class="image-preview-container" id="brand-image-preview">
+                            <small style="color: #666;">Image Preview:</small>
+                            <img id="brand-preview-image" class="image-preview" src="" alt="Preview"
+                                 onerror="this.style.display='none'">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Description (Optional)</label>
+                        <textarea id="brand-description" rows="4" placeholder="Describe your business..."></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Expiry Date (Optional)</label>
+                            <input type="date" id="brand-expiry">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Featured Listing (Optional)</label>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="brand-featured">
+                                <label for="brand-featured">Mark as featured (⭐)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="clearBrandForm()">Clear Form</button>
+                        <button type="button" class="btn btn-primary" onclick="addBrand()">Add Brand</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Manage Brands Tab -->
+            <div id="manage-brands" class="tab-content">
+                <div class="items-list">
+                    <h3>Sponsored Brands</h3>
+                    <div id="brands-container">
+                        <!-- Brands will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
         // ======================
-        // PASSWORD MANAGEMENT
+        // DATA MANAGEMENT SYSTEM
         // ======================
         
-        // Set default password if not set
-        if (!localStorage.getItem('admin_password')) {
-            localStorage.setItem('admin_password', 'campus123');
+        // Events data (from localStorage)
+        let events = JSON.parse(localStorage.getItem('campus_events') || '[]');
+        
+        // Brands data (from localStorage - your existing system)
+        let brands = JSON.parse(localStorage.getItem('medsphere_brands') || '[]');
+        
+        // ======================
+        // UTILITY FUNCTIONS
+        // ======================
+        
+        function saveEvents() {
+            localStorage.setItem('campus_events', JSON.stringify(events));
+            updateDashboardStats();
         }
         
-        function checkAdminPassword() {
-            const passwordInput = document.getElementById('admin-password');
-            const password = passwordInput.value;
-            const correctPassword = localStorage.getItem('admin_password');
+        function saveBrands() {
+            localStorage.setItem('medsphere_brands', JSON.stringify(brands));
+            updateDashboardStats();
+        }
+        
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-US', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+        
+        function getTodayDate() {
+            return new Date().toISOString().split('T')[0];
+        }
+        
+        // Image preview function
+        function showImagePreview(url, previewId) {
+            const previewContainer = event.target.parentElement.querySelector('.image-preview-container');
+            const previewImg = document.getElementById(previewId);
             
-            if (password === correctPassword) {
-                // Create session that lasts 24 hours
-                const session = {
-                    loggedIn: true,
-                    expiry: new Date().getTime() + (24 * 60 * 60 * 1000) // 24 hours
-                };
-                localStorage.setItem('admin_session', JSON.stringify(session));
-                
-                // Hide password screen, show dashboard
-                document.getElementById('password-protection').style.display = 'none';
-                document.querySelector('.admin-container').style.display = 'block';
-                
-                // Clear password field
-                passwordInput.value = '';
+            if (url && url.startsWith('http')) {
+                previewImg.src = url;
+                previewContainer.style.display = 'block';
+                previewImg.style.display = 'block';
             } else {
-                alert('❌ Incorrect password!');
-                passwordInput.focus();
-                passwordInput.select();
+                previewContainer.style.display = 'none';
             }
         }
         
-        function resetPassword() {
-            if (confirm('Reset password to default (campus123)?')) {
-                localStorage.setItem('admin_password', 'campus123');
-                alert('✅ Password reset to "campus123"');
-                document.getElementById('admin-password').value = 'campus123';
-            }
-        }
-        
-        function checkExistingSession() {
-            const session = localStorage.getItem('admin_session');
+        // Generate placeholder image URL for events
+        function getEventPlaceholderImage(title, type) {
+            const colors = {
+                career: '4A90E2',
+                technology: '7B1FA2',
+                academic: '388E3C',
+                social: 'F57C00',
+                sports: 'D32F2F',
+                cultural: '5D4037'
+            };
             
-            if (session) {
-                const sessionData = JSON.parse(session);
-                const now = new Date().getTime();
-                
-                if (now < sessionData.expiry) {
-                    // Session is valid
-                    document.getElementById('password-protection').style.display = 'none';
-                    document.querySelector('.admin-container').style.display = 'block';
-                    return true;
-                } else {
-                    // Session expired
-                    localStorage.removeItem('admin_session');
-                }
-            }
-            return false;
+            const color = colors[type] || '667eea';
+            const encodedTitle = encodeURIComponent(title.substring(0, 20));
+            return `https://via.placeholder.com/400x300/${color}/ffffff?text=${encodedTitle}`;
         }
         
-        function logout() {
-            localStorage.removeItem('admin_session');
-            document.getElementById('password-protection').style.display = 'flex';
-            document.querySelector('.admin-container').style.display = 'none';
-            alert('Logged out successfully');
+        // Generate placeholder image URL for brands
+        function getBrandPlaceholderImage(name, category) {
+            const colors = {
+                food: 'E91E63',
+                retail: '2196F3',
+                services: '4CAF50',
+                technology: '9C27B0',
+                health: '00BCD4',
+                education: 'FF9800',
+                entertainment: '795548'
+            };
+            
+            const color = colors[category] || '667eea';
+            const encodedName = encodeURIComponent(name.substring(0, 20));
+            return `https://via.placeholder.com/400x300/${color}/ffffff?text=${encodedName}`;
+        }
+        
+        // ======================
+        // TAB MANAGEMENT
+        // ======================
+        
+        function switchTab(tabId) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to selected tab
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Update content based on tab
+            switch(tabId) {
+                case 'dashboard':
+                    updateDashboard();
+                    break;
+                case 'manage-events':
+                    loadEventsList();
+                    break;
+                case 'manage-brands':
+                    loadBrandsList();
+                    break;
+                case 'add-event':
+                    initEventForm();
+                    break;
+                case 'add-brand':
+                    initBrandForm();
+                    break;
+            }
+        }
+        
+        // ======================
+        // DASHBOARD FUNCTIONS
+        // ======================
+        
+        function updateDashboard() {
+            updateDashboardStats();
+            loadDashboardEvents();
+            loadDashboardBrands();
+            updateRecentActivity();
+        }
+        
+        function updateDashboardStats() {
+            const totalEvents = events.length;
+            const totalBrands = brands.length;
+            const featuredCount = events.filter(e => e.category === 'featured').length + 
+                                  brands.filter(b => b.featured).length;
+            
+            const today = getTodayDate();
+            const upcomingEvents = events.filter(e => e.date >= today).length;
+            const activeBrands = brands.filter(b => {
+                if (!b.expiry) return true;
+                return b.expiry >= today;
+            }).length;
+            
+            // Update header stats
+            document.getElementById('total-events').textContent = totalEvents;
+            document.getElementById('total-brands').textContent = totalBrands;
+            document.getElementById('featured-items').textContent = featuredCount;
+            
+            // Update dashboard stats
+            document.getElementById('stat-total-events').textContent = totalEvents;
+            document.getElementById('stat-active-brands').textContent = activeBrands;
+            document.getElementById('stat-upcoming-events').textContent = upcomingEvents;
+        }
+        
+        function loadDashboardEvents() {
+            const container = document.getElementById('dashboard-events');
+            const today = getTodayDate();
+            
+            const upcomingEvents = events
+                .filter(e => e.date >= today)
+                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .slice(0, 5);
+            
+            if (upcomingEvents.length === 0) {
+                container.innerHTML = '<p style="color: #666;">No upcoming events</p>';
+                return;
+            }
+            
+            container.innerHTML = upcomingEvents.map(event => {
+                const eventImage = event.image || getEventPlaceholderImage(event.title, event.type);
+                return `
+                <div style="display: flex; padding: 10px 0; border-bottom: 1px solid #eee; align-items: center;">
+                    <div style="width: 60px; height: 60px; border-radius: 8px; overflow: hidden; margin-right: 15px; flex-shrink: 0;">
+                        <img src="${eventImage}" alt="${event.title}" style="width: 100%; height: 100%; object-fit: cover;"
+                             onerror="this.src='${getEventPlaceholderImage(event.title, event.type)}'">
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>${event.title}</strong>
+                                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                                    📅 ${formatDate(event.date)} | 📍 ${event.location}
+                                </div>
+                            </div>
+                            ${event.category === 'featured' ? '<span style="background: #fff7e6; color: #fa8c16; padding: 2px 8px; border-radius: 10px; font-size: 12px;">⭐</span>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+        
+        function loadDashboardBrands() {
+            const container = document.getElementById('dashboard-brands');
+            const today = getTodayDate();
+            
+            const activeBrands = brands
+                .filter(b => {
+                    if (!b.expiry) return true;
+                    return b.expiry >= today;
+                })
+                .slice(0, 5);
+            
+            if (activeBrands.length === 0) {
+                container.innerHTML = '<p style="color: #666;">No active brands</p>';
+                return;
+            }
+            
+            container.innerHTML = activeBrands.map(brand => {
+                const brandImage = brand.image || getBrandPlaceholderImage(brand.name, brand.category);
+                return `
+                <div style="display: flex; padding: 10px 0; border-bottom: 1px solid #eee; align-items: center;">
+                    <div style="width: 60px; height: 60px; border-radius: 8px; overflow: hidden; margin-right: 15px; flex-shrink: 0;">
+                        <img src="${brandImage}" alt="${brand.name}" style="width: 100%; height: 100%; object-fit: cover;"
+                             onerror="this.src='${getBrandPlaceholderImage(brand.name, brand.category)}'">
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>${brand.name}</strong>
+                                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                                    🏷️ ${brand.category} | 📍 ${brand.location}
+                                </div>
+                            </div>
+                            ${brand.featured ? '<span style="background: #fff7e6; color: #fa8c16; padding: 2px 8px; border-radius: 10px; font-size: 12px;">⭐</span>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+        
+        function updateRecentActivity() {
+            const container = document.getElementById('recent-activity');
+            const today = new Date();
+            
+            const recentEvents = [...events]
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 3);
+            
+            const recentBrands = [...brands]
+                .sort((a, b) => {
+                    const dateA = b.expiry ? new Date(b.expiry) : new Date();
+                    const dateB = a.expiry ? new Date(a.expiry) : new Date();
+                    return dateB - dateA;
+                })
+                .slice(0, 2);
+            
+            const activities = [
+                ...recentEvents.map(e => `📅 Added "${e.title}" event`),
+                ...recentBrands.map(b => `🏪 Added "${b.name}" brand`),
+                `📊 Total: ${events.length} events, ${brands.length} brands`
+            ];
+            
+            container.innerHTML = activities.map(activity => `
+                <div style="padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+                    ${activity}
+                </div>
+            `).join('');
+        }
+        
+        // ======================
+        // EVENTS MANAGEMENT (WITH IMAGES)
+        // ======================
+        
+        function initEventForm() {
+            // Clear form
+            clearEventForm();
+        }
+        
+        function clearEventForm() {
+            document.getElementById('event-title').value = '';
+            document.getElementById('event-date').value = '';
+            document.getElementById('event-type').value = '';
+            document.getElementById('event-location').value = '';
+            document.getElementById('event-time').value = '';
+            document.getElementById('event-image').value = '';
+            document.getElementById('event-description').value = '';
+            document.getElementById('event-button').value = '';
+            document.getElementById('event-image-preview').style.display = 'none';
+            
+            // Reset category
+            document.querySelectorAll('.category-option[data-category]').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            document.querySelector('.category-option[data-category="regular"]').classList.add('selected');
+            document.getElementById('event-category').value = 'regular';
+        }
+        
+        function selectCategory(element, type) {
+            document.querySelectorAll('.category-option[data-category]').forEach(opt => {
+                if (opt.parentElement === element.parentElement) {
+                    opt.classList.remove('selected');
+                }
+            });
+            element.classList.add('selected');
+            
+            if (type === 'event') {
+                document.getElementById('event-category').value = element.dataset.category;
+            }
+        }
+        
+        function addEvent() {
+            const title = document.getElementById('event-title').value.trim();
+            const date = document.getElementById('event-date').value;
+            const type = document.getElementById('event-type').value;
+            const location = document.getElementById('event-location').value.trim();
+            const time = document.getElementById('event-time').value.trim();
+            const image = document.getElementById('event-image').value.trim();
+            const description = document.getElementById('event-description').value.trim();
+            const buttonText = document.getElementById('event-button').value.trim();
+            const category = document.getElementById('event-category').value;
+            
+            // Validation - NO compulsory fields
+            if (!title) {
+                alert('Please enter at least an event title');
+                return;
+            }
+            
+            // Create event object
+            const newEvent = {
+                id: Date.now(),
+                title,
+                date: date || null, // Allow empty date
+                type: type || 'general',
+                location: location || 'Campus',
+                time: time || 'TBA',
+                image: image || '',
+                description: description || 'No description provided.',
+                buttonText: buttonText || '',
+                category: category || 'regular',
+                created: new Date().toISOString()
+            };
+            
+            events.push(newEvent);
+            saveEvents();
+            clearEventForm();
+            
+            alert('✅ Event added successfully!');
+            switchTab('manage-events');
+        }
+        
+        function deleteEvent(id) {
+            if (confirm('Are you sure you want to delete this event?')) {
+                events = events.filter(e => e.id !== id);
+                saveEvents();
+                loadEventsList();
+                alert('Event deleted successfully!');
+            }
+        }
+        
+        // ======================
+        // BRANDS MANAGEMENT (WITH IMAGES)
+        // ======================
+        
+        function initBrandForm() {
+            // Clear form
+            clearBrandForm();
+        }
+        
+        function addBrand() {
+            const name = document.getElementById('brand-name').value.trim();
+            const category = document.getElementById('brand-category').value;
+            const price = document.getElementById('brand-price').value.trim();
+            const phone = document.getElementById('brand-phone').value.trim();
+            const location = document.getElementById('brand-location').value.trim();
+            const image = document.getElementById('brand-image').value.trim();
+            const description = document.getElementById('brand-description').value.trim();
+            const expiry = document.getElementById('brand-expiry').value;
+            const featured = document.getElementById('brand-featured').checked;
+            
+            // Validation - ONLY name is required
+            if (!name) {
+                alert('Please enter at least a brand name');
+                return;
+            }
+            
+            // Create brand object
+            const newBrand = {
+                id: Date.now(),
+                name,
+                category: category || 'general',
+                price: price || 'Contact for pricing',
+                phone: phone || 'Contact via WhatsApp',
+                location: location || 'Campus Area',
+                image: image || '',
+                description: description || 'No description provided.',
+                expiry: expiry || null,
+                featured,
+                created: new Date().toISOString()
+            };
+            
+            brands.push(newBrand);
+            saveBrands();
+            clearBrandForm();
+            
+            alert('✅ Brand added successfully!');
+            switchTab('manage-brands');
+        }
+        
+        function clearBrandForm() {
+            document.getElementById('brand-name').value = '';
+            document.getElementById('brand-category').value = '';
+            document.getElementById('brand-price').value = '';
+            document.getElementById('brand-phone').value = '';
+            document.getElementById('brand-location').value = '';
+            document.getElementById('brand-image').value = '';
+            document.getElementById('brand-description').value = '';
+            document.getElementById('brand-expiry').value = '';
+            document.getElementById('brand-featured').checked = false;
+            document.getElementById('brand-image-preview').style.display = 'none';
+        }
+        
+        function loadBrandsList() {
+            const container = document.getElementById('brands-container');
+            const today = getTodayDate();
+            
+            // Remove expired brands
+            const activeBrands = brands.filter(brand => {
+                if (!brand.expiry) return true;
+                return brand.expiry >= today;
+            });
+            
+            // Save if any were removed
+            if (activeBrands.length < brands.length) {
+                brands = activeBrands;
+                saveBrands();
+            }
+            
+            if (activeBrands.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🏪</div>
+                        <h3>No Brands Yet</h3>
+                        <p>Add your first sponsored brand!</p>
+                        <button class="btn btn-primary" style="margin-top: 20px;" onclick="switchTab('add-brand')">
+                            Add First Brand
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = activeBrands.map(brand => {
+                const brandImage = brand.image || getBrandPlaceholderImage(brand.name, brand.category);
+                return `
+                <div class="item-card">
+                    <div class="item-image">
+                        <img src="${brandImage}" alt="${brand.name}"
+                             onerror="this.parentElement.innerHTML='<div class=\"image-placeholder\">${brand.name.substring(0, 20)}</div>'">
+                    </div>
+                    <div class="item-info">
+                        <h4>${brand.name}</h4>
+                        <p>${brand.description.substring(0, 100)}${brand.description.length > 100 ? '...' : ''}</p>
+                        <div class="item-meta">
+                            <span class="meta-badge type-badge">${brand.category.toUpperCase()}</span>
+                            <span class="meta-badge">💰 ${brand.price}</span>
+                            <span class="meta-badge">📍 ${brand.location}</span>
+                            <span class="meta-badge">📞 ${brand.phone}</span>
+                            ${brand.featured ? '<span class="meta-badge featured-badge">⭐ FEATURED</span>' : ''}
+                            ${brand.expiry ? `<span class="meta-badge date-badge">📅 Expires: ${formatDate(brand.expiry)}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-small btn-edit" onclick="editBrand(${brand.id})">Edit</button>
+                        <button class="btn-small btn-delete" onclick="deleteBrand(${brand.id})">Delete</button>
+                    </div>
+                </div>
+            `}).join('');
+        }
+        
+        function editBrand(id) {
+            const brand = brands.find(b => b.id === id);
+            if (!brand) return;
+            
+            // Populate form
+            document.getElementById('brand-name').value = brand.name;
+            document.getElementById('brand-category').value = brand.category;
+            document.getElementById('brand-price').value = brand.price;
+            document.getElementById('brand-phone').value = brand.phone;
+            document.getElementById('brand-location').value = brand.location;
+            document.getElementById('brand-image').value = brand.image || '';
+            document.getElementById('brand-description').value = brand.description;
+            document.getElementById('brand-expiry').value = brand.expiry || '';
+            document.getElementById('brand-featured').checked = brand.featured;
+            
+            // Show image preview if exists
+            if (brand.image) {
+                const previewContainer = document.getElementById('brand-image-preview');
+                const previewImg = document.getElementById('brand-preview-image');
+                previewImg.src = brand.image;
+                previewContainer.style.display = 'block';
+                previewImg.style.display = 'block';
+            }
+            
+            // Change button action
+            const btn = document.querySelector('#add-brand .btn-primary');
+            btn.textContent = 'Update Brand';
+            btn.onclick = function() { updateBrand(id); };
+            
+            switchTab('add-brand');
+        }
+        
+        function updateBrand(id) {
+            const index = brands.findIndex(b => b.id === id);
+            if (index === -1) return;
+            
+            brands[index] = {
+                ...brands[index],
+                name: document.getElementById('brand-name').value.trim(),
+                category: document.getElementById('brand-category').value,
+                price: document.getElementById('brand-price').value.trim(),
+                phone: document.getElementById('brand-phone').value.trim(),
+                location: document.getElementById('brand-location').value.trim(),
+                image: document.getElementById('brand-image').value.trim(),
+                description: document.getElementById('brand-description').value.trim(),
+                expiry: document.getElementById('brand-expiry').value || null,
+                featured: document.getElementById('brand-featured').checked
+            };
+            
+            saveBrands();
+            
+            // Reset button
+            const btn = document.querySelector('#add-brand .btn-primary');
+            btn.textContent = 'Add Brand';
+            btn.onclick = addBrand;
+            
+            alert('Brand updated successfully!');
+            switchTab('manage-brands');
+        }
+        
+        function deleteBrand(id) {
+            if (confirm('Are you sure you want to delete this brand?')) {
+                brands = brands.filter(b => b.id !== id);
+                saveBrands();
+                loadBrandsList();
+                alert('Brand deleted successfully!');
+            }
+        }
+        
+        // ======================
+        // CLEAR ALL DATA
+        // ======================
+        
+        function clearAllData() {
+            if (confirm('⚠️ WARNING: This will delete ALL events and brands. This cannot be undone!\n\nAre you sure?')) {
+                events = [];
+                brands = [];
+                saveEvents();
+                saveBrands();
+                alert('All data cleared!');
+                updateDashboard();
+                switchTab('dashboard');
+            }
         }
         
         // ======================
@@ -118,49 +1393,26 @@
         // ======================
         
         document.addEventListener('DOMContentLoaded', function() {
-            // Check for existing valid session
-            if (!checkExistingSession()) {
-                // Show password screen
-                document.getElementById('password-protection').style.display = 'flex';
-                document.getElementById('admin-password').focus();
-            }
-            
             // Initialize dashboard
             updateDashboard();
             
-            // Add logout button to header (optional)
-            const headerRight = document.querySelector('.header-right');
-            headerRight.innerHTML += `
-                <button onclick="logout()" style="margin-top: 10px; padding: 8px 16px; background: #ff4d4f; color: white; border: none; border-radius: 6px; cursor: pointer;">
-                    Logout
-                </button>
-            `;
-            
-            // Rest of your initialization code...
+            // Set default expiry date for brands (30 days from now)
             const futureDate = new Date();
             futureDate.setDate(futureDate.getDate() + 30);
             document.getElementById('brand-expiry').value = futureDate.toISOString().split('T')[0];
             
-            // Auto-check for expired brands
+            // Auto-check for expired brands (every 5 minutes)
             setInterval(function() {
                 const today = getTodayDate();
                 const lastCheck = localStorage.getItem('last_expiry_check');
                 
                 if (!lastCheck || lastCheck !== today) {
-                    loadBrandsList();
+                    loadBrandsList(); // This will remove expired brands
                     localStorage.setItem('last_expiry_check', today);
                     updateDashboard();
                 }
-            }, 300000);
+            }, 300000); // 5 minutes
         });
-        
-        // ======================
-        // KEEP ALL YOUR EXISTING FUNCTIONS BELOW
-        // ======================
-        
-        // Your existing functions (saveEvents, saveBrands, formatDate, etc.)
-        // ... keep all your existing JavaScript functions as they are ...
-        
     </script>
 </body>
 </html>
