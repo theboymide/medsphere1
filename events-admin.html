@@ -361,6 +361,85 @@
             background: #ffd0d0;
         }
         
+        /* Brands Grid */
+        .brands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .brand-card {
+            border: 2px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .brand-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .brand-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .brand-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .brand-content {
+            padding: 20px;
+        }
+        
+        .brand-name {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .brand-category {
+            display: inline-block;
+            background: #f0f5ff;
+            color: #667eea;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        
+        .brand-price {
+            font-size: 18px;
+            font-weight: bold;
+            color: #52c41a;
+            margin-bottom: 10px;
+        }
+        
+        .brand-info {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .brand-contact {
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        
+        .brand-location,
+        .brand-phone {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
         /* Checkbox Styles */
         .checkbox-group {
             display: flex;
@@ -371,6 +450,26 @@
         .checkbox-group input[type="checkbox"] {
             width: auto;
             transform: scale(1.2);
+        }
+        
+        /* Preview */
+        .preview-container {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+        
+        .preview-container h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .preview-event {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid #eee;
         }
         
         /* Dashboard Grid */
@@ -458,93 +557,6 @@
         }
     </style>
 </head>
-<!-- PASSWORD PROTECTION - SIMPLE VERSION -->
-<div id="password-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 9999; display: flex; justify-content: center; align-items: center;">
-    <div style="background: white; padding: 30px; border-radius: 12px; text-align: center; max-width: 350px; width: 90%;">
-        <div style="font-size: 40px; margin-bottom: 15px;">🔐</div>
-        <h3 style="color: #333; margin-bottom: 10px;">Admin Access</h3>
-        <input type="password" id="simple-password" placeholder="Enter password" 
-               style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 15px; font-size: 16px;">
-        
-        <button onclick="simpleLogin()" 
-                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-size: 16px; cursor: pointer;">
-            Enter Dashboard
-        </button>
-        
-        <p id="simple-error" style="color: red; margin-top: 10px; font-size: 14px; display: none;">
-            Wrong password!
-        </p>
-    </div>
-</div>
-
-<script>
-// ======================
-// SIMPLE PASSWORD SYSTEM
-// ======================
-
-// ⚠️ CHANGE THIS TO YOUR OWN PASSWORD!
-const SIMPLE_PASSWORD = "medsphere262";
-
-function simpleLogin() {
-    const input = document.getElementById('simple-password').value;
-    const error = document.getElementById('simple-error');
-    
-    if (input === SIMPLE_PASSWORD) {
-        // Correct password - hide login screen
-        document.getElementById('password-screen').style.display = 'none';
-        // Show dashboard
-        document.querySelector('.admin-container').style.display = 'block';
-        // Initialize your dashboard
-        initializeDashboard();
-        // Save login for 24 hours
-        localStorage.setItem('admin_login', 'true');
-    } else {
-        // Wrong password
-        error.style.display = 'block';
-        document.getElementById('simple-password').style.borderColor = 'red';
-        document.getElementById('simple-password').value = ''; // Clear input
-        document.getElementById('simple-password').focus();
-    }
-}
-
-// Check if already logged in
-if (localStorage.getItem('admin_login') === 'true') {
-    document.getElementById('password-screen').style.display = 'none';
-    document.querySelector('.admin-container').style.display = 'block';
-} else {
-    document.querySelector('.admin-container').style.display = 'none';
-}
-
-// Enter key support
-document.getElementById('simple-password').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        simpleLogin();
-    }
-});
-
-// Function to add logout button to dashboard
-function addLogoutButton() {
-    const header = document.querySelector('.admin-header .header-right');
-    if (header) {
-        const logoutBtn = document.createElement('button');
-        logoutBtn.innerHTML = '🚪 Logout';
-        logoutBtn.style.cssText = 'background: #ff4d4f; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; margin-left: 10px;';
-        logoutBtn.onclick = function() {
-            localStorage.removeItem('admin_login');
-            location.reload();
-        };
-        header.appendChild(logoutBtn);
-    }
-}
-
-// Initialize your dashboard
-function initializeDashboard() {
-    // Your existing initialization code
-    updateDashboard();
-    // Add logout button
-    addLogoutButton();
-}
-</script>
 <body>
     <div class="admin-container">
         <div class="admin-header">
@@ -1411,7 +1423,7 @@ function initializeDashboard() {
                         <button class="btn-small btn-delete" onclick="deleteBrand(${brand.id})">Delete</button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
         
         function editBrand(id) {
@@ -1474,7 +1486,6 @@ function initializeDashboard() {
             switchTab('manage-brands');
         }
         
-        // FIXED DELETE BRAND FUNCTION
         function deleteBrand(id) {
             if (confirm('Are you sure you want to delete this brand?')) {
                 brands = brands.filter(b => b.id !== id);
