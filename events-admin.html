@@ -458,6 +458,95 @@
         }
     </style>
 </head>
+<!-- PASSWORD PROTECTION - SIMPLE VERSION -->
+<div id="password-screen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+    <div style="background: white; padding: 30px; border-radius: 12px; text-align: center; max-width: 350px; width: 90%;">
+        <div style="font-size: 40px; margin-bottom: 15px;">🔐</div>
+        <h3 style="color: #333; margin-bottom: 10px;">Admin Access</h3>
+        <p style="color: #666; margin-bottom: 20px; font-size: 14px;">Password: campus2024</p>
+        
+        <input type="password" id="simple-password" placeholder="Enter password" 
+               style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; margin-bottom: 15px; font-size: 16px;">
+        
+        <button onclick="simpleLogin()" 
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-size: 16px; cursor: pointer;">
+            Enter Dashboard
+        </button>
+        
+        <p id="simple-error" style="color: red; margin-top: 10px; font-size: 14px; display: none;">
+            Wrong password! Try: campus2024
+        </p>
+    </div>
+</div>
+
+<script>
+// ======================
+// SIMPLE PASSWORD SYSTEM
+// ======================
+
+// ⚠️ CHANGE THIS TO YOUR OWN PASSWORD!
+const SIMPLE_PASSWORD = "medsphere262";
+
+function simpleLogin() {
+    const input = document.getElementById('simple-password').value;
+    const error = document.getElementById('simple-error');
+    
+    if (input === SIMPLE_PASSWORD) {
+        // Correct password - hide login screen
+        document.getElementById('password-screen').style.display = 'none';
+        // Show dashboard
+        document.querySelector('.admin-container').style.display = 'block';
+        // Initialize your dashboard
+        initializeDashboard();
+        // Save login for 24 hours
+        localStorage.setItem('admin_login', 'true');
+    } else {
+        // Wrong password
+        error.style.display = 'block';
+        document.getElementById('simple-password').style.borderColor = 'red';
+        document.getElementById('simple-password').value = ''; // Clear input
+        document.getElementById('simple-password').focus();
+    }
+}
+
+// Check if already logged in
+if (localStorage.getItem('admin_login') === 'true') {
+    document.getElementById('password-screen').style.display = 'none';
+    document.querySelector('.admin-container').style.display = 'block';
+} else {
+    document.querySelector('.admin-container').style.display = 'none';
+}
+
+// Enter key support
+document.getElementById('simple-password').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        simpleLogin();
+    }
+});
+
+// Function to add logout button to dashboard
+function addLogoutButton() {
+    const header = document.querySelector('.admin-header .header-right');
+    if (header) {
+        const logoutBtn = document.createElement('button');
+        logoutBtn.innerHTML = '🚪 Logout';
+        logoutBtn.style.cssText = 'background: #ff4d4f; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 14px; margin-left: 10px;';
+        logoutBtn.onclick = function() {
+            localStorage.removeItem('admin_login');
+            location.reload();
+        };
+        header.appendChild(logoutBtn);
+    }
+}
+
+// Initialize your dashboard
+function initializeDashboard() {
+    // Your existing initialization code
+    updateDashboard();
+    // Add logout button
+    addLogoutButton();
+}
+</script>
 <body>
     <div class="admin-container">
         <div class="admin-header">
