@@ -838,12 +838,12 @@
 // SUPABASE DATABASE SYSTEM (AUTOMATIC SYNC)
 // ======================
 
-// 🔧 REPLACE THESE WITH YOUR KEYS FROM STEP 2
+// 🔧 YOUR KEYS ARE CORRECT
 const SUPABASE_URL = 'https://cgcryscjzfoghaenxeuk.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_xEop6qs9UcrEGd8jYMTrlw_x4omRUxc';
 
 // Initialize Supabase
-const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // Data arrays
 let events = [];
@@ -880,6 +880,10 @@ async function loadDataFromDB() {
         localStorage.setItem('medsphere_brands', JSON.stringify(brands));
         
         console.log('✅ Loaded:', events.length + ' events, ' + brands.length + ' brands');
+        
+        // Load into UI
+        loadEventsList();
+        loadBrandsList();
         
     } catch (error) {
         console.error('❌ Database connection failed:', error);
@@ -934,7 +938,7 @@ async function saveBrands() {
 }
 
 // ======================
-// UPDATED EVENT FUNCTIONS
+// EVENT FUNCTIONS
 // ======================
 
 async function addEvent() {
@@ -1014,38 +1018,308 @@ async function addBrand() {
 }
 
 // ======================
-// UPDATE INITIALIZATION
+// UI FUNCTIONS (MISSING IN YOUR CODE)
+// ======================
+
+function switchTab(tabId) {
+    // Remove active class from all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to selected tab
+    document.getElementById(tabId).classList.add('active');
+    event.target.classList.add('active');
+    
+    // Update content based on tab
+    if (tabId === 'manage-events') {
+        loadEventsList();
+    }
+    if (tabId === 'manage-brands') {
+        loadBrandsList();
+    }
+    if (tabId === 'dashboard') {
+        updateDashboard();
+    }
+}
+
+function loadEventsList() {
+    const container = document.getElementById('events-container');
+    if (!container) return;
+    
+    if (events.length === 0) {
+        container.innerHTML = '<p style="color: #666; text-align: center; padding: 40px;">No events added yet</p>';
+        return;
+    }
+    
+    container.innerHTML = events.map(event => {
+        const eventImage = event.image || `https://via.placeholder.com/300x200/667eea/ffffff?text=${encodeURIComponent(event.title.substring(0, 20))}`;
+        return `
+        <div class="item-card">
+            <div class="item-image">
+                <img src="${eventImage}" alt="${event.title}" onerror="this.src='https://via.placeholder.com/300x200/667eea/ffffff?text=${encodeURIComponent(event.title.substring(0, 20))}'">
+            </div>
+            <div class="item-info">
+                <h4>${event.title}</h4>
+                <p>${event.description}</p>
+                <div class="item-meta">
+                    <span class="meta-badge date-badge">📅 ${event.date || 'No date'}</span>
+                    <span class="meta-badge">📍 ${event.location}</span>
+                    <span class="meta-badge">⏰ ${event.time}</span>
+                    ${event.category === 'featured' ? '<span class="meta-badge featured-badge">⭐ FEATURED</span>' : ''}
+                </div>
+            </div>
+            <div class="item-actions">
+                <button class="btn-small btn-edit" onclick="editEvent(${event.id})">Edit</button>
+                <button class="btn-small btn-delete" onclick="deleteEvent(${event.id})">Delete</button>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+function loadBrandsList() {
+    const container = document.getElementById('brands-container');
+    if (!container) return;
+    
+    if (brands.length === 0) {
+        container.innerHTML = '<p style="color: #666; text-align: center; padding: 40px;">No brands added yet</p>';
+        return;
+    }
+    
+    container.innerHTML = brands.map(brand => {
+        const brandImage = brand.image || `https://via.placeholder.com/300x200/667eea/ffffff?text=${encodeURIComponent(brand.name.substring(0, 20))}`;
+        return `
+        <div class="item-card">
+            <div class="item-image">
+                <img src="${brandImage}" alt="${brand.name}" onerror="this.src='https://via.placeholder.com/300x200/667eea/ffffff?text=${encodeURIComponent(brand.name.substring(0, 20))}'">
+            </div>
+            <div class="item-info">
+                <h4>${brand.name}</h4>
+                <p>${brand.description}</p>
+                <div class="item-meta">
+                    <span class="meta-badge type-badge">${brand.category.toUpperCase()}</span>
+                    <span class="meta-badge">💰 ${brand.price}</span>
+                    <span class="meta-badge">📍 ${brand.location}</span>
+                    <span class="meta-badge">📞 ${brand.phone}</span>
+                    ${brand.featured ? '<span class="meta-badge featured-badge">⭐ FEATURED</span>' : ''}
+                </div>
+            </div>
+            <div class="item-actions">
+                <button class="btn-small btn-edit" onclick="editBrand(${brand.id})">Edit</button>
+                <button class="btn-small btn-delete" onclick="deleteBrand(${brand.id})">Delete</button>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+function deleteEvent(id) {
+    if (!confirm('Delete this event?')) return;
+    
+    events = events.filter(e => e.id !== id);
+    saveEvents();
+    loadEventsList();
+    updateDashboard();
+    alert('Event deleted');
+}
+
+function deleteBrand(id) {
+    if (!confirm('Delete this brand?')) return;
+    
+    brands = brands.filter(b => b.id !== id);
+    saveBrands();
+    loadBrandsList();
+    updateDashboard();
+    alert('Brand deleted');
+}
+
+function clearEventForm() {
+    document.getElementById('event-title').value = '';
+    document.getElementById('event-date').value = '';
+    document.getElementById('event-type').value = '';
+    document.getElementById('event-location').value = '';
+    document.getElementById('event-time').value = '';
+    document.getElementById('event-image').value = '';
+    document.getElementById('event-description').value = '';
+    document.getElementById('event-button').value = '';
+    document.getElementById('event-image-preview').style.display = 'none';
+    
+    // Reset category
+    document.querySelectorAll('.category-option[data-category]').forEach(opt => {
+        opt.classList.remove('selected');
+    });
+    document.querySelector('.category-option[data-category="regular"]').classList.add('selected');
+    document.getElementById('event-category').value = 'regular';
+}
+
+function clearBrandForm() {
+    document.getElementById('brand-name').value = '';
+    document.getElementById('brand-category').value = '';
+    document.getElementById('brand-price').value = '';
+    document.getElementById('brand-phone').value = '';
+    document.getElementById('brand-location').value = '';
+    document.getElementById('brand-image').value = '';
+    document.getElementById('brand-description').value = '';
+    document.getElementById('brand-expiry').value = '';
+    document.getElementById('brand-featured').checked = false;
+    document.getElementById('brand-image-preview').style.display = 'none';
+}
+
+function showImagePreview(url, previewId) {
+    const previewContainer = event.target.parentElement.querySelector('.image-preview-container');
+    const previewImg = document.getElementById(previewId);
+    
+    if (url && url.startsWith('http')) {
+        previewImg.src = url;
+        previewContainer.style.display = 'block';
+        previewImg.style.display = 'block';
+    } else {
+        previewContainer.style.display = 'none';
+    }
+}
+
+function selectCategory(element, type) {
+    document.querySelectorAll('.category-option[data-category]').forEach(opt => {
+        if (opt.parentElement === element.parentElement) {
+            opt.classList.remove('selected');
+        }
+    });
+    element.classList.add('selected');
+    
+    if (type === 'event') {
+        document.getElementById('event-category').value = element.dataset.category;
+    }
+}
+
+function updateDashboard() {
+    updateDashboardStats();
+    updateDashboardEvents();
+    updateDashboardBrands();
+    updateRecentActivity();
+}
+
+function updateDashboardStats() {
+    const totalEvents = events.length;
+    const totalBrands = brands.length;
+    const featuredCount = events.filter(e => e.category === 'featured').length + 
+                          brands.filter(b => b.featured).length;
+    
+    document.getElementById('total-events').textContent = totalEvents;
+    document.getElementById('total-brands').textContent = totalBrands;
+    document.getElementById('featured-items').textContent = featuredCount;
+    
+    document.getElementById('stat-total-events').textContent = totalEvents;
+    document.getElementById('stat-active-brands').textContent = totalBrands;
+    document.getElementById('stat-upcoming-events').textContent = totalEvents;
+}
+
+function updateDashboardEvents() {
+    const container = document.getElementById('dashboard-events');
+    if (!container) return;
+    
+    const recentEvents = events.slice(0, 3);
+    
+    if (recentEvents.length === 0) {
+        container.innerHTML = '<p style="color: #666;">No events</p>';
+        return;
+    }
+    
+    container.innerHTML = recentEvents.map(event => `
+        <div style="padding: 10px 0; border-bottom: 1px solid #eee;">
+            <strong>${event.title}</strong>
+            <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                📅 ${event.date || 'No date'} | 📍 ${event.location}
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateDashboardBrands() {
+    const container = document.getElementById('dashboard-brands');
+    if (!container) return;
+    
+    const recentBrands = brands.slice(0, 3);
+    
+    if (recentBrands.length === 0) {
+        container.innerHTML = '<p style="color: #666;">No brands</p>';
+        return;
+    }
+    
+    container.innerHTML = recentBrands.map(brand => `
+        <div style="padding: 10px 0; border-bottom: 1px solid #eee;">
+            <strong>${brand.name}</strong>
+            <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                🏷️ ${brand.category} | 📍 ${brand.location}
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateRecentActivity() {
+    const container = document.getElementById('recent-activity');
+    if (!container) return;
+    
+    const activities = [
+        events.length > 0 ? `📅 Added "${events[0].title}" event` : 'No events yet',
+        brands.length > 0 ? `🏪 Added "${brands[0].name}" brand` : 'No brands yet',
+        `📊 Total: ${events.length} events, ${brands.length} brands`
+    ];
+    
+    container.innerHTML = activities.map(activity => `
+        <div style="padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
+            ${activity}
+        </div>
+    `).join('');
+}
+
+function clearAllData() {
+    if (!confirm('⚠️ Delete ALL events and brands?')) return;
+    
+    events = [];
+    brands = [];
+    saveEvents();
+    saveBrands();
+    updateDashboard();
+    alert('All data cleared');
+}
+
+// ======================
+// INITIALIZATION
 // ======================
 
 document.addEventListener('DOMContentLoaded', async function() {
+    console.log('🚀 Admin panel starting...');
+    
     // Load data from database
     await loadDataFromDB();
     
     // Initialize dashboard
     updateDashboard();
     
-    // Auto-save every 30 seconds (safety backup)
+    // Auto-save every 30 seconds
     setInterval(async () => {
         if (events.length > 0) await saveEvents();
         if (brands.length > 0) await saveBrands();
     }, 30000);
     
-    console.log('🚀 Admin panel connected to Supabase database');
+    console.log('✅ Admin panel ready');
 });
 
-// ======================
-// KEEP ALL YOUR EXISTING FUNCTIONS BELOW
-// (deleteEvent, deleteBrand, clearEventForm, clearBrandForm, etc.)
-// ======================
-
-// ... [PASTE ALL YOUR EXISTING FUNCTIONS HERE]
-// START PASTING FROM YOUR OLD SCRIPT:
-// function deleteEvent(id) { ... }
-// function deleteBrand(id) { ... }
-// function clearEventForm() { ... }
-// function updateDashboard() { ... }
-// ALL THE WAY TO THE END
-
+// Make functions available globally (for onclick attributes)
+window.switchTab = switchTab;
+window.addEvent = addEvent;
+window.addBrand = addBrand;
+window.clearEventForm = clearEventForm;
+window.clearBrandForm = clearBrandForm;
+window.selectCategory = selectCategory;
+window.showImagePreview = showImagePreview;
+window.clearAllData = clearAllData;
+window.deleteEvent = deleteEvent;
+window.deleteBrand = deleteBrand;
 </script>
 </body>
 </html>
