@@ -835,91 +835,114 @@
     </div>
 <script>
 // ======================
-// DEBUG MODE - SIMPLE ADMIN PANEL
+// COMPLETE WORKING ADMIN PANEL
 // ======================
 
-console.log('🔄 Admin panel loading...');
+console.log('🚨 Loading admin panel...');
 
-// Your Supabase keys
+// 1. Load Supabase library if not already loaded
+function ensureSupabase() {
+    return new Promise((resolve) => {
+        if (window.supabase) {
+            console.log('✅ Supabase already loaded');
+            resolve(window.supabase);
+            return;
+        }
+        
+        // Check if already loading
+        if (window.supabaseLoading) {
+            console.log('⏳ Supabase loading...');
+            const check = setInterval(() => {
+                if (window.supabase) {
+                    clearInterval(check);
+                    resolve(window.supabase);
+                }
+            }, 100);
+            return;
+        }
+        
+        window.supabaseLoading = true;
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/@supabase/supabase-js@2';
+        script.onload = () => {
+            console.log('✅ Supabase library loaded');
+            window.supabaseLoading = false;
+            resolve(window.supabase);
+        };
+        script.onerror = () => {
+            console.error('❌ Failed to load Supabase');
+            window.supabaseLoading = false;
+            resolve(null);
+        };
+        document.head.appendChild(script);
+    });
+}
+
+// 2. Your Supabase keys
 const SUPABASE_URL = 'https://cgcryscjzfoghaenxeuk.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_xEop6qs9UcrEGd8jYMTrlw_x4omRUxc';
-
-// Test if Supabase is loaded
-console.log('Supabase loaded?', typeof window.supabase);
-
-// Initialize
 let supabase = null;
-if (window.supabase) {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log('✅ Supabase client created');
-} else {
-    console.error('❌ Supabase library not loaded');
+
+// 3. Initialize Supabase
+async function initSupabase() {
+    const supabaseLib = await ensureSupabase();
+    if (supabaseLib) {
+        supabase = supabaseLib.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('✅ Supabase client initialized');
+        return true;
+    }
+    return false;
 }
 
-// Simple test function
-async function testConnection() {
-    if (!supabase) {
-        alert('Supabase not loaded. Check console.');
-        return;
-    }
-    
-    try {
-        const { data, error } = await supabase.from('events').select('*');
-        console.log('Connection test:', error ? '❌ ' + error.message : '✅ Connected');
-        console.log('Data:', data);
-    } catch (e) {
-        console.error('Test failed:', e);
-    }
-}
-
-// SIMPLIFIED ADD EVENT FUNCTION
+// 4. SIMPLE ADD EVENT FUNCTION
 async function addEvent() {
-    console.log('🎯 Add Event button clicked');
+    console.log('🎯 Add Event clicked');
     
-    // Check Supabase
+    // Check if Supabase is ready
     if (!supabase) {
-        alert('❌ Supabase not loaded. Refresh page.');
-        return;
+        const loaded = await initSupabase();
+        if (!loaded) {
+            alert('❌ Cannot connect to database. Refresh page.');
+            return;
+        }
     }
     
     // Get form values
     const title = document.getElementById('event-title').value.trim();
     const date = document.getElementById('event-date').value;
     const location = document.getElementById('event-location').value.trim();
+    const description = document.getElementById('event-description').value.trim();
     
-    console.log('Form data:', { title, date, location });
-    
+    // Validate
     if (!title) {
         alert('Please enter event title');
         return;
     }
     
-    // Simple event object
-    const newEvent = {
-        id: Date.now(),
-        title: title,
-        date: date || null,
-        location: location || 'Campus',
-        description: document.getElementById('event-description').value.trim() || 'No description',
-        created_at: new Date().toISOString()
-    };
-    
-    console.log('Saving event:', newEvent);
-    
     try {
+        // Create event object
+        const newEvent = {
+            id: Date.now(),
+            title: title,
+            date: date || null,
+            location: location || 'Campus',
+            description: description || 'No description',
+            created_at: new Date().toISOString()
+        };
+        
+        console.log('📤 Saving event:', newEvent);
+        
         // Save to Supabase
         const { data, error } = await supabase
             .from('events')
             .insert([newEvent]);
         
         if (error) {
-            console.error('❌ Supabase error:', error);
-            alert('Save failed: ' + error.message);
-            return;
+            throw new Error(error.message);
         }
         
         console.log('✅ Event saved:', data);
-        alert('✅ Event added to LIVE website!');
+        alert('🎉 Event added to LIVE website!');
         
         // Clear form
         document.getElementById('event-title').value = '';
@@ -936,13 +959,16 @@ async function addEvent() {
     }
 }
 
-// SIMPLIFIED ADD BRAND FUNCTION
+// 5. SIMPLE ADD BRAND FUNCTION
 async function addBrand() {
-    console.log('🎯 Add Brand button clicked');
+    console.log('🏪 Add Brand clicked');
     
     if (!supabase) {
-        alert('❌ Supabase not loaded. Refresh page.');
-        return;
+        const loaded = await initSupabase();
+        if (!loaded) {
+            alert('❌ Cannot connect to database. Refresh page.');
+            return;
+        }
     }
     
     const name = document.getElementById('brand-name').value.trim();
@@ -953,31 +979,27 @@ async function addBrand() {
         return;
     }
     
-    const newBrand = {
-        id: Date.now(),
-        name: name,
-        category: category || 'general',
-        price: document.getElementById('brand-price').value.trim() || 'Contact for price',
-        location: document.getElementById('brand-location').value.trim() || 'Campus',
-        featured: document.getElementById('brand-featured').checked,
-        created_at: new Date().toISOString()
-    };
-    
-    console.log('Saving brand:', newBrand);
-    
     try {
+        const newBrand = {
+            id: Date.now(),
+            name: name,
+            category: category || 'general',
+            price: document.getElementById('brand-price').value.trim() || 'Contact for price',
+            location: document.getElementById('brand-location').value.trim() || 'Campus',
+            featured: document.getElementById('brand-featured').checked || false,
+            created_at: new Date().toISOString()
+        };
+        
+        console.log('📤 Saving brand:', newBrand);
+        
         const { data, error } = await supabase
             .from('brands')
             .insert([newBrand]);
         
-        if (error) {
-            console.error('❌ Supabase error:', error);
-            alert('Save failed: ' + error.message);
-            return;
-        }
+        if (error) throw new Error(error.message);
         
         console.log('✅ Brand saved:', data);
-        alert('✅ Brand added to LIVE website!');
+        alert('🎉 Brand added to LIVE website!');
         
         // Clear form
         document.getElementById('brand-name').value = '';
@@ -994,11 +1016,11 @@ async function addBrand() {
     }
 }
 
-// BASIC TAB SWITCHING
+// 6. TAB SWITCHING FUNCTION
 function switchTab(tabId) {
-    console.log('Switching to tab:', tabId);
+    console.log('🔄 Switching to tab:', tabId);
     
-    // Remove active class
+    // Remove active from all
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
     });
@@ -1006,46 +1028,184 @@ function switchTab(tabId) {
         btn.classList.remove('active');
     });
     
-    // Add active class
-    document.getElementById(tabId).classList.add('active');
-    event.target.classList.add('active');
+    // Add active to selected
+    const tabElement = document.getElementById(tabId);
+    if (tabElement) {
+        tabElement.classList.add('active');
+    }
+    
+    // Find clicked button and activate it
+    const buttons = document.querySelectorAll('.tab-btn');
+    for (let btn of buttons) {
+        if (btn.textContent.includes(tabId.replace('-', ' '))) {
+            btn.classList.add('active');
+        }
+    }
+    
+    // Update dashboard if needed
+    if (tabId === 'dashboard') {
+        updateDashboard();
+    }
 }
 
-// BASIC FORM CLEARING
+// 7. FORM CLEARING
 function clearEventForm() {
     document.getElementById('event-title').value = '';
     document.getElementById('event-date').value = '';
+    document.getElementById('event-type').value = '';
     document.getElementById('event-location').value = '';
+    document.getElementById('event-time').value = '';
+    document.getElementById('event-image').value = '';
     document.getElementById('event-description').value = '';
-    console.log('Event form cleared');
+    document.getElementById('event-button').value = '';
+    console.log('📝 Event form cleared');
 }
 
 function clearBrandForm() {
     document.getElementById('brand-name').value = '';
     document.getElementById('brand-category').value = '';
     document.getElementById('brand-price').value = '';
+    document.getElementById('brand-phone').value = '';
     document.getElementById('brand-location').value = '';
+    document.getElementById('brand-image').value = '';
+    document.getElementById('brand-description').value = '';
+    document.getElementById('brand-expiry').value = '';
     document.getElementById('brand-featured').checked = false;
-    console.log('Brand form cleared');
+    console.log('📝 Brand form cleared');
 }
 
-// INITIALIZE
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ Admin panel loaded');
+// 8. DASHBOARD FUNCTIONS
+async function updateDashboard() {
+    try {
+        if (!supabase) await initSupabase();
+        
+        if (supabase) {
+            // Load counts from database
+            const { data: events } = await supabase.from('events').select('*');
+            const { data: brands } = await supabase.from('brands').select('*');
+            
+            // Update stats
+            document.getElementById('total-events').textContent = events?.length || 0;
+            document.getElementById('total-brands').textContent = brands?.length || 0;
+            document.getElementById('featured-items').textContent = 0; // You can update this
+            
+            document.getElementById('stat-total-events').textContent = events?.length || 0;
+            document.getElementById('stat-active-brands').textContent = brands?.length || 0;
+            document.getElementById('stat-upcoming-events').textContent = events?.length || 0;
+        }
+    } catch (error) {
+        console.error('Dashboard error:', error);
+    }
+}
+
+// 9. TEST CONNECTION
+async function testConnection() {
+    console.log('🔧 Testing Supabase connection...');
     
-    // Test connection automatically
-    setTimeout(testConnection, 1000);
+    const loaded = await initSupabase();
+    if (!loaded) {
+        alert('❌ Supabase not loaded');
+        return;
+    }
     
-    // Make functions global
+    try {
+        const { data, error } = await supabase.from('events').select('*').limit(1);
+        if (error) throw error;
+        alert(`✅ Connected! Found ${data?.length || 0} events`);
+        console.log('✅ Connection test passed');
+    } catch (error) {
+        alert('❌ Connection failed: ' + error.message);
+        console.error('Connection test failed:', error);
+    }
+}
+
+// 10. CLEAR ALL DATA (USE WITH CAUTION)
+async function clearAllData() {
+    if (!confirm('⚠️ WARNING: Delete ALL events and brands?\nThis cannot be undone!')) {
+        return;
+    }
+    
+    try {
+        if (!supabase) await initSupabase();
+        
+        await supabase.from('events').delete().neq('id', 0);
+        await supabase.from('brands').delete().neq('id', 0);
+        
+        alert('🗑️ All data cleared!');
+        updateDashboard();
+        
+    } catch (error) {
+        alert('❌ Error clearing data: ' + error.message);
+    }
+}
+
+// 11. IMAGE PREVIEW
+function showImagePreview(url, previewId) {
+    const previewContainer = document.getElementById(previewId + '-container') || 
+                            event.target.parentElement.querySelector('.image-preview-container');
+    const previewImg = document.getElementById(previewId);
+    
+    if (url && url.startsWith('http')) {
+        previewImg.src = url;
+        previewContainer.style.display = 'block';
+        previewImg.style.display = 'block';
+    } else {
+        previewContainer.style.display = 'none';
+    }
+}
+
+// 12. CATEGORY SELECTION
+function selectCategory(element, type) {
+    const options = element.parentElement.querySelectorAll('.category-option');
+    options.forEach(opt => opt.classList.remove('selected'));
+    element.classList.add('selected');
+    
+    if (type === 'event') {
+        document.getElementById('event-category').value = element.dataset.category;
+    }
+}
+
+// 13. INITIALIZE EVERYTHING
+async function initializeAdmin() {
+    console.log('🚀 Starting admin panel...');
+    
+    // Add a test button for debugging
+    const testBtn = document.createElement('button');
+    testBtn.innerHTML = '🔧 TEST';
+    testBtn.style.cssText = 'position:fixed; top:10px; right:10px; z-index:9999; background:red; color:white; padding:10px; border-radius:5px;';
+    testBtn.onclick = testConnection;
+    document.body.appendChild(testBtn);
+    
+    // Initialize Supabase
+    await initSupabase();
+    
+    // Make all functions globally available
     window.addEvent = addEvent;
     window.addBrand = addBrand;
     window.switchTab = switchTab;
     window.clearEventForm = clearEventForm;
     window.clearBrandForm = clearBrandForm;
-    window.testConnection = testConnection; // For debugging
+    window.clearAllData = clearAllData;
+    window.testConnection = testConnection;
+    window.showImagePreview = showImagePreview;
+    window.selectCategory = selectCategory;
     
-    console.log('🎮 Ready! Check console for errors.');
-});
+    // Update dashboard
+    await updateDashboard();
+    
+    console.log('✅ Admin panel ready!');
+}
+
+// 14. START EVERYTHING WHEN PAGE LOADS
+document.addEventListener('DOMContentLoaded', initializeAdmin);
+
+// Emergency fallback: If page loads but buttons don't work, click the test button
+setTimeout(() => {
+    if (!window.addEvent) {
+        console.warn('⚠️ Functions not loaded, reloading...');
+        initializeAdmin();
+    }
+}, 2000);
 </script>
 </body>
 </html>
