@@ -835,194 +835,170 @@
     </div>
 <script>
 // ======================
-// SUPABASE DATABASE SYSTEM (AUTOMATIC SYNC)
+// DEBUG MODE - SIMPLE ADMIN PANEL
 // ======================
 
-// 🔧 YOUR KEYS ARE CORRECT
+console.log('🔄 Admin panel loading...');
+
+// Your Supabase keys
 const SUPABASE_URL = 'https://cgcryscjzfoghaenxeuk.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_xEop6qs9UcrEGd8jYMTrlw_x4omRUxc';
 
-// Initialize Supabase
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Test if Supabase is loaded
+console.log('Supabase loaded?', typeof window.supabase);
 
-// Data arrays
-let events = [];
-let brands = [];
-
-// ======================
-// LOAD DATA FROM DATABASE
-// ======================
-
-async function loadDataFromDB() {
-    try {
-        console.log('🔄 Loading data from database...');
-        
-        // Load events
-        const { data: eventsData, error: eventsError } = await supabase
-            .from('events')
-            .select('*')
-            .order('date', { ascending: true });
-        
-        // Load brands
-        const { data: brandsData, error: brandsError } = await supabase
-            .from('brands')
-            .select('*')
-            .order('created_at', { ascending: false });
-        
-        if (eventsError) console.error('Events error:', eventsError);
-        if (brandsError) console.error('Brands error:', brandsError);
-        
-        events = eventsData || [];
-        brands = brandsData || [];
-        
-        // Backup to localStorage
-        localStorage.setItem('campus_events', JSON.stringify(events));
-        localStorage.setItem('medsphere_brands', JSON.stringify(brands));
-        
-        console.log('✅ Loaded:', events.length + ' events, ' + brands.length + ' brands');
-        
-        // Load into UI
-        loadEventsList();
-        loadBrandsList();
-        
-    } catch (error) {
-        console.error('❌ Database connection failed:', error);
-        // Fallback to localStorage
-        events = JSON.parse(localStorage.getItem('campus_events') || '[]');
-        brands = JSON.parse(localStorage.getItem('medsphere_brands') || '[]');
-    }
+// Initialize
+let supabase = null;
+if (window.supabase) {
+    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    console.log('✅ Supabase client created');
+} else {
+    console.error('❌ Supabase library not loaded');
 }
 
-// ======================
-// SAVE DATA TO DATABASE
-// ======================
-
-async function saveEvents() {
-    try {
-        // Delete all existing events
-        await supabase.from('events').delete().neq('id', 0);
-        
-        // Insert all events
-        if (events.length > 0) {
-            const { error } = await supabase.from('events').insert(events);
-            if (error) throw error;
-        }
-        
-        console.log('✅ Events saved to database');
-        
-    } catch (error) {
-        console.error('Error saving events:', error);
-        localStorage.setItem('campus_events', JSON.stringify(events));
-    }
-    updateDashboardStats();
-}
-
-async function saveBrands() {
-    try {
-        // Delete all existing brands
-        await supabase.from('brands').delete().neq('id', 0);
-        
-        // Insert all brands
-        if (brands.length > 0) {
-            const { error } = await supabase.from('brands').insert(brands);
-            if (error) throw error;
-        }
-        
-        console.log('✅ Brands saved to database');
-        
-    } catch (error) {
-        console.error('Error saving brands:', error);
-        localStorage.setItem('medsphere_brands', JSON.stringify(brands));
-    }
-    updateDashboardStats();
-}
-
-// ======================
-// EVENT FUNCTIONS
-// ======================
-
-async function addEvent() {
-    const title = document.getElementById('event-title').value.trim();
-    const date = document.getElementById('event-date').value;
-    const type = document.getElementById('event-type').value;
-    const location = document.getElementById('event-location').value.trim();
-    const time = document.getElementById('event-time').value.trim();
-    const image = document.getElementById('event-image').value.trim();
-    const description = document.getElementById('event-description').value.trim();
-    const buttonText = document.getElementById('event-button').value.trim();
-    const category = document.getElementById('event-category').value;
-    
-    if (!title) {
-        alert('Please enter at least an event title');
+// Simple test function
+async function testConnection() {
+    if (!supabase) {
+        alert('Supabase not loaded. Check console.');
         return;
     }
     
+    try {
+        const { data, error } = await supabase.from('events').select('*');
+        console.log('Connection test:', error ? '❌ ' + error.message : '✅ Connected');
+        console.log('Data:', data);
+    } catch (e) {
+        console.error('Test failed:', e);
+    }
+}
+
+// SIMPLIFIED ADD EVENT FUNCTION
+async function addEvent() {
+    console.log('🎯 Add Event button clicked');
+    
+    // Check Supabase
+    if (!supabase) {
+        alert('❌ Supabase not loaded. Refresh page.');
+        return;
+    }
+    
+    // Get form values
+    const title = document.getElementById('event-title').value.trim();
+    const date = document.getElementById('event-date').value;
+    const location = document.getElementById('event-location').value.trim();
+    
+    console.log('Form data:', { title, date, location });
+    
+    if (!title) {
+        alert('Please enter event title');
+        return;
+    }
+    
+    // Simple event object
     const newEvent = {
         id: Date.now(),
-        title,
+        title: title,
         date: date || null,
-        type: type || 'general',
         location: location || 'Campus',
-        time: time || 'TBA',
-        image: image || '',
-        description: description || 'No description provided.',
-        buttonText: buttonText || '',
-        category: category || 'regular',
+        description: document.getElementById('event-description').value.trim() || 'No description',
         created_at: new Date().toISOString()
     };
     
-    events.push(newEvent);
-    await saveEvents(); // Auto-saves to database
-    clearEventForm();
+    console.log('Saving event:', newEvent);
     
-    alert('✅ Event added to LIVE website!');
-    switchTab('manage-events');
+    try {
+        // Save to Supabase
+        const { data, error } = await supabase
+            .from('events')
+            .insert([newEvent]);
+        
+        if (error) {
+            console.error('❌ Supabase error:', error);
+            alert('Save failed: ' + error.message);
+            return;
+        }
+        
+        console.log('✅ Event saved:', data);
+        alert('✅ Event added to LIVE website!');
+        
+        // Clear form
+        document.getElementById('event-title').value = '';
+        document.getElementById('event-date').value = '';
+        document.getElementById('event-location').value = '';
+        document.getElementById('event-description').value = '';
+        
+        // Switch to dashboard
+        switchTab('dashboard');
+        
+    } catch (error) {
+        console.error('❌ Error:', error);
+        alert('❌ Failed to save: ' + error.message);
+    }
 }
 
+// SIMPLIFIED ADD BRAND FUNCTION
 async function addBrand() {
+    console.log('🎯 Add Brand button clicked');
+    
+    if (!supabase) {
+        alert('❌ Supabase not loaded. Refresh page.');
+        return;
+    }
+    
     const name = document.getElementById('brand-name').value.trim();
     const category = document.getElementById('brand-category').value;
-    const price = document.getElementById('brand-price').value.trim();
-    const phone = document.getElementById('brand-phone').value.trim();
-    const location = document.getElementById('brand-location').value.trim();
-    const image = document.getElementById('brand-image').value.trim();
-    const description = document.getElementById('brand-description').value.trim();
-    const expiry = document.getElementById('brand-expiry').value;
-    const featured = document.getElementById('brand-featured').checked;
     
     if (!name) {
-        alert('Please enter at least a brand name');
+        alert('Please enter brand name');
         return;
     }
     
     const newBrand = {
         id: Date.now(),
-        name,
+        name: name,
         category: category || 'general',
-        price: price || 'Contact for pricing',
-        phone: phone || 'Contact via WhatsApp',
-        location: location || 'Campus Area',
-        image: image || '',
-        description: description || 'No description provided.',
-        expiry: expiry || null,
-        featured,
+        price: document.getElementById('brand-price').value.trim() || 'Contact for price',
+        location: document.getElementById('brand-location').value.trim() || 'Campus',
+        featured: document.getElementById('brand-featured').checked,
         created_at: new Date().toISOString()
     };
     
-    brands.push(newBrand);
-    await saveBrands(); // Auto-saves to database
-    clearBrandForm();
+    console.log('Saving brand:', newBrand);
     
-    alert('✅ Brand added to LIVE website!');
-    switchTab('manage-brands');
+    try {
+        const { data, error } = await supabase
+            .from('brands')
+            .insert([newBrand]);
+        
+        if (error) {
+            console.error('❌ Supabase error:', error);
+            alert('Save failed: ' + error.message);
+            return;
+        }
+        
+        console.log('✅ Brand saved:', data);
+        alert('✅ Brand added to LIVE website!');
+        
+        // Clear form
+        document.getElementById('brand-name').value = '';
+        document.getElementById('brand-category').value = '';
+        document.getElementById('brand-price').value = '';
+        document.getElementById('brand-location').value = '';
+        document.getElementById('brand-featured').checked = false;
+        
+        switchTab('dashboard');
+        
+    } catch (error) {
+        console.error('❌ Error:', error);
+        alert('❌ Failed to save: ' + error.message);
+    }
 }
 
-// ======================
-// UI FUNCTIONS (MISSING IN YOUR CODE)
-// ======================
-
+// BASIC TAB SWITCHING
 function switchTab(tabId) {
-    // Remove active class from all tabs
+    console.log('Switching to tab:', tabId);
+    
+    // Remove active class
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
     });
@@ -1030,296 +1006,46 @@ function switchTab(tabId) {
         btn.classList.remove('active');
     });
     
-    // Add active class to selected tab
+    // Add active class
     document.getElementById(tabId).classList.add('active');
     event.target.classList.add('active');
-    
-    // Update content based on tab
-    if (tabId === 'manage-events') {
-        loadEventsList();
-    }
-    if (tabId === 'manage-brands') {
-        loadBrandsList();
-    }
-    if (tabId === 'dashboard') {
-        updateDashboard();
-    }
 }
 
-function loadEventsList() {
-    const container = document.getElementById('events-container');
-    if (!container) return;
-    
-    if (events.length === 0) {
-        container.innerHTML = '<p style="color: #666; text-align: center; padding: 40px;">No events added yet</p>';
-        return;
-    }
-    
-    container.innerHTML = events.map(event => {
-        const eventImage = event.image || `https://via.placeholder.com/300x200/667eea/ffffff?text=${encodeURIComponent(event.title.substring(0, 20))}`;
-        return `
-        <div class="item-card">
-            <div class="item-image">
-                <img src="${eventImage}" alt="${event.title}" onerror="this.src='https://via.placeholder.com/300x200/667eea/ffffff?text=${encodeURIComponent(event.title.substring(0, 20))}'">
-            </div>
-            <div class="item-info">
-                <h4>${event.title}</h4>
-                <p>${event.description}</p>
-                <div class="item-meta">
-                    <span class="meta-badge date-badge">📅 ${event.date || 'No date'}</span>
-                    <span class="meta-badge">📍 ${event.location}</span>
-                    <span class="meta-badge">⏰ ${event.time}</span>
-                    ${event.category === 'featured' ? '<span class="meta-badge featured-badge">⭐ FEATURED</span>' : ''}
-                </div>
-            </div>
-            <div class="item-actions">
-                <button class="btn-small btn-edit" onclick="editEvent(${event.id})">Edit</button>
-                <button class="btn-small btn-delete" onclick="deleteEvent(${event.id})">Delete</button>
-            </div>
-        </div>
-        `;
-    }).join('');
-}
-
-function loadBrandsList() {
-    const container = document.getElementById('brands-container');
-    if (!container) return;
-    
-    if (brands.length === 0) {
-        container.innerHTML = '<p style="color: #666; text-align: center; padding: 40px;">No brands added yet</p>';
-        return;
-    }
-    
-    container.innerHTML = brands.map(brand => {
-        const brandImage = brand.image || `https://via.placeholder.com/300x200/667eea/ffffff?text=${encodeURIComponent(brand.name.substring(0, 20))}`;
-        return `
-        <div class="item-card">
-            <div class="item-image">
-                <img src="${brandImage}" alt="${brand.name}" onerror="this.src='https://via.placeholder.com/300x200/667eea/ffffff?text=${encodeURIComponent(brand.name.substring(0, 20))}'">
-            </div>
-            <div class="item-info">
-                <h4>${brand.name}</h4>
-                <p>${brand.description}</p>
-                <div class="item-meta">
-                    <span class="meta-badge type-badge">${brand.category.toUpperCase()}</span>
-                    <span class="meta-badge">💰 ${brand.price}</span>
-                    <span class="meta-badge">📍 ${brand.location}</span>
-                    <span class="meta-badge">📞 ${brand.phone}</span>
-                    ${brand.featured ? '<span class="meta-badge featured-badge">⭐ FEATURED</span>' : ''}
-                </div>
-            </div>
-            <div class="item-actions">
-                <button class="btn-small btn-edit" onclick="editBrand(${brand.id})">Edit</button>
-                <button class="btn-small btn-delete" onclick="deleteBrand(${brand.id})">Delete</button>
-            </div>
-        </div>
-        `;
-    }).join('');
-}
-
-function deleteEvent(id) {
-    if (!confirm('Delete this event?')) return;
-    
-    events = events.filter(e => e.id !== id);
-    saveEvents();
-    loadEventsList();
-    updateDashboard();
-    alert('Event deleted');
-}
-
-function deleteBrand(id) {
-    if (!confirm('Delete this brand?')) return;
-    
-    brands = brands.filter(b => b.id !== id);
-    saveBrands();
-    loadBrandsList();
-    updateDashboard();
-    alert('Brand deleted');
-}
-
+// BASIC FORM CLEARING
 function clearEventForm() {
     document.getElementById('event-title').value = '';
     document.getElementById('event-date').value = '';
-    document.getElementById('event-type').value = '';
     document.getElementById('event-location').value = '';
-    document.getElementById('event-time').value = '';
-    document.getElementById('event-image').value = '';
     document.getElementById('event-description').value = '';
-    document.getElementById('event-button').value = '';
-    document.getElementById('event-image-preview').style.display = 'none';
-    
-    // Reset category
-    document.querySelectorAll('.category-option[data-category]').forEach(opt => {
-        opt.classList.remove('selected');
-    });
-    document.querySelector('.category-option[data-category="regular"]').classList.add('selected');
-    document.getElementById('event-category').value = 'regular';
+    console.log('Event form cleared');
 }
 
 function clearBrandForm() {
     document.getElementById('brand-name').value = '';
     document.getElementById('brand-category').value = '';
     document.getElementById('brand-price').value = '';
-    document.getElementById('brand-phone').value = '';
     document.getElementById('brand-location').value = '';
-    document.getElementById('brand-image').value = '';
-    document.getElementById('brand-description').value = '';
-    document.getElementById('brand-expiry').value = '';
     document.getElementById('brand-featured').checked = false;
-    document.getElementById('brand-image-preview').style.display = 'none';
+    console.log('Brand form cleared');
 }
 
-function showImagePreview(url, previewId) {
-    const previewContainer = event.target.parentElement.querySelector('.image-preview-container');
-    const previewImg = document.getElementById(previewId);
+// INITIALIZE
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ Admin panel loaded');
     
-    if (url && url.startsWith('http')) {
-        previewImg.src = url;
-        previewContainer.style.display = 'block';
-        previewImg.style.display = 'block';
-    } else {
-        previewContainer.style.display = 'none';
-    }
-}
-
-function selectCategory(element, type) {
-    document.querySelectorAll('.category-option[data-category]').forEach(opt => {
-        if (opt.parentElement === element.parentElement) {
-            opt.classList.remove('selected');
-        }
-    });
-    element.classList.add('selected');
+    // Test connection automatically
+    setTimeout(testConnection, 1000);
     
-    if (type === 'event') {
-        document.getElementById('event-category').value = element.dataset.category;
-    }
-}
-
-function updateDashboard() {
-    updateDashboardStats();
-    updateDashboardEvents();
-    updateDashboardBrands();
-    updateRecentActivity();
-}
-
-function updateDashboardStats() {
-    const totalEvents = events.length;
-    const totalBrands = brands.length;
-    const featuredCount = events.filter(e => e.category === 'featured').length + 
-                          brands.filter(b => b.featured).length;
+    // Make functions global
+    window.addEvent = addEvent;
+    window.addBrand = addBrand;
+    window.switchTab = switchTab;
+    window.clearEventForm = clearEventForm;
+    window.clearBrandForm = clearBrandForm;
+    window.testConnection = testConnection; // For debugging
     
-    document.getElementById('total-events').textContent = totalEvents;
-    document.getElementById('total-brands').textContent = totalBrands;
-    document.getElementById('featured-items').textContent = featuredCount;
-    
-    document.getElementById('stat-total-events').textContent = totalEvents;
-    document.getElementById('stat-active-brands').textContent = totalBrands;
-    document.getElementById('stat-upcoming-events').textContent = totalEvents;
-}
-
-function updateDashboardEvents() {
-    const container = document.getElementById('dashboard-events');
-    if (!container) return;
-    
-    const recentEvents = events.slice(0, 3);
-    
-    if (recentEvents.length === 0) {
-        container.innerHTML = '<p style="color: #666;">No events</p>';
-        return;
-    }
-    
-    container.innerHTML = recentEvents.map(event => `
-        <div style="padding: 10px 0; border-bottom: 1px solid #eee;">
-            <strong>${event.title}</strong>
-            <div style="font-size: 12px; color: #666; margin-top: 5px;">
-                📅 ${event.date || 'No date'} | 📍 ${event.location}
-            </div>
-        </div>
-    `).join('');
-}
-
-function updateDashboardBrands() {
-    const container = document.getElementById('dashboard-brands');
-    if (!container) return;
-    
-    const recentBrands = brands.slice(0, 3);
-    
-    if (recentBrands.length === 0) {
-        container.innerHTML = '<p style="color: #666;">No brands</p>';
-        return;
-    }
-    
-    container.innerHTML = recentBrands.map(brand => `
-        <div style="padding: 10px 0; border-bottom: 1px solid #eee;">
-            <strong>${brand.name}</strong>
-            <div style="font-size: 12px; color: #666; margin-top: 5px;">
-                🏷️ ${brand.category} | 📍 ${brand.location}
-            </div>
-        </div>
-    `).join('');
-}
-
-function updateRecentActivity() {
-    const container = document.getElementById('recent-activity');
-    if (!container) return;
-    
-    const activities = [
-        events.length > 0 ? `📅 Added "${events[0].title}" event` : 'No events yet',
-        brands.length > 0 ? `🏪 Added "${brands[0].name}" brand` : 'No brands yet',
-        `📊 Total: ${events.length} events, ${brands.length} brands`
-    ];
-    
-    container.innerHTML = activities.map(activity => `
-        <div style="padding: 8px 0; border-bottom: 1px solid #f0f0f0;">
-            ${activity}
-        </div>
-    `).join('');
-}
-
-function clearAllData() {
-    if (!confirm('⚠️ Delete ALL events and brands?')) return;
-    
-    events = [];
-    brands = [];
-    saveEvents();
-    saveBrands();
-    updateDashboard();
-    alert('All data cleared');
-}
-
-// ======================
-// INITIALIZATION
-// ======================
-
-document.addEventListener('DOMContentLoaded', async function() {
-    console.log('🚀 Admin panel starting...');
-    
-    // Load data from database
-    await loadDataFromDB();
-    
-    // Initialize dashboard
-    updateDashboard();
-    
-    // Auto-save every 30 seconds
-    setInterval(async () => {
-        if (events.length > 0) await saveEvents();
-        if (brands.length > 0) await saveBrands();
-    }, 30000);
-    
-    console.log('✅ Admin panel ready');
+    console.log('🎮 Ready! Check console for errors.');
 });
-
-// Make functions available globally (for onclick attributes)
-window.switchTab = switchTab;
-window.addEvent = addEvent;
-window.addBrand = addBrand;
-window.clearEventForm = clearEventForm;
-window.clearBrandForm = clearBrandForm;
-window.selectCategory = selectCategory;
-window.showImagePreview = showImagePreview;
-window.clearAllData = clearAllData;
-window.deleteEvent = deleteEvent;
-window.deleteBrand = deleteBrand;
 </script>
 </body>
 </html>
