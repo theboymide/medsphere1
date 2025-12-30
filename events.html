@@ -26,16 +26,15 @@
         }
         
         /* Header */
-        header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        
+        /* Header - REMOVED sticky positioning */
+header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 30px 0;
+    position: relative !important; /* Changed from sticky */
+    z-index: 1000;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
         .header-content {
             display: flex;
             justify-content: space-between;
@@ -264,22 +263,23 @@
 </head>
 <body>
     <!-- Header -->
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <a href="index.html" class="logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <div class="logo-text">The<span>MedSphere</span></div>
-                </a>
-                
-                <a href="index.html" class="back-home">
-                    <i class="fas fa-home"></i> Back to Home
-                </a>
-            </div>
+    <!-- Header -->
+<header style="position: relative !important; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+    <div class="container">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">The<span>MedSphere</span></div>
+            </a>
+            
+            <a href="index.html" class="back-home">
+                <i class="fas fa-home"></i> Back to Home
+            </a>
         </div>
-    </header>
+    </div>
+</header>
     
     <!-- Hero Section -->
     <section class="hero">
