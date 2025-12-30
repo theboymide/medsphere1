@@ -4,57 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TheMedSphere | Campus Community Hub</title>
-    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* REDUCED SPACING STYLES */
-        .purple-heading {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 700;
-            text-align: center;
+        /* IMPROVED NAVIGATION STYLES */
+        .main-header {
+            position: relative !important; /* Changed from sticky/fixed */
+            top: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            z-index: 1000;
         }
         
-        .section-subtitle {
-            color: #666;
-            text-align: center;
-            font-size: 16px;
-            margin-top: 5px; /* Reduced from 10px */
-        }
-        
-        .section-spacing {
-            padding: 40px 20px; /* Reduced from 80px 20px */
-            margin: 0;
+        .main-nav {
+            display: flex;
+            gap: 30px;
         }
         
         .nav-link {
-            position: relative;
+            color: #555;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            padding: 8px 15px;
+            border-radius: 6px;
             transition: all 0.3s ease;
+            position: relative;
         }
         
         .nav-link:hover {
             color: #764ba2;
+            background: #f8f9ff;
         }
         
-        .nav-link.active {
-            color: #667eea;
-            font-weight: 600;
+        /* FIX: Make events/brands links on homepage scroll to sections */
+        .nav-link[href="#events-section"],
+        .nav-link[href="#brands-section"],
+        .nav-link[href="#chat"] {
+            cursor: pointer;
         }
         
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 3px;
+        /* Remove target="_blank" behavior */
+        .nav-link:not([href^="http"]) {
+            cursor: pointer;
         }
         
+        /* Back to top button */
         .back-to-top {
             position: fixed;
             bottom: 30px;
@@ -84,6 +80,7 @@
             justify-content: center;
         }
         
+        /* Smooth scrolling */
         html {
             scroll-behavior: smooth;
         }
@@ -92,29 +89,27 @@
 <body>
     <!-- Back to Top Button -->
     <button class="back-to-top" onclick="scrollToTop()">↑</button>
+<!-- Main Header -->
+<div class="main-header">
+    <div class="container">
+        <div class="navbar">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">The<span>MedSphere</span></div>
+            </a>
 
-    <!-- Main Header -->
-    <div class="main-header">
-        <div class="container">
-            <div class="navbar">
-                <a href="#" class="logo">
-                    <div class="logo-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <div class="logo-text">The<span>MedSphere</span></div>
-                </a>
-
-                <!-- Main Navigation - FIXED: Removed target="_blank" -->
-                <nav class="main-nav">
-                    <a href="#home" class="nav-link active">Home</a>
-                    <a href="events.html" class="nav-link">Events</a>
-                    <a href="chat.html" class="nav-link">Chat</a>
-                    <a href="brands.html" class="nav-link">Brands</a>
-                </nav>
-            </div>
+            <!-- FIXED NAVIGATION -->
+            <nav class="main-nav">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#events-section" class="nav-link">Events</a>
+                <a href="#chat" class="nav-link">Chat</a>
+                <a href="#brands-section" class="nav-link">Brands</a>
+            </nav>
         </div>
     </div>
-
+</div>
     <!-- Hero Section - REDUCED SPACING -->
     <section id="home" class="hero" style="padding: 60px 0;">
         <div class="container">
