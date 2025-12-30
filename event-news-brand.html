@@ -89,6 +89,17 @@
             font-size: 1rem;
         }
         
+        .required::after {
+            content: " *";
+            color: #ef4444;
+        }
+        
+        .optional {
+            color: #6b7280;
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+        
         input, textarea, select {
             width: 100%;
             padding: 14px;
@@ -176,13 +187,18 @@
             margin: 30px auto 0;
         }
         
-        .submit-btn:hover {
+        .submit-btn:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
         }
         
-        .submit-btn:active {
+        .submit-btn:active:not(:disabled) {
             transform: translateY(0);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
         
         .status-message {
@@ -205,6 +221,13 @@
             background: #fee2e2;
             color: #991b1b;
             border: 1px solid #fecaca;
+            display: block;
+        }
+        
+        .info {
+            background: #dbeafe;
+            color: #1e40af;
+            border: 1px solid #93c5fd;
             display: block;
         }
         
@@ -264,6 +287,18 @@
         .delete-btn:hover {
             background: #dc2626;
         }
+        
+        .flex-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .flex-fields {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -284,7 +319,7 @@
                 <h2>Add New Event/News</h2>
                 <form id="eventForm">
                     <div class="form-group">
-                        <label for="eventImages">Upload Images (Multiple allowed)</label>
+                        <label for="eventImages" class="optional">Upload Images (Optional)</label>
                         <div class="file-upload">
                             <div class="upload-icon">📸</div>
                             <div class="upload-text">Click to upload images or drag & drop</div>
@@ -294,27 +329,34 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="eventName">Event/News Name *</label>
+                        <label for="eventName" class="required">Event/News Name</label>
                         <input type="text" id="eventName" required placeholder="e.g., Tech Conference 2024">
                     </div>
                     
                     <div class="form-group">
-                        <label for="eventDescription">Description *</label>
+                        <label for="eventDescription" class="required">Description</label>
                         <textarea id="eventDescription" required placeholder="Provide detailed description..."></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label for="eventContact">Contact Information *</label>
+                        <label for="eventContact" class="required">Contact Information</label>
                         <input type="text" id="eventContact" required placeholder="Email or phone number">
                     </div>
                     
-                    <div class="form-group">
-                        <label for="eventTime">Event Time *</label>
-                        <input type="datetime-local" id="eventTime" required>
+                    <div class="flex-fields">
+                        <div class="form-group">
+                            <label for="eventDate" class="optional">Event Date (Optional)</label>
+                            <input type="date" id="eventDate">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="eventTime" class="optional">Event Time (Optional)</label>
+                            <input type="time" id="eventTime">
+                        </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="eventType">Type *</label>
+                        <label for="eventType" class="required">Type</label>
                         <select id="eventType" required>
                             <option value="">Select Type</option>
                             <option value="event">Event</option>
@@ -322,7 +364,7 @@
                         </select>
                     </div>
                     
-                    <button type="submit" class="submit-btn">Add Event/News</button>
+                    <button type="submit" class="submit-btn" id="eventSubmitBtn">Add Event/News</button>
                 </form>
                 
                 <div id="eventStatus" class="status-message"></div>
@@ -340,7 +382,7 @@
                 <h2>Add New Brand</h2>
                 <form id="brandForm">
                     <div class="form-group">
-                        <label for="brandImages">Upload Brand Images (Multiple allowed)</label>
+                        <label for="brandImages" class="optional">Upload Brand Images (Optional)</label>
                         <div class="file-upload">
                             <div class="upload-icon">🏢</div>
                             <div class="upload-text">Click to upload brand logos/images</div>
@@ -350,21 +392,21 @@
                     </div>
                     
                     <div class="form-group">
-                        <label for="brandName">Brand Name *</label>
+                        <label for="brandName" class="required">Brand Name</label>
                         <input type="text" id="brandName" required placeholder="e.g., TechCorp Inc.">
                     </div>
                     
                     <div class="form-group">
-                        <label for="brandDescription">Brand Description *</label>
+                        <label for="brandDescription" class="required">Brand Description</label>
                         <textarea id="brandDescription" required placeholder="Describe the brand and what they offer..."></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label for="brandContact">Contact Information *</label>
+                        <label for="brandContact" class="required">Contact Information</label>
                         <input type="text" id="brandContact" required placeholder="Email or phone number for inquiries">
                     </div>
                     
-                    <button type="submit" class="submit-btn">Add Brand</button>
+                    <button type="submit" class="submit-btn" id="brandSubmitBtn">Add Brand</button>
                 </form>
                 
                 <div id="brandStatus" class="status-message"></div>
@@ -386,7 +428,7 @@
         // Your Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyA8XaUNfLDq6PYJu-LC0y_5ClAkGNfrLaw",
-            authDomain: "medsphere-c73e4.firebaseapp.com",
+            authDomain: "medsphere-c73e4.firebasestorage.app",
             databaseURL: "https://medsphere-c73e4-default-rtdb.firebaseio.com",
             projectId: "medsphere-c73e4",
             storageBucket: "medsphere-c73e4.firebasestorage.app",
@@ -395,7 +437,7 @@
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
         const storage = firebase.storage();
 
@@ -444,50 +486,80 @@
         async function uploadImages(files, folder) {
             const imageUrls = [];
             for (const file of files) {
-                const storageRef = storage.ref(`${folder}/${Date.now()}_${file.name}`);
-                await storageRef.put(file);
-                const url = await storageRef.getDownloadURL();
-                imageUrls.push(url);
+                try {
+                    const fileName = `${folder}_${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+                    const storageRef = storage.ref(`${folder}/${fileName}`);
+                    await storageRef.put(file);
+                    const url = await storageRef.getDownloadURL();
+                    imageUrls.push(url);
+                } catch (error) {
+                    console.error('Error uploading image:', error);
+                    throw new Error('Failed to upload images. Please try again.');
+                }
             }
             return imageUrls;
         }
 
-        // Handle Event Form Submission
+        // Handle Event Form Submission - FIXED
         document.getElementById('eventForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const submitBtn = this.querySelector('.submit-btn');
+            const submitBtn = document.getElementById('eventSubmitBtn');
             const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Uploading...';
+            submitBtn.textContent = 'Adding...';
             submitBtn.disabled = true;
 
             try {
-                const eventName = document.getElementById('eventName').value;
-                const description = document.getElementById('eventDescription').value;
-                const contact = document.getElementById('eventContact').value;
+                const eventName = document.getElementById('eventName').value.trim();
+                const description = document.getElementById('eventDescription').value.trim();
+                const contact = document.getElementById('eventContact').value.trim();
+                const eventDate = document.getElementById('eventDate').value;
                 const eventTime = document.getElementById('eventTime').value;
                 const eventType = document.getElementById('eventType').value;
                 const imageFiles = document.getElementById('eventImages').files;
 
+                // Basic validation
+                if (!eventName || !description || !contact || !eventType) {
+                    throw new Error('Please fill in all required fields');
+                }
+
                 // Upload images if any
                 let imageUrls = [];
                 if (imageFiles.length > 0) {
+                    showStatus('eventStatus', '📤 Uploading images...', 'info');
                     imageUrls = await uploadImages(Array.from(imageFiles), 'events');
+                }
+
+                // Combine date and time if both provided
+                let combinedDateTime = null;
+                if (eventDate) {
+                    if (eventTime) {
+                        combinedDateTime = `${eventDate}T${eventTime}:00`;
+                    } else {
+                        combinedDateTime = `${eventDate}T12:00:00`;
+                    }
                 }
 
                 // Generate unique ID
                 const eventId = 'event_' + Date.now();
                 
-                // Save to Realtime Database
-                await database.ref('events/' + eventId).set({
+                // Prepare event data
+                const eventData = {
                     id: eventId,
                     name: eventName,
                     description: description,
                     contact: contact,
-                    time: eventTime,
                     type: eventType,
                     images: imageUrls,
                     createdAt: Date.now()
-                });
+                };
+
+                // Add date/time if provided
+                if (combinedDateTime) {
+                    eventData.time = combinedDateTime;
+                }
+
+                // Save to Realtime Database
+                await database.ref('events/' + eventId).set(eventData);
 
                 // Show success
                 showStatus('eventStatus', '✅ Event/News added successfully!', 'success');
@@ -508,23 +580,29 @@
             }
         });
 
-        // Handle Brand Form Submission
+        // Handle Brand Form Submission - FIXED
         document.getElementById('brandForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const submitBtn = this.querySelector('.submit-btn');
+            const submitBtn = document.getElementById('brandSubmitBtn');
             const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Uploading...';
+            submitBtn.textContent = 'Adding...';
             submitBtn.disabled = true;
 
             try {
-                const brandName = document.getElementById('brandName').value;
-                const description = document.getElementById('brandDescription').value;
-                const contact = document.getElementById('brandContact').value;
+                const brandName = document.getElementById('brandName').value.trim();
+                const description = document.getElementById('brandDescription').value.trim();
+                const contact = document.getElementById('brandContact').value.trim();
                 const imageFiles = document.getElementById('brandImages').files;
+
+                // Basic validation
+                if (!brandName || !description || !contact) {
+                    throw new Error('Please fill in all required fields');
+                }
 
                 // Upload images if any
                 let imageUrls = [];
                 if (imageFiles.length > 0) {
+                    showStatus('brandStatus', '📤 Uploading images...', 'info');
                     imageUrls = await uploadImages(Array.from(imageFiles), 'brands');
                 }
 
@@ -560,10 +638,10 @@
             }
         });
 
-        // Load and display events
+        // Load and display events - FIXED
         async function loadEvents() {
             const eventsList = document.getElementById('eventsList');
-            eventsList.innerHTML = '<p>Loading...</p>';
+            eventsList.innerHTML = '<p>Loading events...</p>';
 
             try {
                 const snapshot = await database.ref('events').once('value');
@@ -578,16 +656,39 @@
                 Object.entries(events).forEach(([key, data]) => {
                     const item = document.createElement('div');
                     item.className = 'item-card';
+                    
+                    // Format date/time
+                    let timeInfo = 'No date set';
+                    if (data.time) {
+                        const eventDate = new Date(data.time);
+                        timeInfo = eventDate.toLocaleString('en-US', {
+                            weekday: 'short',
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        });
+                    }
+                    
+                    // Get first image or placeholder
+                    const imageUrl = data.images && data.images.length > 0 
+                        ? data.images[0] 
+                        : `https://via.placeholder.com/100/667eea/ffffff?text=${data.type === 'news' ? '📰' : '🎉'}`;
+                    
                     item.innerHTML = `
-                        ${data.images && data.images.length > 0 ? 
-                            `<img src="${data.images[0]}" alt="${data.name}" class="item-image">` : 
-                            `<div class="item-image" style="background: #e5e7eb; display: flex; align-items: center; justify-content: center;">📅</div>`
-                        }
+                        <img src="${imageUrl}" alt="${data.name}" class="item-image">
                         <div class="item-info">
-                            <div class="item-title">${data.name} <span style="background: #e0e7ff; color: #4f46e5; padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-left: 10px;">${data.type}</span></div>
+                            <div class="item-title">${data.name} 
+                                <span style="background: ${data.type === 'news' ? '#e0e7ff' : '#f0f9ff'}; 
+                                      color: ${data.type === 'news' ? '#4f46e5' : '#0ea5e9'}; 
+                                      padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; margin-left: 10px;">
+                                    ${data.type === 'news' ? 'NEWS' : 'EVENT'}
+                                </span>
+                            </div>
                             <p style="color: #6b7280; margin: 5px 0;">${data.description.substring(0, 100)}...</p>
                             <p style="color: #4b5563; font-size: 0.9rem;">📞 ${data.contact}</p>
-                            <p style="color: #4b5563; font-size: 0.9rem;">⏰ ${new Date(data.time).toLocaleString()}</p>
+                            <p style="color: #4b5563; font-size: 0.9rem;">⏰ ${timeInfo}</p>
                         </div>
                         <button class="delete-btn" onclick="deleteItem('events', '${key}')">Delete</button>
                     `;
@@ -596,14 +697,14 @@
 
             } catch (error) {
                 console.error('Error loading events:', error);
-                eventsList.innerHTML = '<p style="color: #ef4444;">Error loading events</p>';
+                eventsList.innerHTML = '<p style="color: #ef4444;">Error loading events. Check console.</p>';
             }
         }
 
-        // Load and display brands
+        // Load and display brands - FIXED
         async function loadBrands() {
             const brandsList = document.getElementById('brandsList');
-            brandsList.innerHTML = '<p>Loading...</p>';
+            brandsList.innerHTML = '<p>Loading brands...</p>';
 
             try {
                 const snapshot = await database.ref('brands').once('value');
@@ -618,11 +719,14 @@
                 Object.entries(brands).forEach(([key, data]) => {
                     const item = document.createElement('div');
                     item.className = 'item-card';
+                    
+                    // Get first image or placeholder
+                    const imageUrl = data.images && data.images.length > 0 
+                        ? data.images[0] 
+                        : `https://via.placeholder.com/100/667eea/ffffff?text=🏢`;
+                    
                     item.innerHTML = `
-                        ${data.images && data.images.length > 0 ? 
-                            `<img src="${data.images[0]}" alt="${data.name}" class="item-image">` : 
-                            `<div class="item-image" style="background: #e5e7eb; display: flex; align-items: center; justify-content: center;">🏢</div>`
-                        }
+                        <img src="${imageUrl}" alt="${data.name}" class="item-image">
                         <div class="item-info">
                             <div class="item-title">${data.name}</div>
                             <p style="color: #6b7280; margin: 5px 0;">${data.description.substring(0, 100)}...</p>
@@ -635,7 +739,7 @@
 
             } catch (error) {
                 console.error('Error loading brands:', error);
-                brandsList.innerHTML = '<p style="color: #ef4444;">Error loading brands</p>';
+                brandsList.innerHTML = '<p style="color: #ef4444;">Error loading brands. Check console.</p>';
             }
         }
 
@@ -653,7 +757,8 @@
                     }
                 } catch (error) {
                     console.error('Error deleting item:', error);
-                    showStatus(collection === 'events' ? 'eventStatus' : 'brandStatus', `❌ Error deleting item: ${error.message}`, 'error');
+                    showStatus(collection === 'events' ? 'eventStatus' : 'brandStatus', 
+                              `❌ Error deleting item: ${error.message}`, 'error');
                 }
             }
         }
@@ -672,6 +777,16 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadEvents();
             loadBrands();
+            
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('eventDate').value = today;
+            
+            // Set default time to next hour
+            const nextHour = new Date();
+            nextHour.setHours(nextHour.getHours() + 1);
+            const timeString = nextHour.getHours().toString().padStart(2, '0') + ':00';
+            document.getElementById('eventTime').value = timeString;
         });
     </script>
 </body>
