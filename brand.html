@@ -26,15 +26,14 @@
         }
         
         /* Header */
-        /* Header - REMOVED sticky positioning */
-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 30px 0;
-    position: relative !important; /* Changed from sticky */
-    z-index: 1000;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 0;
+            position: relative;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
         
         .header-content {
             display: flex;
@@ -83,7 +82,7 @@ header {
         
         /* Hero Section */
         .hero {
-            padding: 80px 0 40px;
+            padding: 60px 0 40px;
             text-align: center;
         }
         
@@ -101,31 +100,6 @@ header {
             color: #666;
             max-width: 600px;
             margin: 0 auto 40px;
-        }
-        
-        /* Stats */
-        .stats {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-bottom: 60px;
-            flex-wrap: wrap;
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 42px;
-            font-weight: 700;
-            color: #667eea;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            color: #666;
-            font-size: 14px;
         }
         
         /* Brands Grid */
@@ -149,8 +123,12 @@ header {
         }
         
         .brand-image {
-            height: 250px;
+            height: 200px;
             overflow: hidden;
+            background: #f0f2ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .brand-image img {
@@ -177,8 +155,9 @@ header {
         
         .brand-description {
             color: #4b5563;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             line-height: 1.5;
+            font-size: 15px;
         }
         
         .brand-contact {
@@ -212,10 +191,10 @@ header {
         .advertise-cta {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 60px 20px;
+            padding: 50px 20px;
             text-align: center;
             border-radius: 20px;
-            margin: 60px 0;
+            margin: 40px 0 60px;
         }
         
         .advertise-cta h2 {
@@ -236,17 +215,17 @@ header {
             gap: 12px;
             background: white;
             color: #667eea;
-            padding: 15px 40px;
+            padding: 15px 35px;
             border-radius: 50px;
             text-decoration: none;
-            font-weight: 700;
-            font-size: 18px;
+            font-weight: 600;
+            font-size: 16px;
             transition: all 0.3s;
         }
         
         .whatsapp-btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(255,255,255,0.2);
+            box-shadow: 0 8px 20px rgba(255,255,255,0.2);
         }
         
         /* Loading */
@@ -280,53 +259,41 @@ header {
                 text-align: center;
             }
             
-            .stats {
-                gap: 20px;
+            .advertise-cta {
+                padding: 40px 20px;
+                margin: 30px 0 50px;
+            }
+            
+            .advertise-cta h2 {
+                font-size: 28px;
             }
         }
     </style>
 </head>
 <body>
     <!-- Header -->
-    <!-- Header -->
-<header style="position: relative !important; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-    <div class="container">
-        <div class="header-content">
-            <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <div class="logo-text">The<span>MedSphere</span></div>
-            </a>
-            
-            <a href="index.html" class="back-home">
-                <i class="fas fa-home"></i> Back to Home
-            </a>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="logo-text">The<span>MedSphere</span></div>
+                </a>
+                
+                <a href="index.html" class="back-home">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
     
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <h1>🏢 Sponsored Brands</h1>
             <p>Discover trusted brands and businesses curated for student life. Support businesses that support your campus community.</p>
-            
-            <!-- Stats -->
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-number" id="brands-count">0</div>
-                    <div class="stat-label">Active Brands</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">1000+</div>
-                    <div class="stat-label">Daily Views</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number">₦15K</div>
-                    <div class="stat-label">Starting Price</div>
-                </div>
-            </div>
         </div>
     </section>
     
@@ -344,7 +311,7 @@ header {
         <div class="advertise-cta">
             <h2>Want Your Brand Here?</h2>
             <p>Reach thousands of students daily with our premium advertising space. Get featured among trusted campus brands.</p>
-            <a href="https://wa.me/2348124219028" class="whatsapp-btn" target="_blank">
+            <a href="https://wa.me/2348124219028" class="whatsapp-btn">
                 <i class="fab fa-whatsapp"></i> Contact Us on WhatsApp
             </a>
         </div>
@@ -390,20 +357,12 @@ header {
                 const snapshot = await database.ref('brands').once('value');
                 const brandsData = snapshot.val();
                 
-                // Update count
-                const count = brandsData ? Object.keys(brandsData).length : 0;
-                document.getElementById('brands-count').textContent = count;
-                
-                if (!brandsData || count === 0) {
+                if (!brandsData) {
                     container.innerHTML = `
                         <div class="no-brands">
                             <div class="no-brands-icon">🏪</div>
                             <h3>No Brands Available Yet</h3>
                             <p style="margin-bottom: 20px;">Be the first to advertise your brand to our student community</p>
-                            <a href="https://wa.me/2348124219028" 
-                               style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 20px;">
-                                <i class="fab fa-whatsapp"></i> Advertise Now
-                            </a>
                         </div>
                     `;
                     return;
@@ -441,13 +400,13 @@ header {
             // Get first image or use placeholder
             const brandImage = brand.images && brand.images.length > 0 
                 ? brand.images[0] 
-                : `https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(brand.name?.substring(0, 20) || 'Brand')}`;
+                : `https://via.placeholder.com/400x200/f0f2ff/667eea?text=${encodeURIComponent(brand.name?.substring(0, 20) || 'Brand')}`;
             
             div.innerHTML = `
                 <div class="brand-image">
                     <img src="${brandImage}" 
                          alt="${brand.name}"
-                         onerror="this.src='https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(brand.name?.substring(0, 20) || 'Brand')}'">
+                         onerror="this.src='https://via.placeholder.com/400x200/f0f2ff/667eea?text=${encodeURIComponent(brand.name?.substring(0, 15) || 'Brand')}'">
                 </div>
                 <div class="brand-content">
                     <h3 class="brand-name">${brand.name}</h3>
