@@ -832,195 +832,176 @@
     </div>
 <script>
 // ======================
-// SIMPLE WORKING VERSION
+// ALL-IN-ONE SOLUTION (NO EXTERNAL SCRIPT TAG)
 // ======================
 
-// 1. Initialize Supabase immediately
-const SUPABASE_URL = 'https://cgcryscjzfoghaenxeuk.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNnY3J5c2NqemZvZ2hhZW54ZXVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQzMzY4MzYsImV4cCI6MjA0OTkxMjgzNn0.xEop6qs9UcrEGd8jYMTrlw_x4omRUxc';
-let supabase = null;
-
-// 2. Initialize when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Page loaded, initializing...');
-    
-    // Load Supabase
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    console.log('✅ Supabase initialized');
-    
-    // Make sure buttons work
-    setupButtons();
-});
-
-// 3. Setup button click handlers
-function setupButtons() {
-    console.log('🔗 Setting up button handlers...');
-    
-    // Add Event button
-    const addEventBtn = document.querySelector('button[onclick*="addEvent"]');
-    if (addEventBtn) {
-        addEventBtn.onclick = addEvent;
-        console.log('✅ Add Event button linked');
+// 1. Load Supabase dynamically if not already loaded
+async function loadSupabase() {
+    if (window.supabase) {
+        console.log('✅ Supabase already loaded');
+        return window.supabase;
     }
     
-    // Add Brand button
-    const addBrandBtn = document.querySelector('button[onclick*="addBrand"]');
-    if (addBrandBtn) {
-        addBrandBtn.onclick = addBrand;
-        console.log('✅ Add Brand button linked');
-    }
+    console.log('📦 Loading Supabase...');
     
-    // Tab buttons
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        const text = btn.textContent.toLowerCase();
-        btn.onclick = function() {
-            if (text.includes('dashboard')) switchTab('dashboard');
-            else if (text.includes('add event')) switchTab('add-event');
-            else if (text.includes('manage event')) switchTab('manage-events');
-            else if (text.includes('add brand')) switchTab('add-brand');
-            else if (text.includes('manage brand')) switchTab('manage-brands');
+    return new Promise((resolve, reject) => {
+        // Create script tag
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/@supabase/supabase-js@2';
+        script.onload = () => {
+            console.log('✅ Supabase library loaded');
+            resolve(window.supabase);
         };
+        script.onerror = () => {
+            console.error('❌ Failed to load Supabase');
+            reject(new Error('Failed to load Supabase'));
+        };
+        document.head.appendChild(script);
     });
 }
 
-// 4. SIMPLE ADD EVENT FUNCTION
-async function addEvent() {
-    console.log('🎯 Add Event clicked');
-    
-    const title = document.getElementById('event-title').value.trim();
-    if (!title) {
-        alert('Please enter event title');
-        return;
-    }
+// 2. Your Supabase config
+const SUPABASE_URL = 'https://cgcryscjzfoghaenxeuk.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_xEop6qs9UcrEGd8jYMTrlw_x4omRUxc';
+
+// 3. Main initialization
+async function initializeApp() {
+    console.log('🚀 Starting app...');
     
     try {
-        // Generate a random ID (since your table uses BIGINT)
-        const randomId = Math.floor(Math.random() * 1000000);
+        // Load Supabase library
+        const supabaseLib = await loadSupabase();
         
-        const newEvent = {
-            id: randomId,
-            title: title,
-            description: document.getElementById('event-description').value.trim() || '',
-            date: document.getElementById('event-date').value || null,
-            location: document.getElementById('event-location').value.trim() || null,
-            created_at: new Date().toISOString()
+        // Create client
+        const supabase = supabaseLib.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log('✅ Supabase client created');
+        
+        // TEST CONNECTION
+        const testBtn = document.createElement('button');
+        testBtn.innerHTML = '🔧 TEST';
+        testBtn.style.cssText = 'position:fixed; top:10px; right:10px; z-index:9999; background:red; color:white; padding:10px; border-radius:5px; border:none; cursor:pointer;';
+        testBtn.onclick = async () => {
+            try {
+                const { data, error } = await supabase.from('events').select('*').limit(1);
+                if (error) throw error;
+                alert(`✅ Connected! Found ${data?.length || 0} events`);
+            } catch (err) {
+                alert('❌ Connection failed: ' + err.message);
+            }
+        };
+        document.body.appendChild(testBtn);
+        
+        // 4. WORKING ADD EVENT FUNCTION
+        window.addEvent = async function() {
+            console.log('🎯 Add Event clicked');
+            
+            const title = document.getElementById('event-title').value.trim();
+            if (!title) {
+                alert('Please enter event title');
+                return;
+            }
+            
+            try {
+                const eventData = {
+                    id: Date.now(),
+                    title: title,
+                    description: document.getElementById('event-description').value.trim() || '',
+                    created_at: new Date().toISOString()
+                };
+                
+                console.log('📤 Inserting:', eventData);
+                
+                const { data, error } = await supabase
+                    .from('events')
+                    .insert([eventData]);
+                
+                if (error) throw error;
+                
+                alert('✅ Event added successfully!');
+                
+                // Clear form
+                document.getElementById('event-title').value = '';
+                document.getElementById('event-description').value = '';
+                
+                console.log('✅ Insert result:', data);
+                
+            } catch (error) {
+                console.error('❌ Error:', error);
+                alert('Failed: ' + error.message);
+            }
         };
         
-        console.log('Sending:', newEvent);
+        // 5. WORKING ADD BRAND FUNCTION
+        window.addBrand = async function() {
+            console.log('🏪 Add Brand clicked');
+            
+            const name = document.getElementById('brand-name').value.trim();
+            if (!name) {
+                alert('Please enter brand name');
+                return;
+            }
+            
+            try {
+                const brandData = {
+                    id: Date.now() + 1,
+                    name: name,
+                    category: document.getElementById('brand-category').value || 'general',
+                    created_at: new Date().toISOString()
+                };
+                
+                console.log('📤 Inserting:', brandData);
+                
+                const { data, error } = await supabase
+                    .from('brands')
+                    .insert([brandData]);
+                
+                if (error) throw error;
+                
+                alert('✅ Brand added successfully!');
+                
+                // Clear form
+                document.getElementById('brand-name').value = '';
+                
+                console.log('✅ Insert result:', data);
+                
+            } catch (error) {
+                console.error('❌ Error:', error);
+                alert('Failed: ' + error.message);
+            }
+        };
         
-        const { data, error } = await supabase
-            .from('events')
-            .insert([newEvent]);
-        
-        if (error) throw error;
-        
-        alert('✅ Event added successfully!');
-        document.getElementById('event-title').value = '';
-        document.getElementById('event-description').value = '';
+        console.log('✅ App initialized - buttons should work!');
         
     } catch (error) {
-        console.error('Error:', error);
-        alert('❌ Failed: ' + error.message);
+        console.error('❌ Initialization failed:', error);
+        alert('App failed to load: ' + error.message);
     }
 }
 
-// 5. SIMPLE ADD BRAND FUNCTION
-async function addBrand() {
-    console.log('🏪 Add Brand clicked');
-    
-    const name = document.getElementById('brand-name').value.trim();
-    if (!name) {
-        alert('Please enter brand name');
-        return;
-    }
-    
-    try {
-        const randomId = Math.floor(Math.random() * 1000000);
-        
-        const newBrand = {
-            id: randomId,
-            name: name,
-            category: document.getElementById('brand-category').value || 'general',
-            price: document.getElementById('brand-price').value.trim() || 'Contact for price',
-            location: document.getElementById('brand-location').value.trim() || 'Campus',
-            featured: document.getElementById('brand-featured').checked || false,
-            created_at: new Date().toISOString()
-        };
-        
-        console.log('Sending:', newBrand);
-        
-        const { data, error } = await supabase
-            .from('brands')
-            .insert([newBrand]);
-        
-        if (error) throw error;
-        
-        alert('✅ Brand added successfully!');
-        document.getElementById('brand-name').value = '';
-        
-    } catch (error) {
-        console.error('Error:', error);
-        alert('❌ Failed: ' + error.message);
-    }
-}
+// 6. Start everything
+initializeApp();
 
-// 6. TAB SWITCHING
-function switchTab(tabId) {
-    // Hide all tabs
+// 7. Keep your existing tab switching functions
+window.switchTab = function(tabId) {
     document.querySelectorAll('.tab-content').forEach(tab => {
         tab.classList.remove('active');
     });
-    
-    // Show selected tab
-    const tab = document.getElementById(tabId);
-    if (tab) tab.classList.add('active');
-    
-    // Update buttons
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('active');
     });
     
-    // Find and activate the clicked button
+    const tab = document.getElementById(tabId);
+    if (tab) tab.classList.add('active');
+    
     const buttons = document.querySelectorAll('.tab-btn');
     buttons.forEach(btn => {
         if (btn.textContent.toLowerCase().includes(tabId.replace('-', ' '))) {
             btn.classList.add('active');
         }
     });
-}
+};
 
-// 7. Clear forms
-function clearEventForm() {
-    document.getElementById('event-title').value = '';
-    document.getElementById('event-date').value = '';
-    document.getElementById('event-description').value = '';
-}
-
-function clearBrandForm() {
-    document.getElementById('brand-name').value = '';
-    document.getElementById('brand-price').value = '';
-}
-
-// 8. Test connection
-async function testConnection() {
-    try {
-        const { data, error } = await supabase.from('events').select('*');
-        if (error) throw error;
-        alert(`✅ Connected! Found ${data.length} events`);
-    } catch (error) {
-        alert('❌ Connection failed: ' + error.message);
-    }
-}
-
-// 9. Make functions global
-window.addEvent = addEvent;
-window.addBrand = addBrand;
-window.switchTab = switchTab;
-window.clearEventForm = clearEventForm;
-window.clearBrandForm = clearBrandForm;
-window.testConnection = testConnection;
-
-console.log('✅ All functions loaded');
+console.log('📝 Script loaded - waiting for initialization...');
 </script>
 </body>
 </html>
