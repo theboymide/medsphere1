@@ -912,6 +912,9 @@ async function addEvent() {
     const date = document.getElementById('event-date').value;
     const location = document.getElementById('event-location').value.trim();
     const description = document.getElementById('event-description').value.trim();
+    const type = document.getElementById('event-type').value;
+    const time = document.getElementById('event-time').value.trim();
+    const image = document.getElementById('event-image').value.trim();
     
     // Validate
     if (!title) {
@@ -920,13 +923,15 @@ async function addEvent() {
     }
     
     try {
-        // Create event object
+        // Create event object - REMOVE the manual id field!
         const newEvent = {
-            id: Date.now(),
             title: title,
             date: date || null,
             location: location || 'Campus',
             description: description || 'No description',
+            type: type || null,
+            time: time || null,
+            image: image || null,
             created_at: new Date().toISOString()
         };
         
@@ -935,26 +940,27 @@ async function addEvent() {
         // Save to Supabase
         const { data, error } = await supabase
             .from('events')
-            .insert([newEvent]);
+            .insert(newEvent); // Remove the array brackets!
         
         if (error) {
+            console.error('Supabase error details:', error);
             throw new Error(error.message);
         }
         
         console.log('✅ Event saved:', data);
-        alert('🎉 Event added to LIVE website!');
+        alert('🎉 Event added successfully!');
         
         // Clear form
-        document.getElementById('event-title').value = '';
-        document.getElementById('event-date').value = '';
-        document.getElementById('event-location').value = '';
-        document.getElementById('event-description').value = '';
+        clearEventForm();
         
         // Switch to dashboard
         switchTab('dashboard');
         
+        // Refresh dashboard
+        await updateDashboard();
+        
     } catch (error) {
-        console.error('❌ Error:', error);
+        console.error('❌ Full Error:', error);
         alert('❌ Failed to save: ' + error.message);
     }
 }
@@ -980,13 +986,17 @@ async function addBrand() {
     }
     
     try {
+        // Remove the manual ID field!
         const newBrand = {
-            id: Date.now(),
             name: name,
             category: category || 'general',
             price: document.getElementById('brand-price').value.trim() || 'Contact for price',
             location: document.getElementById('brand-location').value.trim() || 'Campus',
+            phone: document.getElementById('brand-phone').value.trim() || null,
+            description: document.getElementById('brand-description').value.trim() || null,
             featured: document.getElementById('brand-featured').checked || false,
+            expiry_date: document.getElementById('brand-expiry').value || null,
+            image: document.getElementById('brand-image').value.trim() || null,
             created_at: new Date().toISOString()
         };
         
@@ -994,28 +1004,27 @@ async function addBrand() {
         
         const { data, error } = await supabase
             .from('brands')
-            .insert([newBrand]);
+            .insert(newBrand); // Remove array brackets!
         
-        if (error) throw new Error(error.message);
+        if (error) {
+            console.error('Brand insert error:', error);
+            throw error;
+        }
         
         console.log('✅ Brand saved:', data);
-        alert('🎉 Brand added to LIVE website!');
+        alert('🎉 Brand added successfully!');
         
         // Clear form
-        document.getElementById('brand-name').value = '';
-        document.getElementById('brand-category').value = '';
-        document.getElementById('brand-price').value = '';
-        document.getElementById('brand-location').value = '';
-        document.getElementById('brand-featured').checked = false;
+        clearBrandForm();
         
         switchTab('dashboard');
+        await updateDashboard();
         
     } catch (error) {
-        console.error('❌ Error:', error);
+        console.error('❌ Full Error:', error);
         alert('❌ Failed to save: ' + error.message);
     }
 }
-
 // 6. TAB SWITCHING FUNCTION
 function switchTab(tabId) {
     console.log('🔄 Switching to tab:', tabId);
