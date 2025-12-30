@@ -833,30 +833,69 @@
     
     
 <script>
-// Firebase configuration - USE YOUR ACTUAL CHAT CONFIG!
+<!-- Add these Firebase SDKs BEFORE your script -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ======================
+// COMPLETE FIREBASE ADMIN PANEL
+// ======================
+
+// Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyA8XaUNfLDq6PYJu-LC0y_5ClAkGNfrLaw",
-  authDomain: "medsphere-c73e4.firebaseapp.com",
-  databaseURL: "https://medsphere-c73e4-default-rtdb.firebaseio.com",
-  projectId: "medsphere-c73e4",
-  storageBucket: "medsphere-c73e4.firebasestorage.app",
-  messagingSenderId: "289749352034",
-  appId: "1:289749352034:web:57fb380ac94433148bdb3b"
+    apiKey: "AIzaSyA8XaUNfLDq6PYJu-LC0y_5ClAkGNfrLaw",
+    authDomain: "medsphere-c73e4.firebaseapp.com",
+    databaseURL: "https://medsphere-c73e4-default-rtdb.firebaseio.com",
+    projectId: "medsphere-c73e4",
+    storageBucket: "medsphere-c73e4.firebasestorage.app",
+    messagingSenderId: "289749352034",
+    appId: "1:289749352034:web:57fb380ac94433148bdb3b"
 };
 
 // Initialize Firebase
-let db;
-try {
-    firebase.initializeApp(firebaseConfig);
-    db = firebase.firestore();
-    console.log('✅ Firebase ready');
-} catch (error) {
-    console.error('Firebase init error:', error);
-}
+let db = null;
 
-// SIMPLE ADD EVENT WITH FIREBASE
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.firestore();
+        console.log('✅ Firebase Firestore ready');
+        
+        // Load initial data
+        loadEvents();
+        loadBrands();
+        
+        // Add test button
+        const testBtn = document.createElement('button');
+        testBtn.innerHTML = '🔧 TEST';
+        testBtn.style.cssText = 'position:fixed; top:10px; right:10px; z-index:9999; background:red; color:white; padding:10px; border-radius:5px; border:none; cursor:pointer;';
+        testBtn.onclick = async () => {
+            try {
+                const snapshot = await db.collection('events').get();
+                alert(`✅ Connected! Found ${snapshot.size} events`);
+            } catch (err) {
+                alert('❌ Error: ' + err.message);
+            }
+        };
+        document.body.appendChild(testBtn);
+        
+    } catch (error) {
+        console.error('❌ Firebase init error:', error);
+        alert('Firebase failed to load: ' + error.message);
+    }
+});
+
+// ========== EVENT FUNCTIONS ==========
 async function addEvent() {
     console.log('🎯 Add Event clicked');
+    
+    if (!db) {
+        alert('Database not ready yet. Wait for Firebase to load.');
+        return;
+    }
     
     const title = document.getElementById('event-title').value.trim();
     if (!title) {
@@ -875,12 +914,12 @@ async function addEvent() {
             image: document.getElementById('event-image').value.trim() || null,
             category: document.getElementById('event-category').value || 'regular',
             buttonText: document.getElementById('event-button').value.trim() || null,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
         
-        console.log('📤 Saving to Firebase:', eventData);
+        console.log('📤 Saving event to Firestore:', eventData);
         
-        // Save to Firestore
         await db.collection('events').add(eventData);
         
         alert('✅ Event added successfully!');
@@ -895,14 +934,131 @@ async function addEvent() {
         switchTab('dashboard');
         
     } catch (error) {
-        console.error('❌ Error:', error);
+        console.error('❌ Error adding event:', error);
         alert('Failed: ' + error.message);
     }
 }
 
-// SIMPLE ADD BRAND WITH FIREBASE
+async function loadEvents() {
+    if (!db) {
+        console.log('Database not ready yet');
+        return;
+    }
+    
+    try {
+        const snapshot = await db.collection('events')
+            .orderBy('createdAt', 'desc')
+            .get();
+        
+        const events = [];
+        snapshot.forEach(doc => {
+            events.push({
+                id: doc.id,
+                ...doc.data()
+            });
+        });
+        
+        console.log('📊 Loaded', events.length, 'events');
+        
+        // Update counters
+        document.getElementById('total-events').textContent = events.length;
+        document.getElementById('stat-total-events').textContent = events.length;
+        
+        // Display events
+        displayEvents(events);
+        displayDashboardEvents(events);
+        
+    } catch (error) {
+        console.error('❌ Error loading events:', error);
+    }
+}
+
+function displayEvents(events) {
+    const container = document.getElementById('events-container');
+    if (!container) return;
+    
+    if (!events || events.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No events yet. Add your first event!</p></div>';
+        return;
+    }
+    
+    container.innerHTML = events.map(event => {
+        const date = event.date ? new Date(event.date).toLocaleDateString() : 'No date';
+        const location = event.location || 'Location not specified';
+        
+        return `
+        <div class="item-card">
+            <div class="item-image">
+                ${event.image ? 
+                    `<img src="${event.image}" alt="${event.title}">` : 
+                    `<div class="image-placeholder">📅</div>`
+                }
+            </div>
+            <div class="item-info">
+                <h4>${event.title}</h4>
+                <p>${event.description || 'No description'}</p>
+                <div class="item-meta">
+                    <span class="meta-badge date-badge">📅 ${date}</span>
+                    <span class="meta-badge">📍 ${location}</span>
+                    ${event.category === 'featured' ? 
+                        `<span class="meta-badge featured-badge">⭐ Featured</span>` : 
+                        ''
+                    }
+                </div>
+            </div>
+            <div class="item-actions">
+                <button class="btn-small btn-delete" onclick="deleteEvent('${event.id}')">Delete</button>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+function displayDashboardEvents(events) {
+    const container = document.getElementById('dashboard-events');
+    if (!container) return;
+    
+    const recentEvents = events.slice(0, 3);
+    
+    if (recentEvents.length === 0) {
+        container.innerHTML = '<p style="color: #666;">No events yet</p>';
+        return;
+    }
+    
+    container.innerHTML = recentEvents.map(event => {
+        const date = event.date ? new Date(event.date).toLocaleDateString() : 'No date';
+        return `
+        <div style="padding: 15px; border-bottom: 1px solid #eee; margin-bottom: 10px;">
+            <div style="font-weight: bold; color: #333;">${event.title}</div>
+            <div style="color: #666; font-size: 14px; margin-top: 5px;">
+                📅 ${date} • ${event.location || ''}
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+async function deleteEvent(eventId) {
+    if (!confirm('Delete this event?')) return;
+    
+    try {
+        await db.collection('events').doc(eventId).delete();
+        alert('✅ Event deleted');
+        loadEvents();
+    } catch (error) {
+        console.error('❌ Error deleting event:', error);
+        alert('Failed: ' + error.message);
+    }
+}
+
+// ========== BRAND FUNCTIONS ==========
 async function addBrand() {
     console.log('🏪 Add Brand clicked');
+    
+    if (!db) {
+        alert('Database not ready yet. Wait for Firebase to load.');
+        return;
+    }
     
     const name = document.getElementById('brand-name').value.trim();
     if (!name) {
@@ -921,10 +1077,11 @@ async function addBrand() {
             expiry: document.getElementById('brand-expiry').value || null,
             featured: document.getElementById('brand-featured').checked || false,
             image: document.getElementById('brand-image').value.trim() || null,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
         
-        console.log('📤 Saving to Firebase:', brandData);
+        console.log('📤 Saving brand to Firestore:', brandData);
         
         await db.collection('brands').add(brandData);
         
@@ -935,56 +1092,182 @@ async function addBrand() {
         switchTab('dashboard');
         
     } catch (error) {
-        console.error('❌ Error:', error);
+        console.error('❌ Error adding brand:', error);
         alert('Failed: ' + error.message);
     }
 }
 
-// LOAD EVENTS FROM FIREBASE
-async function loadEvents() {
+async function loadBrands() {
+    if (!db) {
+        console.log('Database not ready yet');
+        return;
+    }
+    
     try {
-        const snapshot = await db.collection('events')
+        const snapshot = await db.collection('brands')
             .orderBy('createdAt', 'desc')
             .get();
         
-        const events = [];
+        const brands = [];
         snapshot.forEach(doc => {
-            events.push({
+            brands.push({
                 id: doc.id,
                 ...doc.data()
             });
         });
         
-        console.log('📊 Loaded events:', events.length);
+        console.log('📊 Loaded', brands.length, 'brands');
         
         // Update counters
-        document.getElementById('total-events').textContent = events.length;
-        document.getElementById('stat-total-events').textContent = events.length;
+        document.getElementById('total-brands').textContent = brands.length;
+        document.getElementById('stat-active-brands').textContent = brands.length;
         
-        // Display events
-        displayEvents(events);
-        displayDashboardEvents(events);
+        // Display brands
+        displayBrands(brands);
+        displayDashboardBrands(brands);
         
     } catch (error) {
-        console.error('Error loading events:', error);
+        console.error('❌ Error loading brands:', error);
     }
 }
 
-// DELETE EVENT FROM FIREBASE
-async function deleteEvent(eventId) {
-    if (!confirm('Delete this event?')) return;
+function displayBrands(brands) {
+    const container = document.getElementById('brands-container');
+    if (!container) return;
+    
+    if (!brands || brands.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>No brands yet. Add your first brand!</p></div>';
+        return;
+    }
+    
+    container.innerHTML = brands.map(brand => {
+        return `
+        <div class="brand-card">
+            <div class="brand-image">
+                ${brand.image ? 
+                    `<img src="${brand.image}" alt="${brand.name}">` : 
+                    `<div class="image-placeholder">🏢</div>`
+                }
+            </div>
+            <div class="brand-content">
+                <div class="brand-name">${brand.name}</div>
+                ${brand.category ? `<div class="brand-category">${brand.category}</div>` : ''}
+                ${brand.price ? `<div class="brand-price">${brand.price}</div>` : ''}
+                <div class="brand-info">${brand.description || 'No description'}</div>
+                <div class="brand-contact">
+                    ${brand.location ? `<div class="brand-location">📍 ${brand.location}</div>` : ''}
+                    ${brand.phone ? `<div class="brand-phone">📞 ${brand.phone}</div>` : ''}
+                </div>
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+function displayDashboardBrands(brands) {
+    const container = document.getElementById('dashboard-brands');
+    if (!container) return;
+    
+    const recentBrands = brands.slice(0, 3);
+    
+    if (recentBrands.length === 0) {
+        container.innerHTML = '<p style="color: #666;">No brands yet</p>';
+        return;
+    }
+    
+    container.innerHTML = recentBrands.map(brand => {
+        return `
+        <div style="padding: 15px; border-bottom: 1px solid #eee; margin-bottom: 10px;">
+            <div style="font-weight: bold; color: #333;">${brand.name}</div>
+            <div style="color: #666; font-size: 14px; margin-top: 5px;">
+                ${brand.category ? `${brand.category} • ` : ''}
+                ${brand.location || ''}
+            </div>
+        </div>
+        `;
+    }).join('');
+}
+
+async function deleteBrand(brandId) {
+    if (!confirm('Delete this brand?')) return;
     
     try {
-        await db.collection('events').doc(eventId).delete();
-        alert('✅ Event deleted');
-        loadEvents();
+        await db.collection('brands').doc(brandId).delete();
+        alert('✅ Brand deleted');
+        loadBrands();
     } catch (error) {
-        alert('❌ Error: ' + error.message);
+        console.error('❌ Error deleting brand:', error);
+        alert('Failed: ' + error.message);
     }
 }
-<!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+// ========== HELPER FUNCTIONS ==========
+function clearEventForm() {
+    document.getElementById('event-title').value = '';
+    document.getElementById('event-date').value = '';
+    document.getElementById('event-type').value = '';
+    document.getElementById('event-location').value = '';
+    document.getElementById('event-time').value = '';
+    document.getElementById('event-image').value = '';
+    document.getElementById('event-description').value = '';
+    document.getElementById('event-button').value = '';
+}
+
+function clearBrandForm() {
+    document.getElementById('brand-name').value = '';
+    document.getElementById('brand-category').value = '';
+    document.getElementById('brand-price').value = '';
+    document.getElementById('brand-phone').value = '';
+    document.getElementById('brand-location').value = '';
+    document.getElementById('brand-image').value = '';
+    document.getElementById('brand-description').value = '';
+    document.getElementById('brand-expiry').value = '';
+    document.getElementById('brand-featured').checked = false;
+}
+
+function switchTab(tabId) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    
+    // Show selected tab
+    const tab = document.getElementById(tabId);
+    if (tab) tab.classList.add('active');
+    
+    // Update buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Find and activate clicked button
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.textContent.toLowerCase().includes(tabId.replace('-', ' '))) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Load data for certain tabs
+    if (tabId === 'dashboard') {
+        loadEvents();
+        loadBrands();
+    } else if (tabId === 'manage-events') {
+        loadEvents();
+    } else if (tabId === 'manage-brands') {
+        loadBrands();
+    }
+}
+
+// Make functions global
+window.addEvent = addEvent;
+window.addBrand = addBrand;
+window.switchTab = switchTab;
+window.clearEventForm = clearEventForm;
+window.clearBrandForm = clearBrandForm;
+window.deleteEvent = deleteEvent;
+window.deleteBrand = deleteBrand;
+
+console.log('✅ Admin panel code loaded');
 </script>
 </body>
 </html>
