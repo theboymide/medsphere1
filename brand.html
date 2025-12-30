@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Events & News | TheMedSphere</title>
+    <title>Sponsored Brands | TheMedSphere</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -103,42 +103,40 @@
             margin: 0 auto 40px;
         }
         
-        /* Filters */
-        .filters {
+        /* Stats */
+        .stats {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-bottom: 40px;
+            gap: 40px;
+            margin-bottom: 60px;
             flex-wrap: wrap;
         }
         
-        .filter-btn {
-            padding: 10px 25px;
-            border: none;
-            background: white;
-            border-radius: 25px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        .stat-item {
+            text-align: center;
         }
         
-        .filter-btn:hover, .filter-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
+        .stat-number {
+            font-size: 42px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
         }
         
-        /* Events Grid */
-        .events-grid {
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* Brands Grid */
+        .brands-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
             gap: 30px;
             margin-bottom: 60px;
         }
         
-        .event-card {
+        .brand-card {
             background: white;
             border-radius: 16px;
             overflow: hidden;
@@ -146,63 +144,44 @@
             transition: transform 0.3s;
         }
         
-        .event-card:hover {
+        .brand-card:hover {
             transform: translateY(-5px);
         }
         
-        .event-image {
-            height: 200px;
+        .brand-image {
+            height: 250px;
             overflow: hidden;
         }
         
-        .event-image img {
+        .brand-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s;
         }
         
-        .event-content {
+        .brand-card:hover .brand-image img {
+            transform: scale(1.05);
+        }
+        
+        .brand-content {
             padding: 25px;
         }
         
-        .event-type {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-        
-        .event-title {
+        .brand-name {
             font-size: 22px;
             color: #1f2937;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             line-height: 1.3;
         }
         
-        .event-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 15px;
-            color: #6b7280;
-            font-size: 14px;
-        }
-        
-        .event-meta i {
-            margin-right: 5px;
-        }
-        
-        .event-description {
+        .brand-description {
             color: #4b5563;
             margin-bottom: 20px;
             line-height: 1.5;
         }
         
-        .event-contact {
+        .brand-contact {
             background: #f3f4f6;
             padding: 15px;
             border-radius: 10px;
@@ -211,22 +190,63 @@
             color: #6b7280;
         }
         
-        .event-contact i {
+        .brand-contact i {
             color: #667eea;
             margin-right: 8px;
         }
         
-        /* No Events Message */
-        .no-events {
+        /* No Brands Message */
+        .no-brands {
             text-align: center;
             padding: 80px 20px;
             grid-column: 1 / -1;
         }
         
-        .no-events-icon {
+        .no-brands-icon {
             font-size: 60px;
             color: #667eea;
             margin-bottom: 20px;
+        }
+        
+        /* Advertise CTA */
+        .advertise-cta {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 20px;
+            margin: 60px 0;
+        }
+        
+        .advertise-cta h2 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        
+        .advertise-cta p {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+        
+        .whatsapp-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            color: #667eea;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255,255,255,0.2);
         }
         
         /* Loading */
@@ -250,7 +270,7 @@
                 font-size: 32px;
             }
             
-            .events-grid {
+            .brands-grid {
                 grid-template-columns: 1fr;
             }
             
@@ -258,6 +278,10 @@
                 flex-direction: column;
                 gap: 20px;
                 text-align: center;
+            }
+            
+            .stats {
+                gap: 20px;
             }
         }
     </style>
@@ -284,25 +308,44 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>📅 Campus Events & News</h1>
-            <p>Stay updated with the latest campus activities, events, and important announcements</p>
+            <h1>🏢 Sponsored Brands</h1>
+            <p>Discover trusted brands and businesses curated for student life. Support businesses that support your campus community.</p>
             
-            <!-- Filters -->
-            <div class="filters">
-                <button class="filter-btn active" onclick="filterEvents('all')">All Events</button>
-                <button class="filter-btn" onclick="filterEvents('event')">Events</button>
-                <button class="filter-btn" onclick="filterEvents('news')">News</button>
-                <button class="filter-btn" onclick="filterEvents('upcoming')">Upcoming</button>
+            <!-- Stats -->
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="brands-count">0</div>
+                    <div class="stat-label">Active Brands</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Daily Views</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">₦15K</div>
+                    <div class="stat-label">Starting Price</div>
+                </div>
             </div>
         </div>
     </section>
     
-    <!-- Events Grid -->
+    <!-- Brands Grid -->
     <div class="container">
-        <div id="events-container" class="events-grid">
+        <div id="brands-container" class="brands-grid">
             <div class="loading">
-                <i class="fas fa-spinner fa-spin"></i> Loading events...
+                <i class="fas fa-spinner fa-spin"></i> Loading brands...
             </div>
+        </div>
+    </div>
+    
+    <!-- Advertise CTA -->
+    <div class="container">
+        <div class="advertise-cta">
+            <h2>Want Your Brand Here?</h2>
+            <p>Reach thousands of students daily with our premium advertising space. Get featured among trusted campus brands.</p>
+            <a href="https://wa.me/2348124219028" class="whatsapp-btn" target="_blank">
+                <i class="fab fa-whatsapp"></i> Contact Us on WhatsApp
+            </a>
         </div>
     </div>
     
@@ -311,7 +354,7 @@
         <div class="container">
             <p>&copy; 2025 TheMedSphere. All rights reserved.</p>
             <p style="margin-top: 10px; color: #aaa;">
-                Events are updated in real-time from the admin dashboard
+                Brands are updated in real-time from the admin dashboard
             </p>
         </div>
     </footer>
@@ -338,113 +381,80 @@
         }
         const database = firebase.database();
         
-        let allEvents = [];
-        let currentFilter = 'all';
-        
-        // Load events from Firebase
-        async function loadAllEvents() {
-            const container = document.getElementById('events-container');
+        // Load brands from Firebase
+        async function loadAllBrands() {
+            const container = document.getElementById('brands-container');
             
             try {
-                const snapshot = await database.ref('events').once('value');
-                const eventsData = snapshot.val();
+                const snapshot = await database.ref('brands').once('value');
+                const brandsData = snapshot.val();
                 
-                if (!eventsData) {
+                // Update count
+                const count = brandsData ? Object.keys(brandsData).length : 0;
+                document.getElementById('brands-count').textContent = count;
+                
+                if (!brandsData || count === 0) {
                     container.innerHTML = `
-                        <div class="no-events">
-                            <div class="no-events-icon">📅</div>
-                            <h3>No Events Available</h3>
-                            <p>Check back later for campus events and news</p>
+                        <div class="no-brands">
+                            <div class="no-brands-icon">🏪</div>
+                            <h3>No Brands Available Yet</h3>
+                            <p style="margin-bottom: 20px;">Be the first to advertise your brand to our student community</p>
+                            <a href="https://wa.me/2348124219028" 
+                               style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-top: 20px;">
+                                <i class="fab fa-whatsapp"></i> Advertise Now
+                            </a>
                         </div>
                     `;
                     return;
                 }
                 
-                // Convert to array and sort by date (newest first)
-                allEvents = Object.values(eventsData).sort((a, b) => {
-                    return new Date(b.time || b.createdAt) - new Date(a.time || a.createdAt);
+                // Convert to array and sort by creation date (newest first)
+                const brands = Object.values(brandsData).sort((a, b) => {
+                    return (b.createdAt || 0) - (a.createdAt || 0);
                 });
                 
-                displayEvents(allEvents);
+                container.innerHTML = '';
+                
+                brands.forEach(brand => {
+                    const brandCard = createBrandCard(brand);
+                    container.appendChild(brandCard);
+                });
                 
             } catch (error) {
-                console.error('Error loading events:', error);
+                console.error('Error loading brands:', error);
                 container.innerHTML = `
-                    <div class="no-events">
-                        <div class="no-events-icon">❌</div>
-                        <h3>Unable to Load Events</h3>
+                    <div class="no-brands">
+                        <div class="no-brands-icon">❌</div>
+                        <h3>Unable to Load Brands</h3>
                         <p>Please check your internet connection</p>
                     </div>
                 `;
             }
         }
         
-        // Display events
-        function displayEvents(events) {
-            const container = document.getElementById('events-container');
-            
-            if (events.length === 0) {
-                container.innerHTML = `
-                    <div class="no-events">
-                        <div class="no-events-icon">🔍</div>
-                        <h3>No Events Found</h3>
-                        <p>Try selecting a different filter</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            container.innerHTML = '';
-            
-            events.forEach(event => {
-                const eventCard = createEventCard(event);
-                container.appendChild(eventCard);
-            });
-        }
-        
-        // Create event card
-        function createEventCard(event) {
+        // Create brand card
+        function createBrandCard(brand) {
             const div = document.createElement('div');
-            div.className = 'event-card';
-            
-            const eventDate = event.time ? new Date(event.time) : new Date(event.createdAt);
-            const formattedDate = eventDate.toLocaleDateString('en-US', {
-                weekday: 'long',
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric'
-            });
-            const formattedTime = eventDate.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            div.className = 'brand-card';
             
             // Get first image or use placeholder
-            const eventImage = event.images && event.images.length > 0 
-                ? event.images[0] 
-                : `https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(event.name?.substring(0, 20) || 'Event')}`;
+            const brandImage = brand.images && brand.images.length > 0 
+                ? brand.images[0] 
+                : `https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(brand.name?.substring(0, 20) || 'Brand')}`;
             
             div.innerHTML = `
-                <div class="event-image">
-                    <img src="${eventImage}" 
-                         alt="${event.name}"
-                         onerror="this.src='https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(event.name?.substring(0, 20) || 'Event')}'">
+                <div class="brand-image">
+                    <img src="${brandImage}" 
+                         alt="${brand.name}"
+                         onerror="this.src='https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(brand.name?.substring(0, 20) || 'Brand')}'">
                 </div>
-                <div class="event-content">
-                    <div class="event-type">
-                        ${event.type === 'news' ? '📰 NEWS' : '🎉 EVENT'}
-                    </div>
-                    <h3 class="event-title">${event.name}</h3>
+                <div class="brand-content">
+                    <h3 class="brand-name">${brand.name}</h3>
                     
-                    <div class="event-meta">
-                        <span><i class="far fa-calendar"></i> ${formattedDate}</span>
-                        <span><i class="far fa-clock"></i> ${formattedTime}</span>
-                    </div>
+                    <p class="brand-description">${brand.description}</p>
                     
-                    <p class="event-description">${event.description}</p>
-                    
-                    <div class="event-contact">
-                        <i class="fas fa-phone-alt"></i> Contact: ${event.contact}
+                    <div class="brand-contact">
+                        <i class="fas fa-phone-alt"></i> Contact: ${brand.contact}
                     </div>
                 </div>
             `;
@@ -452,39 +462,12 @@
             return div;
         }
         
-        // Filter events
-        function filterEvents(type) {
-            currentFilter = type;
-            
-            // Update active button
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            let filteredEvents = allEvents;
-            
-            if (type === 'event') {
-                filteredEvents = allEvents.filter(event => event.type === 'event');
-            } else if (type === 'news') {
-                filteredEvents = allEvents.filter(event => event.type === 'news');
-            } else if (type === 'upcoming') {
-                const now = new Date();
-                filteredEvents = allEvents.filter(event => {
-                    const eventDate = event.time ? new Date(event.time) : new Date(event.createdAt);
-                    return eventDate >= now;
-                });
-            }
-            
-            displayEvents(filteredEvents);
-        }
-        
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            loadAllEvents();
+            loadAllBrands();
             
             // Real-time updates
-            database.ref('events').on('value', loadAllEvents);
+            database.ref('brands').on('value', loadAllBrands);
         });
     </script>
 </body>
