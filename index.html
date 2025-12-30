@@ -132,7 +132,7 @@
     </section>
 
 <!-- =========================================== -->
-<!-- EVENTS SECTION - UPDATED -->
+<!-- EVENTS SECTION - UPDATED FOR NAVIGATION -->
 <!-- =========================================== -->
 <section id="events-section" class="section-spacing" style="background: #f8f9fa;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
@@ -152,11 +152,19 @@
             <!-- Events will be dynamically loaded here -->
         </div>
         
-        <!-- No Events Message - WITHOUT ADMIN BUTTON -->
-        <div id="no-events-message" style="text-align: center; padding: 60px; display: none;">
-            <div style="font-size: 60px; margin-bottom: 20px; color: #667eea;">📅</div>
-            <h3 style="color: #666; margin-bottom: 10px; font-size: 24px;">No Events Scheduled</h3>
-            <p style="color: #999; margin-bottom: 20px; font-size: 16px;">Check back later for upcoming campus events</p>
+        <!-- View All Events Button -->
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="events.html" target="_blank" 
+               style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 30px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 16px; transition: all 0.3s;"
+               onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(102, 126, 234, 0.3)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <i class="fas fa-calendar-alt"></i>
+                View Latest Events & News
+                <i class="fas fa-external-link-alt" style="font-size: 14px;"></i>
+            </a>
+            <p style="color: #999; margin-top: 15px; font-size: 14px;">
+                Opens in new tab • Updated in real-time
+            </p>
         </div>
     </div>
 </section>
@@ -229,7 +237,7 @@
     </section>
 
 <!-- =========================================== -->
-<!-- SPONSORED BRANDS SECTION - UPDATED -->
+<!-- SPONSORED BRANDS SECTION - UPDATED FOR NAVIGATION -->
 <!-- =========================================== -->
 <section id="brands-section" class="section-spacing" style="background: white;">
     <div style="max-width: 1200px; margin: 0 auto;">
@@ -248,11 +256,19 @@
             <!-- Brands will be loaded here -->
         </div>
         
-        <!-- No Brands Message - WITHOUT ADMIN BUTTON -->
-        <div id="no-brands-message" style="text-align: center; padding: 60px; display: none;">
-            <div style="font-size: 60px; margin-bottom: 20px; color: #667eea;">🏪</div>
-            <h3 style="color: #666; margin-bottom: 10px; font-size: 24px;">Be the first to advertise your Brand</h3>
-            <p style="color: #999; font-size: 16px;">Text us on WhatsApp to get your brand featured here</p>
+        <!-- View All Brands Button -->
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="brands.html" target="_blank" 
+               style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 14px 30px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 16px; transition: all 0.3s;"
+               onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(102, 126, 234, 0.3)';"
+               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+                <i class="fas fa-store"></i>
+                View Sponsored Brands
+                <i class="fas fa-external-link-alt" style="font-size: 14px;"></i>
+            </a>
+            <p style="color: #999; margin-top: 15px; font-size: 14px;">
+                Opens in new tab • Premium advertising space
+            </p>
         </div>
     </div>
 </section>
@@ -415,168 +431,150 @@
         </div>
     </footer>
 
-    <!-- =========================================== -->
-    <!-- JAVASCRIPT FOR EVENTS & BRANDS LOADING -->
-    <!-- =========================================== -->
     <script>
 // ======================
-// LOAD EVENTS ON HOMEPAGE - UPDATED WITH IMAGES
+// FIREBASE CONFIGURATION
 // ======================
+const firebaseConfig = {
+    apiKey: "AIzaSyA8XaUNfLDq6PYJu-LC0y_5ClAkGNfrLaw",
+    authDomain: "medsphere-c73e4.firebaseapp.com",
+    databaseURL: "https://medsphere-c73e4-default-rtdb.firebaseio.com",
+    projectId: "medsphere-c73e4",
+    storageBucket: "medsphere-c73e4.firebasestorage.app",
+    messagingSenderId: "289749352034",
+    appId: "1:289749352034:web:57fb380ac94433148bdb3b"
+};
 
-function loadHomepageEvents() {
-    console.log('🔄 Loading events from localStorage...');
-    
-    // Get events from localStorage (SAME as admin dashboard)
-    const events = JSON.parse(localStorage.getItem('campus_events') || '[]');
+// Initialize Firebase
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+const database = firebase.database();
+
+// ======================
+// LOAD EVENTS FROM FIREBASE
+// ======================
+async function loadHomepageEvents() {
     const container = document.getElementById('events-container');
-    const noEventsMsg = document.getElementById('no-events-message');
+    if (!container) return;
     
-    if (!container) {
-        console.error('❌ Events container not found!');
-        return;
+    try {
+        const snapshot = await database.ref('events').once('value');
+        const eventsData = snapshot.val();
+        
+        if (!eventsData) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px; grid-column: 1 / -1;">
+                    <div style="font-size: 60px; margin-bottom: 20px; color: #667eea;">📅</div>
+                    <h3 style="color: #666; margin-bottom: 10px; font-size: 24px;">No Events Scheduled</h3>
+                    <p style="color: #999; margin-bottom: 20px; font-size: 16px;">Check back later for upcoming campus events</p>
+                </div>
+            `;
+            return;
+        }
+        
+        // Convert to array and sort by date
+        const events = Object.values(eventsData);
+        const upcomingEvents = events
+            .filter(event => event.time && new Date(event.time) >= new Date())
+            .sort((a, b) => new Date(a.time) - new Date(b.time))
+            .slice(0, 6); // Show max 6 events
+        
+        container.innerHTML = '';
+        
+        if (upcomingEvents.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px; grid-column: 1 / -1;">
+                    <div style="font-size: 60px; margin-bottom: 20px; color: #667eea;">📅</div>
+                    <h3 style="color: #666; margin-bottom: 10px; font-size: 24px;">No Upcoming Events</h3>
+                    <p style="color: #999; margin-bottom: 20px; font-size: 16px;">Check back soon for new events</p>
+                </div>
+            `;
+            return;
+        }
+        
+        upcomingEvents.forEach(event => {
+            const eventCard = createEventCard(event);
+            container.appendChild(eventCard);
+        });
+        
+    } catch (error) {
+        console.error('Error loading events:', error);
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; grid-column: 1 / -1; color: #ef4444;">
+                <p>Unable to load events. Please check your connection.</p>
+            </div>
+        `;
     }
-    
-    console.log(`📊 Found ${events.length} events in storage`);
-    
-    // Get today's date
-    const today = new Date().toISOString().split('T')[0];
-    
-    // Filter for upcoming events (from today onwards)
-    const upcomingEvents = events
-        .filter(event => {
-            if (!event.date) return true; // Show events without dates
-            return event.date >= today;
-        })
-        .sort((a, b) => {
-            if (!a.date) return 1;
-            if (!b.date) return -1;
-            return new Date(a.date) - new Date(b.date);
-        })
-        .slice(0, 6); // Show max 6 events
-    
-    console.log(`📅 Upcoming events: ${upcomingEvents.length}`);
-    
-    // If no events
-    if (upcomingEvents.length === 0) {
-        container.style.display = 'none';
-        noEventsMsg.style.display = 'block';
-        return;
-    }
-    
-    // Show container, hide message
-    container.style.display = 'grid';
-    noEventsMsg.style.display = 'none';
-    
-    // Clear container
-    container.innerHTML = '';
-    
-    // Create event cards WITH IMAGES
-    upcomingEvents.forEach(event => {
-        console.log('🎯 Creating card for:', event.title);
-        const eventCard = createEventCardWithImage(event);
-        container.appendChild(eventCard);
-    });
 }
 
-// NEW FUNCTION: Create event cards with images
-function createEventCardWithImage(event) {
+function createEventCard(event) {
     const div = document.createElement('div');
+    const eventDate = new Date(event.time);
+    const formattedDate = eventDate.toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        year: 'numeric'
+    });
+    const formattedTime = eventDate.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
     
-    // Get image URL (from admin dashboard or placeholder)
-    const eventImage = event.image || getEventPlaceholderImage(event.title, event.type || 'general');
-    
-    // Format date
-    let dateDisplay = 'Date not set';
-    if (event.date) {
-        const eventDate = new Date(event.date);
-        dateDisplay = eventDate.toLocaleDateString('en-US', {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric'
-        });
-    }
-    
-    // Get category color
-    const colors = {
-        career: '#4A90E2',
-        technology: '#7B1FA2',
-        academic: '#388E3C',
-        social: '#F57C00',
-        sports: '#D32F2F',
-        cultural: '#5D4037',
-        general: '#667eea'
-    };
-    
-    const color = colors[event.type] || '#667eea';
+    // Get first image or use placeholder
+    const eventImage = event.images && event.images.length > 0 
+        ? event.images[0] 
+        : `https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(event.name?.substring(0, 20) || 'Event')}`;
     
     div.innerHTML = `
         <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); height: 100%; display: flex; flex-direction: column; transition: transform 0.3s;">
             <!-- EVENT IMAGE -->
             <div style="height: 200px; overflow: hidden; position: relative;">
                 <img src="${eventImage}" 
-                     alt="${event.title}" 
+                     alt="${event.name}"
                      style="width: 100%; height: 100%; object-fit: cover;"
-                     onerror="this.onerror=null; this.src='${getEventPlaceholderImage(event.title, event.type || 'general')}'">
-                ${event.category === 'featured' ? 
-                    '<div style="position: absolute; top: 15px; right: 15px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;">⭐ FEATURED</div>' 
-                    : ''}
+                     onerror="this.src='https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(event.name?.substring(0, 20) || 'Event')}'">
+                <div style="position: absolute; top: 15px; right: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+                    ${event.type === 'news' ? '📰 NEWS' : '🎉 EVENT'}
+                </div>
             </div>
             
             <!-- EVENT CONTENT -->
             <div style="padding: 25px; flex: 1;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
-                    <h3 style="font-size: 22px; color: #1f2937; margin: 0; font-weight: 700; line-height: 1.3;">
-                        ${event.title || 'Untitled Event'}
-                    </h3>
-                    <span style="background: ${color}20; color: ${color}; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
-                        ${(event.type || 'general').toUpperCase()}
-                    </span>
-                </div>
+                <h3 style="font-size: 22px; color: #1f2937; margin: 0 0 15px 0; font-weight: 700; line-height: 1.3;">
+                    ${event.name}
+                </h3>
                 
-                <!-- EVENT META INFO -->
                 <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px;">
-                    ${event.date ? `
-                        <div style="display: flex; align-items: center; gap: 5px; color: #6b7280; font-size: 14px;">
-                            <i class="far fa-calendar"></i>
-                            <span>${dateDisplay}</span>
-                        </div>
-                    ` : ''}
-                    
-                    ${event.time ? `
-                        <div style="display: flex; align-items: center; gap: 5px; color: #6b7280; font-size: 14px;">
-                            <i class="far fa-clock"></i>
-                            <span>${event.time}</span>
-                        </div>
-                    ` : ''}
-                    
-                    ${event.location ? `
-                        <div style="display: flex; align-items: center; gap: 5px; color: #6b7280; font-size: 14px;">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>${event.location}</span>
-                        </div>
-                    ` : ''}
+                    <div style="display: flex; align-items: center; gap: 5px; color: #6b7280; font-size: 14px;">
+                        <i class="far fa-calendar"></i>
+                        <span>${formattedDate}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px; color: #6b7280; font-size: 14px;">
+                        <i class="far fa-clock"></i>
+                        <span>${formattedTime}</span>
+                    </div>
                 </div>
                 
-                <!-- EVENT DESCRIPTION -->
                 <p style="color: #4b5563; font-size: 15px; line-height: 1.5; margin-bottom: 20px;">
-                    ${event.description || 'No description provided.'}
+                    ${event.description}
                 </p>
                 
-                <!-- EVENT BUTTON -->
-                ${event.buttonText ? `
-                    <div style="margin-top: auto;">
-                        <button style="background: linear-gradient(135deg, ${color} 0%, ${color}99 100%); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; transition: opacity 0.3s;"
-                                onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
-                            ${event.buttonText}
-                        </button>
+                <div style="margin-top: auto;">
+                    <div style="color: #6b7280; font-size: 14px; margin-bottom: 10px;">
+                        <i class="fas fa-phone-alt"></i> ${event.contact}
                     </div>
-                ` : ''}
+                    <a href="events.html" target="_blank" 
+                       style="display: block; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; transition: opacity 0.3s;"
+                       onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                        View Details
+                    </a>
+                </div>
             </div>
         </div>
     `;
     
-    // Add hover effect
     div.addEventListener('mouseenter', function() {
         this.style.transform = 'translateY(-5px)';
     });
@@ -587,175 +585,156 @@ function createEventCardWithImage(event) {
     return div;
 }
 
-// Helper function for placeholder images (SAME as admin)
-function getEventPlaceholderImage(title, type) {
-    const colors = {
-        career: '4A90E2',
-        technology: '7B1FA2',
-        academic: '388E3C',
-        social: 'F57C00',
-        sports: 'D32F2F',
-        cultural: '5D4037',
-        general: '667eea'
-    };
+// ======================
+// LOAD BRANDS FROM FIREBASE
+// ======================
+async function loadHomepageBrands() {
+    const container = document.getElementById('brands-container');
+    if (!container) return;
     
-    const color = colors[type] || '667eea';
-    const encodedTitle = encodeURIComponent((title || 'Event').substring(0, 20));
-    return `https://via.placeholder.com/400x300/${color}/ffffff?text=${encodedTitle}`;
-}
-
-    // ======================
-    // LOAD BRANDS ON HOMEPAGE
-    // ======================
-
-    function loadHomepageBrands() {
-        const brands = JSON.parse(localStorage.getItem('medsphere_brands') || '[]');
-        const container = document.getElementById('brands-container');
-        const noBrandsMsg = document.getElementById('no-brands-message');
+    try {
+        const snapshot = await database.ref('brands').once('value');
+        const brandsData = snapshot.val();
         
-        if (!container) return;
-        
-        const today = new Date().toISOString().split('T')[0];
-        
-        // Filter active brands (not expired)
-        const activeBrands = brands.filter(brand => {
-            if (!brand.expiry) return true;
-            return brand.expiry >= today;
-        }).slice(0, 6); // Show max 6 brands
-        
-        if (activeBrands.length === 0) {
-            container.style.display = 'none';
-            noBrandsMsg.style.display = 'block';
+        if (!brandsData) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px; grid-column: 1 / -1;">
+                    <div style="font-size: 60px; margin-bottom: 20px; color: #667eea;">🏪</div>
+                    <h3 style="color: #666; margin-bottom: 10px; font-size: 24px;">No Brands Available</h3>
+                    <p style="color: #999; font-size: 16px;">Be the first to advertise here</p>
+                </div>
+            `;
             return;
         }
         
-        container.style.display = 'grid';
-        noBrandsMsg.style.display = 'none';
+        const brands = Object.values(brandsData).slice(0, 6); // Show max 6 brands
         container.innerHTML = '';
         
-        activeBrands.forEach(brand => {
+        brands.forEach(brand => {
             const brandCard = createBrandCard(brand);
             container.appendChild(brandCard);
         });
-    }
-
-    function createBrandCard(brand) {
-        const div = document.createElement('div');
         
-        const colors = {
-            food: '#E91E63',
-            retail: '#2196F3',
-            services: '#4CAF50',
-            technology: '#9C27B0',
-            health: '#00BCD4',
-            education: '#FF9800',
-            entertainment: '#795548'
-        };
-        
-        const color = colors[brand.category] || '#667eea';
-        const imageUrl = brand.image || `https://via.placeholder.com/400x300/${color.replace('#', '')}/ffffff?text=${encodeURIComponent(brand.name.substring(0, 20))}`;
-        
-        div.innerHTML = `
-            <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); height: 100%; transition: transform 0.3s;">
-                <div style="height: 180px; overflow: hidden;">
-                    <img src="${imageUrl}" alt="${brand.name}" 
-                         style="width: 100%; height: 100%; object-fit: cover;"
-                         onerror="this.src='https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(brand.name.substring(0, 20))}'">
-                </div>
-                <div style="padding: 20px;">
-                    ${brand.featured ? '<span style="background: #fff7e6; color: #fa8c16; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; display: inline-block; margin-bottom: 10px;">⭐ FEATURED</span>' : ''}
-                    <h4 style="color: #333; margin-bottom: 8px; font-size: 18px;">${brand.name}</h4>
-                    <div style="color: ${color}; font-weight: 500; margin-bottom: 10px;">${brand.price}</div>
-                    <p style="color: #666; font-size: 14px; line-height: 1.5; margin-bottom: 15px;">${brand.description.substring(0, 100)}${brand.description.length > 100 ? '...' : ''}</p>
-                    
-                    <div style="border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px;">
-                        <div style="color: #666; font-size: 14px; margin-bottom: 5px;">📍 ${brand.location}</div>
-                        <div style="color: #666; font-size: 14px;">📞 ${brand.phone}</div>
-                    </div>
-                </div>
+    } catch (error) {
+        console.error('Error loading brands:', error);
+        container.innerHTML = `
+            <div style="text-align: center; padding: 40px; grid-column: 1 / -1; color: #ef4444;">
+                <p>Unable to load brands. Please check your connection.</p>
             </div>
         `;
-        
-        // Add hover effect
-        div.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-        });
-        div.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
-        
-        return div;
     }
+}
 
-    document.addEventListener('DOMContentLoaded', function() {
-    // Load events and brands
-    loadHomepageEvents();  // This should call the updated function
+function createBrandCard(brand) {
+    const div = document.createElement('div');
+    const brandImage = brand.images && brand.images.length > 0 
+        ? brand.images[0] 
+        : `https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(brand.name?.substring(0, 20) || 'Brand')}`;
+    
+    div.innerHTML = `
+        <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.08); height: 100%; display: flex; flex-direction: column; transition: transform 0.3s;">
+            <!-- BRAND IMAGE -->
+            <div style="height: 200px; overflow: hidden;">
+                <img src="${brandImage}" 
+                     alt="${brand.name}"
+                     style="width: 100%; height: 100%; object-fit: cover;"
+                     onerror="this.src='https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(brand.name?.substring(0, 20) || 'Brand')}'">
+            </div>
+            
+            <!-- BRAND CONTENT -->
+            <div style="padding: 25px; flex: 1;">
+                <h3 style="font-size: 22px; color: #1f2937; margin: 0 0 10px 0; font-weight: 700; line-height: 1.3;">
+                    ${brand.name}
+                </h3>
+                
+                <p style="color: #4b5563; font-size: 15px; line-height: 1.5; margin-bottom: 20px;">
+                    ${brand.description}
+                </p>
+                
+                <div style="margin-top: auto; border-top: 1px solid #f3f4f6; padding-top: 15px;">
+                    <div style="color: #6b7280; font-size: 14px; margin-bottom: 5px;">
+                        <i class="fas fa-phone-alt"></i> ${brand.contact}
+                    </div>
+                    <a href="brands.html" target="_blank" 
+                       style="display: block; text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 10px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; transition: opacity 0.3s;"
+                       onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+                        View Brand
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    div.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px)';
+    });
+    div.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0)';
+    });
+    
+    return div;
+}
+
+// ======================
+// INITIALIZE PAGE
+// ======================
+document.addEventListener('DOMContentLoaded', function() {
+    // Load Firebase data
+    loadHomepageEvents();
     loadHomepageBrands();
     
     // Auto-refresh every 30 seconds
     setInterval(loadHomepageEvents, 30000);
     setInterval(loadHomepageBrands, 30000);
     
-    // Listen for storage changes (when admin adds content)
-    window.addEventListener('storage', function(event) {
-        if (event.key === 'campus_events') {
-            console.log('📥 New event added from admin!');
-            loadHomepageEvents();
-        }
-        if (event.key === 'medsphere_brands') {
-            loadHomepageBrands();
-        }
-    });
+    // Setup real-time listeners
+    database.ref('events').on('value', loadHomepageEvents);
+    database.ref('brands').on('value', loadHomepageBrands);
     
-    // Update navigation active state on scroll
+    // Update navigation
     updateNavOnScroll();
 });
-    // ======================
-    // NAVIGATION SCROLL FUNCTION
-    // ======================
 
-    function updateNavOnScroll() {
-        const sections = document.querySelectorAll('section[id]');
-        const navLinks = document.querySelectorAll('.nav-link');
-        
-        window.addEventListener('scroll', function() {
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (scrollY >= (sectionTop - 200)) {
-                    current = section.getAttribute('id');
-                }
-            });
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === '#' + current) {
-                    link.classList.add('active');
-                }
-            });
-        });
-    }
-
-    // ======================
-    // BACK TO TOP FUNCTION
-    // ======================
-
-    window.addEventListener('scroll', function() {
-        const button = document.querySelector('.back-to-top');
-        if (window.scrollY > 300) {
-            button.classList.add('show');
-        } else {
-            button.classList.remove('show');
-        }
-    });
+// Keep your existing navigation and back-to-top functions
+function updateNavOnScroll() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
     
-    function scrollToTop() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+    window.addEventListener('scroll', function() {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (scrollY >= (sectionTop - 200)) {
+                current = section.getAttribute('id');
+            }
         });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    });
+}
+
+// Back to top function
+window.addEventListener('scroll', function() {
+    const button = document.querySelector('.back-to-top');
+    if (window.scrollY > 300) {
+        button.classList.add('show');
+    } else {
+        button.classList.remove('show');
     }
-    </script>
+});
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
+</script>
 </body>
 </html>
