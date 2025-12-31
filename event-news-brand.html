@@ -934,7 +934,7 @@
                     throw new Error('Invalid image URL');
                 }
 
-                // Create item data
+                // Create item data - FIXED: Ensure type is always included
                 const itemId = `${type}_` + Date.now();
                 const itemData = {
                     id: itemId,
@@ -945,7 +945,7 @@
                         'https://via.placeholder.com/400x200/059669/ffffff?text=No+Image'),
                     createdAt: Date.now(),
                     updatedAt: Date.now(),
-                    type: type // Add type to distinguish between event and news
+                    type: type // CRITICAL FIX: Always include the type field
                 };
 
                 // Add date only for events
@@ -1054,7 +1054,7 @@
             }
         });
 
-        // Load Events & News
+        // Load Events & News - FIXED: Proper type detection
         async function loadEvents() {
             const eventsList = document.getElementById('eventsList');
             eventsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b;">Loading events & news...</div>';
@@ -1071,24 +1071,42 @@
 
                 eventsList.innerHTML = '';
                 Object.entries(data).forEach(([key, item]) => {
+                    // FIXED: Better type detection logic
                     const isEvent = item.type === 'event';
-                    const typeBadge = isEvent ? 
+                    const isNews = item.type === 'news';
+                    
+                    // For backward compatibility: if type is missing, check for time field
+                    let actualType = item.type;
+                    if (!item.type) {
+                        actualType = item.time ? 'event' : 'news';
+                    }
+                    
+                    const isEventFinal = actualType === 'event';
+                    
+                    const typeBadge = isEventFinal ? 
                         '<div class="type-badge event-badge">EVENT</div>' : 
                         '<div class="type-badge news-badge">NEWS</div>';
                     
-                    const itemDate = isEvent ? new Date(item.time) : new Date(item.createdAt);
-                    const dateDisplay = isEvent ? 
-                        `${itemDate.toLocaleDateString()} at ${itemDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}` :
-                        itemDate.toLocaleDateString();
+                    // FIXED: Date handling for both events and news
+                    let dateDisplay = '';
+                    if (isEventFinal && item.time) {
+                        const itemDate = new Date(item.time);
+                        dateDisplay = `${itemDate.toLocaleDateString()} at ${itemDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+                    } else if (item.createdAt) {
+                        const itemDate = new Date(item.createdAt);
+                        dateDisplay = itemDate.toLocaleDateString();
+                    } else {
+                        dateDisplay = 'No date';
+                    }
                     
-                    const placeholderImage = isEvent ? 
+                    const placeholderImage = isEventFinal ? 
                         'https://via.placeholder.com/300x200/667eea/ffffff?text=EVENT' :
                         'https://via.placeholder.com/300x200/059669/ffffff?text=NEWS';
                     
                     const itemCard = document.createElement('div');
                     itemCard.className = 'item-card';
                     itemCard.innerHTML = `
-                        <img src="${item.imageUrl}" alt="${item.name}" class="item-image" onerror="this.src='${placeholderImage}'">
+                        <img src="${item.imageUrl || placeholderImage}" alt="${item.name}" class="item-image" onerror="this.src='${placeholderImage}'">
                         <div class="item-details">
                             ${typeBadge}
                             <div class="item-title">${item.name}</div>
@@ -1098,10 +1116,10 @@
                                     <i class="fas fa-calendar"></i>
                                     ${dateDisplay}
                                 </div>
-                                ${isEvent ? `
+                                ${isEventFinal ? `
                                 <div class="info-item">
                                     <i class="fas fa-clock"></i>
-                                    ${itemDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                    ${new Date(item.time || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                 </div>
                                 ` : ''}
                             </div>
@@ -1172,7 +1190,7 @@
             }
         }
 
-        // Load Dashboard
+        // Load Dashboard - FIXED: Better type counting
         async function loadDashboard() {
             try {
                 // Load events and news count
@@ -1183,10 +1201,18 @@
                 
                 if (eventsData) {
                     Object.values(eventsData).forEach(item => {
+                        // FIXED: Better type detection for existing items
                         if (item.type === 'event') {
                             eventsCount++;
                         } else if (item.type === 'news') {
                             newsCount++;
+                        } else {
+                            // For backward compatibility: items without type field
+                            if (item.time) {
+                                eventsCount++; // Has time field, probably an event
+                            } else {
+                                newsCount++; // No time field, probably news
+                            }
                         }
                     });
                 }
@@ -1206,10 +1232,16 @@
                 
                 if (eventsData) {
                     Object.entries(eventsData).forEach(([key, value]) => {
+                        // Determine type for display
+                        let displayType = value.type;
+                        if (!displayType) {
+                            displayType = value.time ? 'event' : 'news';
+                        }
+                        
                         allItems.push({
                             ...value,
                             key: key,
-                            type: value.type || 'event' // Default to event for backwards compatibility
+                            type: displayType
                         });
                     });
                 }
@@ -1235,20 +1267,16 @@
                     recent.forEach(item => {
                         let typeText = '';
                         let badgeClass = '';
-                        let badgeColor = '';
                         
                         if (item.type === 'event') {
                             typeText = 'EVENT';
                             badgeClass = 'event-badge';
-                            badgeColor = '#667eea';
                         } else if (item.type === 'news') {
                             typeText = 'NEWS';
                             badgeClass = 'news-badge';
-                            badgeColor = '#059669';
                         } else if (item.type === 'brand') {
                             typeText = 'BRAND';
                             badgeClass = '';
-                            badgeColor = '#764ba2';
                         }
                         
                         const itemCard = document.createElement('div');
@@ -1265,13 +1293,16 @@
                             'https://via.placeholder.com/300x200/764ba2/ffffff?text=BRAND';
                         
                         itemCard.innerHTML = `
-                            <img src="${item.imageUrl}" alt="${item.name}" class="item-image" onerror="this.src='${placeholderImage}'">
+                            <img src="${item.imageUrl || placeholderImage}" alt="${item.name}" class="item-image" onerror="this.src='${placeholderImage}'">
                             <div class="item-details">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                     <div class="item-title">${item.name}</div>
                                     ${typeBadge}
                                 </div>
                                 <p class="item-description">${item.description ? item.description.substring(0, 80) + '...' : 'No description'}</p>
+                                <div style="font-size: 12px; color: #94a3b8; margin-top: 5px;">
+                                    <i class="fas fa-clock"></i> ${new Date(item.createdAt).toLocaleDateString()}
+                                </div>
                             </div>
                         `;
                         recentItems.appendChild(itemCard);
@@ -1303,10 +1334,15 @@
                 const extraFields = document.getElementById('editExtraFields');
                 extraFields.innerHTML = '';
                 
-                // Add type-specific fields for events/news
+                // Determine item type for events/news
                 if (type === 'events') {
+                    // Determine type - check for existing type or time field
+                    let itemType = item.type;
+                    if (!itemType) {
+                        itemType = item.time ? 'event' : 'news';
+                    }
+                    
                     // Set the type selection
-                    const itemType = item.type || 'event';
                     document.getElementById('editItemType').value = itemType;
                     
                     // Select the correct type in the modal
@@ -1370,19 +1406,19 @@
                 const snapshot = await database.ref(`${type}/${id}`).once('value');
                 const existingData = snapshot.val();
                 
-                // Prepare update data with existing values as fallback
+                // Prepare update data
                 const updateData = {
                     ...existingData,
                     name: name || existingData.name,
                     description: description || existingData.description,
-                    imageUrl: imageUrl || existingData.imageUrl || 'https://via.placeholder.com/400x200/667eea/ffffff?text=No+Image',
+                    imageUrl: imageUrl || existingData.imageUrl,
                     updatedAt: Date.now()
                 };
                 
                 // Add type-specific fields for events/news
                 if (type === 'events') {
                     const itemType = document.getElementById('editItemType').value;
-                    updateData.type = itemType;
+                    updateData.type = itemType; // Always set type
                     
                     if (itemType === 'event') {
                         updateData.time = document.getElementById('editTime').value || existingData.time || new Date().toISOString();
@@ -1456,6 +1492,45 @@
             }
         }
 
+        // Auto-migrate existing items that don't have type field
+        async function migrateExistingItems() {
+            try {
+                console.log('Checking for items that need migration...');
+                const snapshot = await database.ref('events').once('value');
+                const data = snapshot.val();
+                
+                if (!data) return;
+                
+                let migrationCount = 0;
+                const updates = {};
+                
+                Object.entries(data).forEach(([key, item]) => {
+                    if (!item.type) {
+                        // Determine type based on time field
+                        const newType = item.time ? 'event' : 'news';
+                        updates[key] = {
+                            ...item,
+                            type: newType
+                        };
+                        migrationCount++;
+                        console.log(`Will migrate ${key} to ${newType} (${item.name})`);
+                    }
+                });
+                
+                if (migrationCount > 0) {
+                    console.log(`Migrating ${migrationCount} items...`);
+                    await database.ref('events').update(updates);
+                    console.log(`✅ Migration complete: ${migrationCount} items updated`);
+                    // Refresh the display
+                    loadEvents();
+                    loadDashboard();
+                }
+                
+            } catch (error) {
+                console.error('Migration error:', error);
+            }
+        }
+
         // Initialize on load
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Admin panel loaded');
@@ -1464,6 +1539,9 @@
             loadEvents();
             loadBrands();
             loadDashboard();
+            
+            // Run migration for existing items
+            setTimeout(migrateExistingItems, 1000);
         });
 
         // Test Firebase connection
