@@ -949,9 +949,9 @@
                 };
 
                 // Add date only for events
-                if (type === 'event') {
-                    itemData.time = time || new Date().toISOString();
-                }
+if (type === 'event') {
+    itemData.time = time || new Date().toISOString();
+}
 
                 console.log('Saving item:', itemData);
 
@@ -1054,93 +1054,90 @@
             }
         });
 
-        // Load Events & News - FIXED: Proper type detection
-        async function loadEvents() {
-            const eventsList = document.getElementById('eventsList');
-            eventsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b;">Loading events & news...</div>';
+        // Load Events & News - FIXED VERSION
+async function loadEvents() {
+    const eventsList = document.getElementById('eventsList');
+    eventsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b;">Loading events & news...</div>';
 
-            try {
-                const snapshot = await database.ref('events').once('value');
-                const data = snapshot.val();
-                console.log('Loaded events & news:', data);
-                
-                if (!data) {
-                    eventsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;">No events or news added yet.</div>';
-                    return;
-                }
-
-                eventsList.innerHTML = '';
-                Object.entries(data).forEach(([key, item]) => {
-                    // FIXED: Better type detection logic
-                    const isEvent = item.type === 'event';
-                    const isNews = item.type === 'news';
-                    
-                    // For backward compatibility: if type is missing, check for time field
-                    let actualType = item.type;
-                    if (!item.type) {
-                        actualType = item.time ? 'event' : 'news';
-                    }
-                    
-                    const isEventFinal = actualType === 'event';
-                    
-                    const typeBadge = isEventFinal ? 
-                        '<div class="type-badge event-badge">EVENT</div>' : 
-                        '<div class="type-badge news-badge">NEWS</div>';
-                    
-                    // FIXED: Date handling for both events and news
-                    let dateDisplay = '';
-                    if (isEventFinal && item.time) {
-                        const itemDate = new Date(item.time);
-                        dateDisplay = `${itemDate.toLocaleDateString()} at ${itemDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-                    } else if (item.createdAt) {
-                        const itemDate = new Date(item.createdAt);
-                        dateDisplay = itemDate.toLocaleDateString();
-                    } else {
-                        dateDisplay = 'No date';
-                    }
-                    
-                    const placeholderImage = isEventFinal ? 
-                        'https://via.placeholder.com/300x200/667eea/ffffff?text=EVENT' :
-                        'https://via.placeholder.com/300x200/059669/ffffff?text=NEWS';
-                    
-                    const itemCard = document.createElement('div');
-                    itemCard.className = 'item-card';
-                    itemCard.innerHTML = `
-                        <img src="${item.imageUrl || placeholderImage}" alt="${item.name}" class="item-image" onerror="this.src='${placeholderImage}'">
-                        <div class="item-details">
-                            ${typeBadge}
-                            <div class="item-title">${item.name}</div>
-                            <p class="item-description">${item.description}</p>
-                            <div class="item-info">
-                                <div class="info-item">
-                                    <i class="fas fa-calendar"></i>
-                                    ${dateDisplay}
-                                </div>
-                                ${isEventFinal ? `
-                                <div class="info-item">
-                                    <i class="fas fa-clock"></i>
-                                    ${new Date(item.time || Date.now()).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                                </div>
-                                ` : ''}
-                            </div>
-                        </div>
-                        <div class="item-actions">
-                            <button class="action-btn edit-btn" onclick="editItem('events', '${key}')">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="action-btn delete-btn" onclick="deleteItem('events', '${key}')">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
-                    `;
-                    eventsList.appendChild(itemCard);
-                });
-
-            } catch (error) {
-                console.error('Error loading events & news:', error);
-                eventsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;">Error loading events & news.</div>';
-            }
+    try {
+        const snapshot = await database.ref('events').once('value');
+        const data = snapshot.val();
+        console.log('Loaded events & news:', data);
+        
+        if (!data) {
+            eventsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;">No events or news added yet.</div>';
+            return;
         }
+
+        eventsList.innerHTML = '';
+        Object.entries(data).forEach(([key, item]) => {
+            // Determine if it's event or news
+            const isEvent = item.type === 'event';
+            const isNews = item.type === 'news';
+            
+            // For backward compatibility
+            const actualType = item.type || (item.time ? 'event' : 'news');
+            const isEventFinal = actualType === 'event';
+            
+            // Get correct badge
+            const typeBadge = isEventFinal ? 
+                '<div class="type-badge event-badge">EVENT</div>' : 
+                '<div class="type-badge news-badge">NEWS</div>';
+            
+            // Get correct date display
+            let dateDisplay = '';
+            if (isEventFinal && item.time) {
+                const itemDate = new Date(item.time);
+                dateDisplay = `${itemDate.toLocaleDateString()} at ${itemDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            } else if (item.createdAt) {
+                const itemDate = new Date(item.createdAt);
+                dateDisplay = itemDate.toLocaleDateString();
+            } else {
+                dateDisplay = 'No date';
+            }
+            
+            const placeholderImage = isEventFinal ? 
+                'https://via.placeholder.com/300x200/667eea/ffffff?text=EVENT' :
+                'https://via.placeholder.com/300x200/059669/ffffff?text=NEWS';
+            
+            const itemCard = document.createElement('div');
+            itemCard.className = 'item-card';
+            itemCard.innerHTML = `
+                <img src="${item.imageUrl || placeholderImage}" alt="${item.name}" class="item-image" onerror="this.src='${placeholderImage}'">
+                <div class="item-details">
+                    ${typeBadge}
+                    <div class="item-title">${item.name}</div>
+                    <p class="item-description">${item.description}</p>
+                    <div class="item-info">
+                        <div class="info-item">
+                            <i class="fas fa-calendar"></i>
+                            ${dateDisplay}
+                        </div>
+                        ${isEventFinal && item.time ? `
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            ${new Date(item.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                <div class="item-actions">
+                    <button class="action-btn edit-btn" onclick="editItem('events', '${key}')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="action-btn delete-btn" onclick="deleteItem('events', '${key}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            `;
+            eventsList.appendChild(itemCard);
+        });
+
+    } catch (error) {
+        console.error('Error loading events & news:', error);
+        eventsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;">Error loading events & news.</div>';
+    }
+}
 
         // Load Brands
         async function loadBrands() {
