@@ -460,16 +460,13 @@
                 
                 <div id="eventMessage" class="message"></div>
                 
-                <form id="eventForm">
-                    <div class="form-group">
-                        <label>Event Image <span class="required">*</span></label>
-                        <div class="file-upload" onclick="document.getElementById('eventImage').click()">
-                            <div class="upload-icon">📸</div>
-                            <div class="upload-text">Click to upload image</div>
-                            <input type="file" id="eventImage" accept="image/*">
-                        </div>
-                        <img id="eventPreview" class="image-preview" style="display: none;">
-                    </div>
+                <div class="form-group">
+    <label for="eventImageUrl">Event Image URL <span class="required">*</span></label>
+    <input type="text" id="eventImageUrl" required placeholder="https://example.com/image.jpg">
+    <div style="font-size: 12px; color: #64748b; margin-top: 5px;">
+        Use image hosting services like: ImgBB, Imgur, Postimages, or Cloudinary
+    </div>
+</div>
                     
                     <div class="form-group">
                         <label for="eventName">Event Name <span class="required">*</span></label>
@@ -509,16 +506,13 @@
                 
                 <div id="brandMessage" class="message"></div>
                 
-                <form id="brandForm">
-                    <div class="form-group">
-                        <label>Brand Image <span class="required">*</span></label>
-                        <div class="file-upload" onclick="document.getElementById('brandImage').click()">
-                            <div class="upload-icon">🏢</div>
-                            <div class="upload-text">Click to upload image</div>
-                            <input type="file" id="brandImage" accept="image/*">
-                        </div>
-                        <img id="brandPreview" class="image-preview" style="display: none;">
-                    </div>
+                <div class="form-group">
+    <label for="brandImageUrl">Brand Image URL <span class="required">*</span></label>
+    <input type="text" id="brandImageUrl" required placeholder="https://example.com/brand-logo.jpg">
+    <div style="font-size: 12px; color: #64748b; margin-top: 5px;">
+        Use image hosting services like: ImgBB, Imgur, Postimages, or Cloudinary
+    </div>
+</div>
                     
                     <div class="form-group">
                         <label for="brandName">Brand Name <span class="required">*</span></label>
@@ -604,583 +598,532 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script>
-
     <script>
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyA8XaUNfLDq6PYJu-LC0y_5ClAkGNfrLaw",
-            authDomain: "medsphere-c73e4.firebasestorage.app",
-            databaseURL: "https://medsphere-c73e4-default-rtdb.firebaseio.com",
-            projectId: "medsphere-c73e4",
-            storageBucket: "medsphere-c73e4.firebasestorage.app",
-            messagingSenderId: "289749352034",
-            appId: "1:289749352034:web:57fb380ac94433148bdb3b"
-        };
+    // Firebase Config
+const firebaseConfig = {
+    apiKey: "AIzaSyA8XaUNfLDq6PYJu-LC0y_5ClAkGNfrLaw",
+    authDomain: "medsphere-c73e4.firebasestorage.app",
+    databaseURL: "https://medsphere-c73e4-default-rtdb.firebaseio.com",
+    projectId: "medsphere-c73e4",
+    storageBucket: "medsphere-c73e4.firebasestorage.app",
+    messagingSenderId: "289749352034",
+    appId: "1:289749352034:web:57fb380ac94433148bdb3b"
+};
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const storage = firebase.storage();
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
-        // Global variables
-        let events = [];
-        let brands = [];
+// Global variables
+let events = [];
+let brands = [];
 
-        // Tab switching
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.content-section').forEach(content => content.classList.remove('active'));
-            
-            document.querySelector(`.tab[onclick*="${tabName}"]`).classList.add('active');
-            document.getElementById(`${tabName}-tab`).classList.add('active');
-            
-            if (tabName === 'dashboard') loadDashboard();
-            if (tabName === 'events') loadEvents();
-            if (tabName === 'brands') loadBrands();
+// URL validation function
+function isValidUrl(string) {
+    try {
+        new URL(string);
+        return true;
+    } catch (_) {
+        return false;
+    }
+}
+
+// Tab switching
+function switchTab(tabName) {
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.content-section').forEach(content => content.classList.remove('active'));
+    
+    document.querySelector(`.tab[onclick*="${tabName}"]`).classList.add('active');
+    document.getElementById(`${tabName}-tab`).classList.add('active');
+    
+    if (tabName === 'dashboard') loadDashboard();
+    if (tabName === 'events') loadEvents();
+    if (tabName === 'brands') loadBrands();
+}
+
+// Add Event
+document.getElementById('eventForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const submitBtn = document.getElementById('eventSubmitBtn');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Adding...';
+    submitBtn.disabled = true;
+
+    try {
+        const name = document.getElementById('eventName').value.trim();
+        const description = document.getElementById('eventDescription').value.trim();
+        const time = document.getElementById('eventTime').value;
+        const imageUrl = document.getElementById('eventImageUrl').value.trim();
+
+        // Validation
+        if (!name || !description || !time || !imageUrl) {
+            showMessage('eventMessage', 'Please fill all required fields', 'error');
+            throw new Error('Missing required fields');
         }
 
-        // Image preview handlers
-        document.getElementById('eventImage').addEventListener('change', function(e) {
-            const preview = document.getElementById('eventPreview');
-            if (this.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                }
-                reader.readAsDataURL(this.files[0]);
-            }
+        // Validate URL format
+        if (!isValidUrl(imageUrl)) {
+            showMessage('eventMessage', 'Please enter a valid image URL (start with http:// or https://)', 'error');
+            throw new Error('Invalid image URL');
+        }
+
+        // Create event data
+        const eventId = 'event_' + Date.now();
+        const eventData = {
+            id: eventId,
+            name: name,
+            description: description,
+            time: time,
+            imageUrl: imageUrl,
+            createdAt: Date.now(),
+            updatedAt: Date.now()
+        };
+
+        // Save to database
+        await database.ref('events/' + eventId).set(eventData);
+
+        // Success
+        showMessage('eventMessage', '✅ Event added successfully!', 'success');
+        
+        // Reset form
+        this.reset();
+        
+        // Refresh
+        loadEvents();
+        loadDashboard();
+
+    } catch (error) {
+        console.error('Error:', error);
+        showMessage('eventMessage', `❌ Error: ${error.message}`, 'error');
+    } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
+});
+
+// Add Brand
+document.getElementById('brandForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const submitBtn = document.getElementById('brandSubmitBtn');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Adding...';
+    submitBtn.disabled = true;
+
+    try {
+        const name = document.getElementById('brandName').value.trim();
+        const description = document.getElementById('brandDescription').value.trim();
+        const prize = document.getElementById('brandPrize').value.trim();
+        const contact = document.getElementById('brandContact').value.trim();
+        const location = document.getElementById('brandLocation').value.trim();
+        const imageUrl = document.getElementById('brandImageUrl').value.trim();
+
+        // Validation
+        if (!name || !description || !imageUrl) {
+            showMessage('brandMessage', 'Please fill all required fields', 'error');
+            throw new Error('Missing required fields');
+        }
+
+        // Validate URL format
+        if (!isValidUrl(imageUrl)) {
+            showMessage('brandMessage', 'Please enter a valid image URL (start with http:// or https://)', 'error');
+            throw new Error('Invalid image URL');
+        }
+
+        // Create brand data
+        const brandId = 'brand_' + Date.now();
+        const brandData = {
+            id: brandId,
+            name: name,
+            description: description,
+            imageUrl: imageUrl,
+            createdAt: Date.now(),
+            updatedAt: Date.now()
+        };
+
+        // Add optional fields if provided
+        if (prize) brandData.prize = prize;
+        if (contact) brandData.contact = contact;
+        if (location) brandData.location = location;
+
+        // Save to database
+        await database.ref('brands/' + brandId).set(brandData);
+
+        // Success
+        showMessage('brandMessage', '✅ Brand added successfully!', 'success');
+        
+        // Reset form
+        this.reset();
+        
+        // Refresh
+        loadBrands();
+        loadDashboard();
+
+    } catch (error) {
+        console.error('Error:', error);
+        showMessage('brandMessage', `❌ Error: ${error.message}`, 'error');
+    } finally {
+        submitBtn.textContent = originalText;
+        submitBtn.disabled = false;
+    }
+});
+
+// Load Events
+async function loadEvents() {
+    const eventsList = document.getElementById('eventsList');
+    eventsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b;">Loading events...</div>';
+
+    try {
+        const snapshot = await database.ref('events').once('value');
+        events = snapshot.val() ? Object.entries(snapshot.val()).map(([key, value]) => ({...value, key})) : [];
+        
+        if (events.length === 0) {
+            eventsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;">No events added yet.</div>';
+            return;
+        }
+
+        eventsList.innerHTML = '';
+        events.forEach(event => {
+            const eventDate = new Date(event.time);
+            const item = document.createElement('div');
+            item.className = 'item-card';
+            item.innerHTML = `
+                <img src="${event.imageUrl}" alt="${event.name}" class="item-image" onerror="this.src='https://via.placeholder.com/300x200/667eea/ffffff?text=EVENT'">
+                <div class="item-details">
+                    <div class="item-title">${event.name}</div>
+                    <p class="item-description">${event.description}</p>
+                    <div class="item-info">
+                        <div class="info-item">
+                            <i class="fas fa-calendar"></i>
+                            ${eventDate.toLocaleDateString()}
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            ${eventDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </div>
+                    </div>
+                </div>
+                <div class="item-actions">
+                    <button class="action-btn edit-btn" onclick="editItem('events', '${event.key}')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="action-btn delete-btn" onclick="deleteItem('events', '${event.key}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            `;
+            eventsList.appendChild(item);
         });
 
-        document.getElementById('brandImage').addEventListener('change', function(e) {
-            const preview = document.getElementById('brandPreview');
-            if (this.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                }
-                reader.readAsDataURL(this.files[0]);
-            }
+    } catch (error) {
+        console.error('Error loading events:', error);
+        eventsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;">Error loading events.</div>';
+    }
+}
+
+// Load Brands
+async function loadBrands() {
+    const brandsList = document.getElementById('brandsList');
+    brandsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b;">Loading brands...</div>';
+
+    try {
+        const snapshot = await database.ref('brands').once('value');
+        brands = snapshot.val() ? Object.entries(snapshot.val()).map(([key, value]) => ({...value, key})) : [];
+        
+        if (brands.length === 0) {
+            brandsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;">No brands added yet.</div>';
+            return;
+        }
+
+        brandsList.innerHTML = '';
+        brands.forEach(brand => {
+            const item = document.createElement('div');
+            item.className = 'item-card';
+            item.innerHTML = `
+                <img src="${brand.imageUrl}" alt="${brand.name}" class="item-image" onerror="this.src='https://via.placeholder.com/300x200/667eea/ffffff?text=BRAND'">
+                <div class="item-details">
+                    <div class="item-title">${brand.name}</div>
+                    <p class="item-description">${brand.description}</p>
+                    <div class="item-info">
+                        ${brand.prize ? `<div class="info-item"><i class="fas fa-trophy"></i> ${brand.prize}</div>` : ''}
+                        ${brand.contact ? `<div class="info-item"><i class="fas fa-phone"></i> ${brand.contact}</div>` : ''}
+                        ${brand.location ? `<div class="info-item"><i class="fas fa-map-marker"></i> ${brand.location}</div>` : ''}
+                    </div>
+                </div>
+                <div class="item-actions">
+                    <button class="action-btn edit-btn" onclick="editItem('brands', '${brand.key}')">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="action-btn delete-btn" onclick="deleteItem('brands', '${brand.key}')">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            `;
+            brandsList.appendChild(item);
         });
 
-        document.getElementById('editImage').addEventListener('change', function(e) {
-            const preview = document.getElementById('editPreview');
-            if (this.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                }
-                reader.readAsDataURL(this.files[0]);
-            }
-        });
+    } catch (error) {
+        console.error('Error loading brands:', error);
+        brandsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;">Error loading brands.</div>';
+    }
+}
 
-        // Compress image
-        async function compressImage(file) {
-            return new Promise((resolve) => {
-                if (!file.type.startsWith('image/')) {
-                    resolve(file);
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        
-                        // Resize if too large
-                        const maxWidth = 800;
-                        if (width > maxWidth) {
-                            height = (height * maxWidth) / width;
-                            width = maxWidth;
-                        }
-                        
-                        canvas.width = width;
-                        canvas.height = height;
-                        
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        
-                        canvas.toBlob(function(blob) {
-                            const compressedFile = new File([blob], file.name, {
-                                type: 'image/jpeg',
-                                lastModified: Date.now()
-                            });
-                            resolve(compressedFile);
-                        }, 'image/jpeg', 0.8);
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
+// Load Dashboard
+async function loadDashboard() {
+    try {
+        // Load events count
+        const eventsSnapshot = await database.ref('events').once('value');
+        const eventsCount = eventsSnapshot.val() ? Object.keys(eventsSnapshot.val()).length : 0;
+        document.getElementById('eventsCount').textContent = eventsCount;
+        
+        // Load brands count
+        const brandsSnapshot = await database.ref('brands').once('value');
+        const brandsCount = brandsSnapshot.val() ? Object.keys(brandsSnapshot.val()).length : 0;
+        document.getElementById('brandsCount').textContent = brandsCount;
+        
+        // Load recent items
+        const recentItems = document.getElementById('recentItems');
+        const allItems = [];
+        
+        if (eventsSnapshot.val()) {
+            Object.entries(eventsSnapshot.val()).forEach(([key, value]) => {
+                allItems.push({
+                    ...value,
+                    key: key,
+                    type: 'event'
+                });
+            });
+        }
+        
+        if (brandsSnapshot.val()) {
+            Object.entries(brandsSnapshot.val()).forEach(([key, value]) => {
+                allItems.push({
+                    ...value,
+                    key: key,
+                    type: 'brand'
+                });
+            });
+        }
+        
+        // Sort by creation date
+        allItems.sort((a, b) => b.createdAt - a.createdAt);
+        const recent = allItems.slice(0, 5);
+        
+        if (recent.length === 0) {
+            recentItems.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;">No items yet.</div>';
+        } else {
+            recentItems.innerHTML = '';
+            recent.forEach(item => {
+                const itemCard = document.createElement('div');
+                itemCard.className = 'item-card';
+                
+                const typeBadge = item.type === 'event' ? 
+                    '<span style="background: #dbeafe; color: #1d4ed8; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">EVENT</span>' :
+                    '<span style="background: #f0fdf4; color: #059669; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">BRAND</span>';
+                
+                itemCard.innerHTML = `
+                    <img src="${item.imageUrl}" alt="${item.name}" class="item-image" onerror="this.src='https://via.placeholder.com/300x200/667eea/ffffff?text=${item.type.toUpperCase()}'">
+                    <div class="item-details">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div class="item-title">${item.name}</div>
+                            ${typeBadge}
+                        </div>
+                        <p class="item-description">${item.description.substring(0, 80)}...</p>
+                    </div>
+                `;
+                recentItems.appendChild(itemCard);
             });
         }
 
-        // Upload image
-        async function uploadImage(file, folder) {
-            const compressedFile = await compressImage(file);
-            const fileName = `${folder}_${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
-            const storageRef = storage.ref(`${folder}/${fileName}`);
-            await storageRef.put(compressedFile);
-            const url = await storageRef.getDownloadURL();
-            return url;
+    } catch (error) {
+        console.error('Error loading dashboard:', error);
+    }
+}
+
+// Edit Item
+async function editItem(type, id) {
+    try {
+        const snapshot = await database.ref(`${type}/${id}`).once('value');
+        const item = snapshot.val();
+        
+        if (!item) return;
+        
+        // Set modal title
+        document.getElementById('modalTitle').textContent = `Edit ${type === 'events' ? 'Event' : 'Brand'}`;
+        document.getElementById('editId').value = id;
+        document.getElementById('editType').value = type;
+        document.getElementById('editName').value = item.name;
+        document.getElementById('editDescription').value = item.description;
+        document.getElementById('editImageUrl').value = item.imageUrl;
+        
+        // Clear extra fields
+        const extraFields = document.getElementById('editExtraFields');
+        extraFields.innerHTML = '';
+        
+        // Add type-specific fields
+        if (type === 'events') {
+            extraFields.innerHTML = `
+                <div class="form-group">
+                    <label for="editTime">Time <span class="required">*</span></label>
+                    <input type="datetime-local" id="editTime" required value="${item.time}">
+                </div>
+            `;
+        } else if (type === 'brands') {
+            extraFields.innerHTML = `
+                <div class="form-group">
+                    <label for="editPrize">Prize</label>
+                    <input type="text" id="editPrize" value="${item.prize || ''}" placeholder="Prize details">
+                </div>
+                <div class="form-group">
+                    <label for="editContact">Contact Info</label>
+                    <input type="text" id="editContact" value="${item.contact || ''}" placeholder="Contact info">
+                </div>
+                <div class="form-group">
+                    <label for="editLocation">Location</label>
+                    <input type="text" id="editLocation" value="${item.location || ''}" placeholder="Location">
+                </div>
+            `;
+        }
+        
+        // Show modal
+        document.getElementById('editModal').classList.add('active');
+        
+    } catch (error) {
+        console.error('Error loading item for edit:', error);
+        showMessage(type === 'events' ? 'eventMessage' : 'brandMessage', 'Error loading item', 'error');
+    }
+}
+
+// Handle Edit Form Submission
+document.getElementById('editForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    try {
+        const id = document.getElementById('editId').value;
+        const type = document.getElementById('editType').value;
+        const name = document.getElementById('editName').value.trim();
+        const description = document.getElementById('editDescription').value.trim();
+        const imageUrl = document.getElementById('editImageUrl').value.trim();
+        
+        // Validation
+        if (!name || !description || !imageUrl) {
+            showMessage('Please fill all required fields', 'error');
+            return;
+        }
+        
+        if (!isValidUrl(imageUrl)) {
+            showMessage('Please enter a valid image URL', 'error');
+            return;
         }
 
-        // Add Event
-        document.getElementById('eventForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const submitBtn = document.getElementById('eventSubmitBtn');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Adding...';
-            submitBtn.disabled = true;
-
-            try {
-                const name = document.getElementById('eventName').value.trim();
-                const description = document.getElementById('eventDescription').value.trim();
-                const time = document.getElementById('eventTime').value;
-                const imageFile = document.getElementById('eventImage').files[0];
-
-                // Validation
-                if (!name || !description || !time || !imageFile) {
-                    showMessage('eventMessage', 'Please fill all required fields', 'error');
-                    throw new Error('Missing required fields');
-                }
-
-                // Upload image
-                showMessage('eventMessage', 'Uploading image...', 'success');
-                const imageUrl = await uploadImage(imageFile, 'events');
-
-                // Create event data
-                const eventId = 'event_' + Date.now();
-                const eventData = {
-                    id: eventId,
-                    name: name,
-                    description: description,
-                    time: time,
-                    imageUrl: imageUrl,
-                    createdAt: Date.now(),
-                    updatedAt: Date.now()
-                };
-
-                // Save to database
-                await database.ref('events/' + eventId).set(eventData);
-
-                // Success
-                showMessage('eventMessage', 'Event added successfully!', 'success');
-                
-                // Reset form
-                this.reset();
-                document.getElementById('eventPreview').style.display = 'none';
-                
-                // Refresh
-                loadEvents();
-                loadDashboard();
-
-            } catch (error) {
-                console.error('Error:', error);
-                showMessage('eventMessage', `Error: ${error.message}`, 'error');
-            } finally {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
+        // Get existing data
+        const snapshot = await database.ref(`${type}/${id}`).once('value');
+        const existingData = snapshot.val();
+        
+        // Prepare update data
+        const updateData = {
+            ...existingData,
+            name: name,
+            description: description,
+            imageUrl: imageUrl,
+            updatedAt: Date.now()
+        };
+        
+        // Add type-specific fields
+        if (type === 'events') {
+            updateData.time = document.getElementById('editTime').value;
+            if (!updateData.time) {
+                showMessage('Please enter event time', 'error');
+                return;
             }
-        });
-
-        // Add Brand
-        document.getElementById('brandForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const submitBtn = document.getElementById('brandSubmitBtn');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Adding...';
-            submitBtn.disabled = true;
-
-            try {
-                const name = document.getElementById('brandName').value.trim();
-                const description = document.getElementById('brandDescription').value.trim();
-                const prize = document.getElementById('brandPrize').value.trim();
-                const contact = document.getElementById('brandContact').value.trim();
-                const location = document.getElementById('brandLocation').value.trim();
-                const imageFile = document.getElementById('brandImage').files[0];
-
-                // Validation
-                if (!name || !description || !imageFile) {
-                    showMessage('brandMessage', 'Please fill all required fields', 'error');
-                    throw new Error('Missing required fields');
-                }
-
-                // Upload image
-                showMessage('brandMessage', 'Uploading image...', 'success');
-                const imageUrl = await uploadImage(imageFile, 'brands');
-
-                // Create brand data
-                const brandId = 'brand_' + Date.now();
-                const brandData = {
-                    id: brandId,
-                    name: name,
-                    description: description,
-                    prize: prize || '',
-                    contact: contact || '',
-                    location: location || '',
-                    imageUrl: imageUrl,
-                    createdAt: Date.now(),
-                    updatedAt: Date.now()
-                };
-
-                // Save to database
-                await database.ref('brands/' + brandId).set(brandData);
-
-                // Success
-                showMessage('brandMessage', 'Brand added successfully!', 'success');
-                
-                // Reset form
-                this.reset();
-                document.getElementById('brandPreview').style.display = 'none';
-                
-                // Refresh
-                loadBrands();
-                loadDashboard();
-
-            } catch (error) {
-                console.error('Error:', error);
-                showMessage('brandMessage', `Error: ${error.message}`, 'error');
-            } finally {
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-            }
-        });
-
-        // Load Events
-        async function loadEvents() {
-            const eventsList = document.getElementById('eventsList');
-            eventsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b;">Loading events...</div>';
-
-            try {
-                const snapshot = await database.ref('events').once('value');
-                events = snapshot.val() ? Object.entries(snapshot.val()).map(([key, value]) => ({...value, key})) : [];
-                
-                if (events.length === 0) {
-                    eventsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;">No events added yet.</div>';
-                    return;
-                }
-
-                eventsList.innerHTML = '';
-                events.forEach(event => {
-                    const eventDate = new Date(event.time);
-                    const item = document.createElement('div');
-                    item.className = 'item-card';
-                    item.innerHTML = `
-                        <img src="${event.imageUrl}" alt="${event.name}" class="item-image">
-                        <div class="item-details">
-                            <div class="item-title">${event.name}</div>
-                            <p class="item-description">${event.description}</p>
-                            <div class="item-info">
-                                <div class="info-item">
-                                    <i class="fas fa-calendar"></i>
-                                    ${eventDate.toLocaleDateString()}
-                                </div>
-                                <div class="info-item">
-                                    <i class="fas fa-clock"></i>
-                                    ${eventDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
-                                </div>
-                            </div>
-                        </div>
-                        <div class="item-actions">
-                            <button class="action-btn edit-btn" onclick="editItem('events', '${event.key}')">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="action-btn delete-btn" onclick="deleteItem('events', '${event.key}')">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
-                    `;
-                    eventsList.appendChild(item);
-                });
-
-            } catch (error) {
-                console.error('Error loading events:', error);
-                eventsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;">Error loading events.</div>';
-            }
+        } else if (type === 'brands') {
+            updateData.prize = document.getElementById('editPrize').value.trim();
+            updateData.contact = document.getElementById('editContact').value.trim();
+            updateData.location = document.getElementById('editLocation').value.trim();
         }
+        
+        // Update database
+        await database.ref(`${type}/${id}`).set(updateData);
+        
+        // Success
+        showMessage(type === 'events' ? 'eventMessage' : 'brandMessage', '✅ Item updated successfully!', 'success');
+        
+        // Close modal and refresh
+        closeModal();
+        if (type === 'events') loadEvents();
+        if (type === 'brands') loadBrands();
+        loadDashboard();
+        
+    } catch (error) {
+        console.error('Error updating item:', error);
+        showMessage('Error updating item', 'error');
+    }
+});
 
-        // Load Brands
-        async function loadBrands() {
-            const brandsList = document.getElementById('brandsList');
-            brandsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b;">Loading brands...</div>';
-
-            try {
-                const snapshot = await database.ref('brands').once('value');
-                brands = snapshot.val() ? Object.entries(snapshot.val()).map(([key, value]) => ({...value, key})) : [];
-                
-                if (brands.length === 0) {
-                    brandsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;">No brands added yet.</div>';
-                    return;
-                }
-
-                brandsList.innerHTML = '';
-                brands.forEach(brand => {
-                    const item = document.createElement('div');
-                    item.className = 'item-card';
-                    item.innerHTML = `
-                        <img src="${brand.imageUrl}" alt="${brand.name}" class="item-image">
-                        <div class="item-details">
-                            <div class="item-title">${brand.name}</div>
-                            <p class="item-description">${brand.description}</p>
-                            <div class="item-info">
-                                ${brand.prize ? `<div class="info-item"><i class="fas fa-trophy"></i> ${brand.prize}</div>` : ''}
-                                ${brand.contact ? `<div class="info-item"><i class="fas fa-phone"></i> ${brand.contact}</div>` : ''}
-                                ${brand.location ? `<div class="info-item"><i class="fas fa-map-marker"></i> ${brand.location}</div>` : ''}
-                            </div>
-                        </div>
-                        <div class="item-actions">
-                            <button class="action-btn edit-btn" onclick="editItem('brands', '${brand.key}')">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            <button class="action-btn delete-btn" onclick="deleteItem('brands', '${brand.key}')">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
-                    `;
-                    brandsList.appendChild(item);
-                });
-
-            } catch (error) {
-                console.error('Error loading brands:', error);
-                brandsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;">Error loading brands.</div>';
-            }
-        }
-
-        // Load Dashboard
-        async function loadDashboard() {
-            try {
-                // Load events count
-                const eventsSnapshot = await database.ref('events').once('value');
-                const eventsCount = eventsSnapshot.val() ? Object.keys(eventsSnapshot.val()).length : 0;
-                document.getElementById('eventsCount').textContent = eventsCount;
-                
-                // Load brands count
-                const brandsSnapshot = await database.ref('brands').once('value');
-                const brandsCount = brandsSnapshot.val() ? Object.keys(brandsSnapshot.val()).length : 0;
-                document.getElementById('brandsCount').textContent = brandsCount;
-                
-                // Load recent items
-                const recentItems = document.getElementById('recentItems');
-                const allItems = [];
-                
-                if (eventsSnapshot.val()) {
-                    Object.entries(eventsSnapshot.val()).forEach(([key, value]) => {
-                        allItems.push({
-                            ...value,
-                            key: key,
-                            type: 'event'
-                        });
-                    });
-                }
-                
-                if (brandsSnapshot.val()) {
-                    Object.entries(brandsSnapshot.val()).forEach(([key, value]) => {
-                        allItems.push({
-                            ...value,
-                            key: key,
-                            type: 'brand'
-                        });
-                    });
-                }
-                
-                // Sort by creation date
-                allItems.sort((a, b) => b.createdAt - a.createdAt);
-                const recent = allItems.slice(0, 5);
-                
-                if (recent.length === 0) {
-                    recentItems.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;">No items yet.</div>';
-                } else {
-                    recentItems.innerHTML = '';
-                    recent.forEach(item => {
-                        const itemCard = document.createElement('div');
-                        itemCard.className = 'item-card';
-                        
-                        const typeBadge = item.type === 'event' ? 
-                            '<span style="background: #dbeafe; color: #1d4ed8; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">EVENT</span>' :
-                            '<span style="background: #f0fdf4; color: #059669; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">BRAND</span>';
-                        
-                        itemCard.innerHTML = `
-                            <img src="${item.imageUrl}" alt="${item.name}" class="item-image">
-                            <div class="item-details">
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                                    <div class="item-title">${item.name}</div>
-                                    ${typeBadge}
-                                </div>
-                                <p class="item-description">${item.description.substring(0, 80)}...</p>
-                            </div>
-                        `;
-                        recentItems.appendChild(itemCard);
-                    });
-                }
-
-            } catch (error) {
-                console.error('Error loading dashboard:', error);
-            }
-        }
-
-        // Edit Item
-        async function editItem(type, id) {
-            try {
-                const snapshot = await database.ref(`${type}/${id}`).once('value');
-                const item = snapshot.val();
-                
-                if (!item) return;
-                
-                // Set modal title
-                document.getElementById('modalTitle').textContent = `Edit ${type === 'events' ? 'Event' : 'Brand'}`;
-                document.getElementById('editId').value = id;
-                document.getElementById('editType').value = type;
-                document.getElementById('editName').value = item.name;
-                document.getElementById('editDescription').value = item.description;
-                document.getElementById('editPreview').src = item.imageUrl;
-                document.getElementById('editPreview').style.display = 'block';
-                
-                // Clear extra fields
-                const extraFields = document.getElementById('editExtraFields');
-                extraFields.innerHTML = '';
-                
-                // Add type-specific fields
-                if (type === 'events') {
-                    extraFields.innerHTML = `
-                        <div class="form-group">
-                            <label for="editTime">Time <span class="required">*</span></label>
-                            <input type="datetime-local" id="editTime" required value="${item.time}">
-                        </div>
-                    `;
-                } else if (type === 'brands') {
-                    extraFields.innerHTML = `
-                        <div class="form-group">
-                            <label for="editPrize">Prize</label>
-                            <input type="text" id="editPrize" value="${item.prize || ''}" placeholder="Prize details">
-                        </div>
-                        <div class="form-group">
-                            <label for="editContact">Contact Info</label>
-                            <input type="text" id="editContact" value="${item.contact || ''}" placeholder="Contact info">
-                        </div>
-                        <div class="form-group">
-                            <label for="editLocation">Location</label>
-                            <input type="text" id="editLocation" value="${item.location || ''}" placeholder="Location">
-                        </div>
-                    `;
-                }
-                
-                // Show modal
-                document.getElementById('editModal').classList.add('active');
-                
-            } catch (error) {
-                console.error('Error loading item for edit:', error);
-                showMessage(type === 'events' ? 'eventMessage' : 'brandMessage', 'Error loading item', 'error');
-            }
-        }
-
-        // Handle Edit Form Submission
-        document.getElementById('editForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+// Delete Item
+async function deleteItem(type, id) {
+    if (confirm('Are you sure you want to delete this item?')) {
+        try {
+            await database.ref(`${type}/${id}`).remove();
             
-            try {
-                const id = document.getElementById('editId').value;
-                const type = document.getElementById('editType').value;
-                const name = document.getElementById('editName').value.trim();
-                const description = document.getElementById('editDescription').value.trim();
-                const imageFile = document.getElementById('editImage').files[0];
-                
-                // Get existing data
-                const snapshot = await database.ref(`${type}/${id}`).once('value');
-                const existingData = snapshot.val();
-                
-                let imageUrl = existingData.imageUrl;
-                
-                // Upload new image if selected
-                if (imageFile) {
-                    imageUrl = await uploadImage(imageFile, type);
-                }
-                
-                // Prepare update data
-                const updateData = {
-                    ...existingData,
-                    name: name,
-                    description: description,
-                    imageUrl: imageUrl,
-                    updatedAt: Date.now()
-                };
-                
-                // Add type-specific fields
-                if (type === 'events') {
-                    updateData.time = document.getElementById('editTime').value;
-                } else if (type === 'brands') {
-                    updateData.prize = document.getElementById('editPrize').value.trim();
-                    updateData.contact = document.getElementById('editContact').value.trim();
-                    updateData.location = document.getElementById('editLocation').value.trim();
-                }
-                
-                // Update database
-                await database.ref(`${type}/${id}`).set(updateData);
-                
-                // Success
-                showMessage(type === 'events' ? 'eventMessage' : 'brandMessage', 'Item updated successfully!', 'success');
-                
-                // Close modal and refresh
-                closeModal();
-                if (type === 'events') loadEvents();
-                if (type === 'brands') loadBrands();
-                loadDashboard();
-                
-            } catch (error) {
-                console.error('Error updating item:', error);
-                showMessage('Error updating item', 'error');
-            }
-        });
-
-        // Delete Item
-        async function deleteItem(type, id) {
-            if (confirm('Are you sure you want to delete this item?')) {
-                try {
-                    await database.ref(`${type}/${id}`).remove();
-                    
-                    showMessage(type === 'events' ? 'eventMessage' : 'brandMessage', 'Item deleted successfully!', 'success');
-                    
-                    if (type === 'events') loadEvents();
-                    if (type === 'brands') loadBrands();
-                    loadDashboard();
-                    
-                } catch (error) {
-                    console.error('Error deleting item:', error);
-                    showMessage(type === 'events' ? 'eventMessage' : 'brandMessage', 'Error deleting item', 'error');
-                }
-            }
-        }
-
-        // Close Modal
-        function closeModal() {
-            document.getElementById('editModal').classList.remove('active');
-            document.getElementById('editForm').reset();
-            document.getElementById('editPreview').style.display = 'none';
-        }
-
-        // Show Message
-        function showMessage(elementId, message, type) {
-            const element = document.getElementById(elementId);
-            element.textContent = message;
-            element.className = `message ${type}`;
-            element.style.display = 'block';
+            showMessage(type === 'events' ? 'eventMessage' : 'brandMessage', '✅ Item deleted successfully!', 'success');
             
-            setTimeout(() => {
-                element.style.display = 'none';
-            }, 5000);
+            if (type === 'events') loadEvents();
+            if (type === 'brands') loadBrands();
+            loadDashboard();
+            
+        } catch (error) {
+            console.error('Error deleting item:', error);
+            showMessage(type === 'events' ? 'eventMessage' : 'brandMessage', '❌ Error deleting item', 'error');
         }
+    }
+}
 
-        // Initialize on load
-        document.addEventListener('DOMContentLoaded', function() {
+// Close Modal
+function closeModal() {
+    document.getElementById('editModal').classList.remove('active');
+    document.getElementById('editForm').reset();
+}
+
+// Show Message
+function showMessage(elementId, message, type) {
+    // If elementId is not provided, show a generic alert
+    if (typeof elementId === 'string' && document.getElementById(elementId)) {
+        const element = document.getElementById(elementId);
+        element.textContent = message;
+        element.className = `message ${type}`;
+        element.style.display = 'block';
+        
+        setTimeout(() => {
+            element.style.display = 'none';
+        }, 5000);
+    } else {
+        // Fallback alert
+        alert(message);
+    }
+}
+
+// Initialize on load
+document.addEventListener('DOMContentLoaded', function() {
+    loadEvents();
+    loadBrands();
+    loadDashboard();
+});
+
+// Optional: Clear all data (for testing)
+async function clearAllData() {
+    if (confirm('WARNING: This will delete ALL events and brands. Continue?')) {
+        try {
+            await database.ref('events').remove();
+            await database.ref('brands').remove();
+            alert('✅ All data cleared!');
             loadEvents();
             loadBrands();
             loadDashboard();
-        });
-    </script>
+        } catch (error) {
+            console.error('Error clearing data:', error);
+        }
+    }
+}
+</script>
 </body>
 </html>
