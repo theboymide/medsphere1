@@ -140,7 +140,7 @@
             font-size: 14px;
         }
         
-        input, textarea {
+        input, textarea, select {
             width: 100%;
             padding: 12px;
             border: 2px solid #e2e8f0;
@@ -150,7 +150,7 @@
             background: white;
         }
         
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
@@ -159,6 +159,47 @@
         textarea {
             min-height: 100px;
             resize: vertical;
+        }
+        
+        /* TYPE SELECTOR */
+        .type-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .type-option {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            color: #64748b;
+        }
+        
+        .type-option:hover {
+            border-color: #cbd5e1;
+            background: white;
+        }
+        
+        .type-option.selected {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+        
+        .type-option.selected i {
+            color: white;
         }
         
         /* IMAGE PREVIEW */
@@ -331,6 +372,26 @@
             background: #fecaca;
         }
         
+        /* TYPE BADGES */
+        .type-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .event-badge {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        
+        .news-badge {
+            background: #f0fdf4;
+            color: #059669;
+        }
+        
         /* MESSAGES */
         .message {
             padding: 12px;
@@ -435,7 +496,7 @@
                 <i class="fas fa-tachometer-alt"></i> Dashboard
             </div>
             <div class="tab" onclick="switchTab('events')">
-                <i class="fas fa-calendar-alt"></i> Events
+                <i class="fas fa-calendar-alt"></i> Events & News
             </div>
             <div class="tab" onclick="switchTab('brands')">
                 <i class="fas fa-store"></i> Brands
@@ -448,6 +509,10 @@
                 <div class="stat-card">
                     <div class="stat-number" id="eventsCount">0</div>
                     <div class="stat-label">Total Events</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="newsCount">0</div>
+                    <div class="stat-label">Total News</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="brandsCount">0</div>
@@ -463,24 +528,38 @@
             </div>
         </div>
         
-        <!-- EVENTS -->
+        <!-- EVENTS & NEWS -->
         <div id="events-tab" class="content-section">
             <div class="form-container">
                 <h2 style="color: #1e293b; margin-bottom: 25px; text-align: center; font-size: 20px;">
-                    <i class="fas fa-plus-circle"></i> Add New Event
+                    <i class="fas fa-plus-circle"></i> Add New Event or News
                 </h2>
                 
                 <div id="eventMessage" class="message"></div>
                 
                 <form id="eventForm">
+                    <!-- TYPE SELECTOR -->
+                    <div class="type-selector">
+                        <div class="type-option" id="eventTypeOption" onclick="selectType('event')">
+                            <i class="fas fa-calendar-day"></i> Event
+                        </div>
+                        <div class="type-option" id="newsTypeOption" onclick="selectType('news')">
+                            <i class="fas fa-newspaper"></i> News
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="itemType" value="event">
+                    
                     <div class="form-group">
-                        <label for="eventName">Event Name</label>
-                        <input type="text" id="eventName" placeholder="Enter event name">
+                        <label for="eventName">
+                            <span id="titleLabel">Event</span> Title
+                        </label>
+                        <input type="text" id="eventName" placeholder="Enter title">
                     </div>
                     
                     <div class="form-group">
                         <label for="eventDescription">Description</label>
-                        <textarea id="eventDescription" placeholder="Enter event description"></textarea>
+                        <textarea id="eventDescription" placeholder="Enter description"></textarea>
                     </div>
                     
                     <div class="form-group">
@@ -505,19 +584,20 @@
                         </div>
                     </div>
                     
-                    <div class="form-group">
-                        <label for="eventTime">Time</label>
+                    <!-- DATE FIELD - Only shown for Events -->
+                    <div class="form-group" id="dateFieldGroup">
+                        <label for="eventTime">Date & Time</label>
                         <input type="datetime-local" id="eventTime">
                     </div>
                     
                     <button type="submit" class="submit-btn" id="eventSubmitBtn">
-                        <i class="fas fa-plus"></i> Add Event
+                        <i class="fas fa-plus"></i> Add <span id="submitButtonText">Event</span>
                     </button>
                 </form>
                 
                 <div class="items-list">
                     <h2 style="color: #1e293b; margin: 40px 0 20px; padding-bottom: 10px; border-bottom: 2px solid #e2e8f0;">
-                        <i class="fas fa-list"></i> All Events
+                        <i class="fas fa-list"></i> All Events & News
                     </h2>
                     <div id="eventsList"></div>
                 </div>
@@ -601,8 +681,20 @@
         <div class="modal-content">
             <div class="modal-title" id="modalTitle">Edit Item</div>
             <form id="editForm">
+                <!-- TYPE SELECTOR FOR EDIT MODAL -->
+                <div class="type-selector" id="editTypeSelector">
+                    <div class="type-option" id="editEventTypeOption" onclick="selectEditType('event')">
+                        <i class="fas fa-calendar-day"></i> Event
+                    </div>
+                    <div class="type-option" id="editNewsTypeOption" onclick="selectEditType('news')">
+                        <i class="fas fa-newspaper"></i> News
+                    </div>
+                </div>
+                
+                <input type="hidden" id="editItemType">
+                
                 <div class="form-group">
-                    <label for="editName">Name</label>
+                    <label for="editName">Title</label>
                     <input type="text" id="editName">
                 </div>
                 
@@ -679,6 +771,52 @@
             if (tabName === 'dashboard') loadDashboard();
             if (tabName === 'events') loadEvents();
             if (tabName === 'brands') loadBrands();
+        }
+
+        // Select type (Event or News)
+        function selectType(type) {
+            const eventOption = document.getElementById('eventTypeOption');
+            const newsOption = document.getElementById('newsTypeOption');
+            const dateFieldGroup = document.getElementById('dateFieldGroup');
+            const titleLabel = document.getElementById('titleLabel');
+            const submitButtonText = document.getElementById('submitButtonText');
+            const itemTypeInput = document.getElementById('itemType');
+            
+            if (type === 'event') {
+                eventOption.classList.add('selected');
+                newsOption.classList.remove('selected');
+                dateFieldGroup.style.display = 'block';
+                titleLabel.textContent = 'Event';
+                submitButtonText.textContent = 'Event';
+            } else {
+                newsOption.classList.add('selected');
+                eventOption.classList.remove('selected');
+                dateFieldGroup.style.display = 'none';
+                titleLabel.textContent = 'News';
+                submitButtonText.textContent = 'News';
+            }
+            
+            itemTypeInput.value = type;
+        }
+
+        // Select type for edit modal
+        function selectEditType(type) {
+            const eventOption = document.getElementById('editEventTypeOption');
+            const newsOption = document.getElementById('editNewsTypeOption');
+            const dateFieldGroup = document.getElementById('editDateFieldGroup');
+            const itemTypeInput = document.getElementById('editItemType');
+            
+            if (type === 'event') {
+                eventOption.classList.add('selected');
+                newsOption.classList.remove('selected');
+                if (dateFieldGroup) dateFieldGroup.style.display = 'block';
+            } else {
+                newsOption.classList.add('selected');
+                eventOption.classList.remove('selected');
+                if (dateFieldGroup) dateFieldGroup.style.display = 'none';
+            }
+            
+            itemTypeInput.value = type;
         }
 
         // URL validation function
@@ -771,7 +909,7 @@
             }
         }
 
-        // Add Event
+        // Add Event or News
         document.getElementById('eventForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const submitBtn = document.getElementById('eventSubmitBtn');
@@ -784,9 +922,10 @@
                 const description = document.getElementById('eventDescription').value.trim();
                 const time = document.getElementById('eventTime').value;
                 const imageUrl = document.getElementById('eventImageUrl').value.trim();
+                const type = document.getElementById('itemType').value; // 'event' or 'news'
 
-                // ALL FIELDS ARE NOW OPTIONAL - Create event with available data
-                if (!name && !description && !time && !imageUrl) {
+                // ALL FIELDS ARE NOW OPTIONAL - Create item with available data
+                if (!name && !description && !imageUrl) {
                     showMessage('eventMessage', 'Please fill at least one field', 'error');
                     throw new Error('No data provided');
                 }
@@ -797,29 +936,39 @@
                     throw new Error('Invalid image URL');
                 }
 
-                // Create event data
-                const eventId = 'event_' + Date.now();
-                const eventData = {
-                    id: eventId,
-                    name: name || 'Untitled Event',
+                // Create item data
+                const itemId = `${type}_` + Date.now();
+                const itemData = {
+                    id: itemId,
+                    name: name || `Untitled ${type === 'event' ? 'Event' : 'News'}`,
                     description: description || 'No description provided',
-                    time: time || new Date().toISOString(),
-                    imageUrl: imageUrl || 'https://via.placeholder.com/400x200/667eea/ffffff?text=No+Image',
+                    imageUrl: imageUrl || (type === 'event' ? 
+                        'https://via.placeholder.com/400x200/667eea/ffffff?text=No+Image' : 
+                        'https://via.placeholder.com/400x200/059669/ffffff?text=No+Image'),
                     createdAt: Date.now(),
-                    updatedAt: Date.now()
+                    updatedAt: Date.now(),
+                    type: type // Add type to distinguish between event and news
                 };
 
-                console.log('Saving event:', eventData);
+                // Add date only for events
+                if (type === 'event') {
+                    itemData.time = time || new Date().toISOString();
+                }
+
+                console.log('Saving item:', itemData);
 
                 // Save to database
-                await database.ref('events/' + eventId).set(eventData);
+                await database.ref('events/' + itemId).set(itemData);
 
                 // Success
-                showMessage('eventMessage', '✅ Event added successfully!', 'success');
+                showMessage('eventMessage', `✅ ${type === 'event' ? 'Event' : 'News'} added successfully!`, 'success');
                 
                 // Reset form
                 this.reset();
                 document.getElementById('eventPreview').classList.remove('visible');
+                
+                // Reset to default (Event)
+                selectType('event');
                 
                 // Refresh
                 setTimeout(() => {
@@ -907,40 +1056,56 @@
             }
         });
 
-        // Load Events
+        // Load Events & News
         async function loadEvents() {
             const eventsList = document.getElementById('eventsList');
-            eventsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b;">Loading events...</div>';
+            eventsList.innerHTML = '<div style="text-align: center; padding: 20px; color: #64748b;">Loading events & news...</div>';
 
             try {
                 const snapshot = await database.ref('events').once('value');
                 const data = snapshot.val();
-                console.log('Loaded events:', data);
+                console.log('Loaded events & news:', data);
                 
                 if (!data) {
-                    eventsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;">No events added yet.</div>';
+                    eventsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;">No events or news added yet.</div>';
                     return;
                 }
 
                 eventsList.innerHTML = '';
-                Object.entries(data).forEach(([key, event]) => {
-                    const eventDate = new Date(event.time);
-                    const item = document.createElement('div');
-                    item.className = 'item-card';
-                    item.innerHTML = `
-                        <img src="${event.imageUrl}" alt="${event.name}" class="item-image" onerror="this.src='https://via.placeholder.com/300x200/667eea/ffffff?text=EVENT'">
+                Object.entries(data).forEach(([key, item]) => {
+                    const isEvent = item.type === 'event';
+                    const typeBadge = isEvent ? 
+                        '<div class="type-badge event-badge">EVENT</div>' : 
+                        '<div class="type-badge news-badge">NEWS</div>';
+                    
+                    const itemDate = isEvent ? new Date(item.time) : new Date(item.createdAt);
+                    const dateDisplay = isEvent ? 
+                        `${itemDate.toLocaleDateString()} at ${itemDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}` :
+                        itemDate.toLocaleDateString();
+                    
+                    const placeholderImage = isEvent ? 
+                        'https://via.placeholder.com/300x200/667eea/ffffff?text=EVENT' :
+                        'https://via.placeholder.com/300x200/059669/ffffff?text=NEWS';
+                    
+                    const itemCard = document.createElement('div');
+                    itemCard.className = 'item-card';
+                    itemCard.innerHTML = `
+                        <img src="${item.imageUrl}" alt="${item.name}" class="item-image" onerror="this.src='${placeholderImage}'">
                         <div class="item-details">
-                            <div class="item-title">${event.name}</div>
-                            <p class="item-description">${event.description}</p>
+                            ${typeBadge}
+                            <div class="item-title">${item.name}</div>
+                            <p class="item-description">${item.description}</p>
                             <div class="item-info">
                                 <div class="info-item">
                                     <i class="fas fa-calendar"></i>
-                                    ${eventDate.toLocaleDateString()}
+                                    ${dateDisplay}
                                 </div>
+                                ${isEvent ? `
                                 <div class="info-item">
                                     <i class="fas fa-clock"></i>
-                                    ${eventDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                    ${itemDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                                 </div>
+                                ` : ''}
                             </div>
                         </div>
                         <div class="item-actions">
@@ -952,12 +1117,12 @@
                             </button>
                         </div>
                     `;
-                    eventsList.appendChild(item);
+                    eventsList.appendChild(itemCard);
                 });
 
             } catch (error) {
-                console.error('Error loading events:', error);
-                eventsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;">Error loading events.</div>';
+                console.error('Error loading events & news:', error);
+                eventsList.innerHTML = '<div style="text-align: center; padding: 40px; color: #dc2626;">Error loading events & news.</div>';
             }
         }
 
@@ -1012,11 +1177,24 @@
         // Load Dashboard
         async function loadDashboard() {
             try {
-                // Load events count
+                // Load events and news count
                 const eventsSnapshot = await database.ref('events').once('value');
                 const eventsData = eventsSnapshot.val();
-                const eventsCount = eventsData ? Object.keys(eventsData).length : 0;
+                let eventsCount = 0;
+                let newsCount = 0;
+                
+                if (eventsData) {
+                    Object.values(eventsData).forEach(item => {
+                        if (item.type === 'event') {
+                            eventsCount++;
+                        } else if (item.type === 'news') {
+                            newsCount++;
+                        }
+                    });
+                }
+                
                 document.getElementById('eventsCount').textContent = eventsCount;
+                document.getElementById('newsCount').textContent = newsCount;
                 
                 // Load brands count
                 const brandsSnapshot = await database.ref('brands').once('value');
@@ -1033,7 +1211,7 @@
                         allItems.push({
                             ...value,
                             key: key,
-                            type: 'event'
+                            type: value.type || 'event' // Default to event for backwards compatibility
                         });
                     });
                 }
@@ -1057,21 +1235,45 @@
                 } else {
                     recentItems.innerHTML = '';
                     recent.forEach(item => {
+                        let typeText = '';
+                        let badgeClass = '';
+                        let badgeColor = '';
+                        
+                        if (item.type === 'event') {
+                            typeText = 'EVENT';
+                            badgeClass = 'event-badge';
+                            badgeColor = '#667eea';
+                        } else if (item.type === 'news') {
+                            typeText = 'NEWS';
+                            badgeClass = 'news-badge';
+                            badgeColor = '#059669';
+                        } else if (item.type === 'brand') {
+                            typeText = 'BRAND';
+                            badgeClass = '';
+                            badgeColor = '#764ba2';
+                        }
+                        
                         const itemCard = document.createElement('div');
                         itemCard.className = 'item-card';
                         
-                        const typeBadge = item.type === 'event' ? 
-                            '<span style="background: #dbeafe; color: #1d4ed8; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">EVENT</span>' :
-                            '<span style="background: #f0fdf4; color: #059669; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">BRAND</span>';
+                        const typeBadge = badgeClass ? 
+                            `<div class="type-badge ${badgeClass}">${typeText}</div>` : 
+                            `<span style="background: #f0fdf4; color: #059669; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">${typeText}</span>`;
+                        
+                        const placeholderImage = item.type === 'event' ? 
+                            'https://via.placeholder.com/300x200/667eea/ffffff?text=EVENT' :
+                            item.type === 'news' ? 
+                            'https://via.placeholder.com/300x200/059669/ffffff?text=NEWS' :
+                            'https://via.placeholder.com/300x200/764ba2/ffffff?text=BRAND';
                         
                         itemCard.innerHTML = `
-                            <img src="${item.imageUrl}" alt="${item.name}" class="item-image" onerror="this.src='https://via.placeholder.com/300x200/667eea/ffffff?text=${item.type.toUpperCase()}'">
+                            <img src="${item.imageUrl}" alt="${item.name}" class="item-image" onerror="this.src='${placeholderImage}'">
                             <div class="item-details">
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                     <div class="item-title">${item.name}</div>
                                     ${typeBadge}
                                 </div>
-                                <p class="item-description">${item.description.substring(0, 80)}...</p>
+                                <p class="item-description">${item.description ? item.description.substring(0, 80) + '...' : 'No description'}</p>
                             </div>
                         `;
                         recentItems.appendChild(itemCard);
@@ -1092,7 +1294,7 @@
                 if (!item) return;
                 
                 // Set modal title
-                document.getElementById('modalTitle').textContent = `Edit ${type === 'events' ? 'Event' : 'Brand'}`;
+                document.getElementById('modalTitle').textContent = type === 'events' ? 'Edit Event/News' : 'Edit Brand';
                 document.getElementById('editId').value = id;
                 document.getElementById('editType').value = type;
                 document.getElementById('editName').value = item.name;
@@ -1103,14 +1305,26 @@
                 const extraFields = document.getElementById('editExtraFields');
                 extraFields.innerHTML = '';
                 
-                // Add type-specific fields
+                // Add type-specific fields for events/news
                 if (type === 'events') {
-                    extraFields.innerHTML = `
-                        <div class="form-group">
-                            <label for="editTime">Time</label>
-                            <input type="datetime-local" id="editTime" value="${item.time}">
-                        </div>
-                    `;
+                    // Set the type selection
+                    const itemType = item.type || 'event';
+                    document.getElementById('editItemType').value = itemType;
+                    
+                    // Select the correct type in the modal
+                    selectEditType(itemType);
+                    
+                    // Add date field only for events
+                    if (itemType === 'event') {
+                        extraFields.innerHTML = `
+                            <div class="form-group" id="editDateFieldGroup">
+                                <label for="editTime">Date & Time</label>
+                                <input type="datetime-local" id="editTime" value="${item.time || new Date().toISOString().slice(0,16)}">
+                            </div>
+                        `;
+                    } else {
+                        extraFields.innerHTML = '';
+                    }
                 } else if (type === 'brands') {
                     extraFields.innerHTML = `
                         <div class="form-group">
@@ -1167,9 +1381,17 @@
                     updatedAt: Date.now()
                 };
                 
-                // Add type-specific fields
+                // Add type-specific fields for events/news
                 if (type === 'events') {
-                    updateData.time = document.getElementById('editTime').value || existingData.time;
+                    const itemType = document.getElementById('editItemType').value;
+                    updateData.type = itemType;
+                    
+                    if (itemType === 'event') {
+                        updateData.time = document.getElementById('editTime').value || existingData.time || new Date().toISOString();
+                    } else {
+                        // Remove time field for news
+                        delete updateData.time;
+                    }
                 } else if (type === 'brands') {
                     updateData.prize = document.getElementById('editPrize').value.trim() || existingData.prize || '';
                     updateData.contact = document.getElementById('editContact').value.trim() || existingData.contact || '';
@@ -1239,6 +1461,8 @@
         // Initialize on load
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Admin panel loaded');
+            // Set default to Event type
+            selectType('event');
             loadEvents();
             loadBrands();
             loadDashboard();
