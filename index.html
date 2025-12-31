@@ -462,12 +462,12 @@
                 <div class="logo-text">The<span>MedSphere</span></div>
             </a>
 
-            <!-- FIXED NAVIGATION -->
+            <!-- FIXED NAVIGATION - Brand opens in new tab -->
             <nav class="main-nav">
                 <a href="#home" class="nav-link">Home</a>
                 <a href="#events-section" class="nav-link">Events</a>
                 <a href="#chat" class="nav-link">Chat</a>
-                <a href="#brands-section" class="nav-link">Brands</a>
+                <a href="brands.html" target="_blank" class="nav-link">Brands</a>
             </nav>
         </div>
     </div>
@@ -482,36 +482,40 @@
         </div>
     </section>
 
-<!-- EVENTS SECTION - REDUCED SPACING & FIXED LINK -->
+<!-- EVENTS SECTION - SIMPLIFIED: Just the button -->
 <section id="events-section" class="section-spacing" style="background: #f8f9fa;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 30px 20px;">
         
-        <!-- SECTION HEADER - REDUCED MARGIN -->
+        <!-- SECTION HEADER -->
         <div style="text-align: center; margin-bottom: 30px;">
             <h2 class="purple-heading" style="font-size: 32px; margin-bottom: 10px;">
-                📅 Upcoming Campus Events & News
+                📅 Campus Events & News
             </h2>
             <p class="section-subtitle" style="font-size: 16px;">
-                Don't miss out on these amazing campus activities
+                Stay updated with campus activities and announcements
             </p>
         </div>
         
-        <!-- Events Container -->
-        <div id="events-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px;">
-            <!-- Events will be dynamically loaded here -->
-        </div>
-        
-        <!-- View All Events Button - REMOVED target="_blank" -->
-        <div style="text-align: center; margin-top: 30px;">
-            <a href="events.html" 
-               style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 16px; transition: all 0.3s;"
+        <!-- Just the Button - Centered -->
+        <div style="text-align: center; padding: 40px 20px; background: white; border-radius: 16px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+            <div style="font-size: 48px; color: #667eea; margin-bottom: 20px;">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <h3 style="color: #333; margin-bottom: 10px; font-size: 22px;">View Campus Events</h3>
+            <p style="color: #666; margin-bottom: 25px; font-size: 16px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                Click the button below to view all upcoming events and campus news
+            </p>
+            
+            <!-- View All Events Button - Opens in new tab -->
+            <a href="events.html" target="_blank"
+               style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 35px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 16px; transition: all 0.3s;"
                onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(102, 126, 234, 0.3)';"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                 <i class="fas fa-calendar-alt"></i>
                 View Latest Events & News
             </a>
-            <p style="color: #999; margin-top: 10px; font-size: 14px;">
-                Updated in real-time
+            <p style="color: #999; margin-top: 15px; font-size: 14px;">
+                Opens in new tab • Updated in real-time
             </p>
         </div>
     </div>
@@ -582,11 +586,11 @@
         </div>
     </section>
 
-<!-- BRANDS SECTION - REDUCED SPACING & FIXED LINK -->
+<!-- BRANDS SECTION - SIMPLIFIED: Just the button -->
 <section id="brands-section" class="section-spacing" style="background: white;">
     <div style="max-width: 1200px; margin: 0 auto; padding: 30px 20px;">
         
-        <!-- SECTION HEADER - REDUCED MARGIN -->
+        <!-- SECTION HEADER -->
         <div style="text-align: center; margin-bottom: 30px;">
             <h2 class="purple-heading" style="font-size: 32px; margin-bottom: 10px;">
                 🏢 Sponsored Brands
@@ -596,21 +600,26 @@
             </p>
         </div>
         
-        <div id="brands-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px;">
-            <!-- Brands will be loaded here -->
-        </div>
-        
-        <!-- View All Brands Button - REMOVED target="_blank" -->
-        <div style="text-align: center; margin-top: 30px;">
-            <a href="brands.html" 
-               style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 25px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 16px; transition: all 0.3s;"
+        <!-- Just the Button - Centered -->
+        <div style="text-align: center; padding: 40px 20px; background: white; border-radius: 16px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #f0f0f0;">
+            <div style="font-size: 48px; color: #667eea; margin-bottom: 20px;">
+                <i class="fas fa-store"></i>
+            </div>
+            <h3 style="color: #333; margin-bottom: 10px; font-size: 22px;">View Sponsored Brands</h3>
+            <p style="color: #666; margin-bottom: 25px; font-size: 16px; max-width: 500px; margin-left: auto; margin-right: auto;">
+                Click the button below to view all sponsored brands and advertising opportunities
+            </p>
+            
+            <!-- View All Brands Button - Opens in new tab -->
+            <a href="brands.html" target="_blank"
+               style="display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 35px; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 16px; transition: all 0.3s;"
                onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 10px 20px rgba(102, 126, 234, 0.3)';"
                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
                 <i class="fas fa-store"></i>
                 View Sponsored Brands
             </a>
-            <p style="color: #999; margin-top: 10px; font-size: 14px;">
-                Premium advertising space
+            <p style="color: #999; margin-top: 15px; font-size: 14px;">
+                Opens in new tab • Premium advertising space
             </p>
         </div>
     </div>
@@ -766,208 +775,15 @@
         </div>
     </footer>
 
-    <!-- JavaScript -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
-
+    <!-- JavaScript - REMOVED Firebase loading -->
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyA8XaUNfLDq6PYJu-LC0y_5ClAkGNfrLaw",
-            authDomain: "medsphere-c73e4.firebaseapp.com",
-            databaseURL: "https://medsphere-c73e4-default-rtdb.firebaseio.com",
-            projectId: "medsphere-c73e4",
-            storageBucket: "medsphere-c73e4.firebasestorage.app",
-            messagingSenderId: "289749352034",
-            appId: "1:289749352034:web:57fb380ac94433148bdb3b"
-        };
-
-        // Initialize Firebase
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-        const database = firebase.database();
-
-        // Load Events from Firebase
-        async function loadHomepageEvents() {
-            const container = document.getElementById('events-container');
-            if (!container) return;
-            
-            try {
-                const snapshot = await database.ref('events').once('value');
-                const eventsData = snapshot.val();
-                
-                if (!eventsData) {
-                    container.innerHTML = `
-                        <div style="text-align: center; padding: 30px; grid-column: 1 / -1;">
-                            <div style="font-size: 48px; margin-bottom: 15px; color: #667eea;">📅</div>
-                            <h3 style="color: #666; margin-bottom: 8px; font-size: 20px;">No Events Scheduled</h3>
-                            <p style="color: #999; font-size: 14px;">Check back later for upcoming campus events</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                // Convert to array and sort
-                const events = Object.values(eventsData);
-                const upcomingEvents = events
-                    .filter(event => !event.time || new Date(event.time) >= new Date())
-                    .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
-                    .slice(0, 3); // Show only 3 events
-                
-                container.innerHTML = '';
-                
-                if (upcomingEvents.length === 0) {
-                    container.innerHTML = `
-                        <div style="text-align: center; padding: 30px; grid-column: 1 / -1;">
-                            <div style="font-size: 48px; margin-bottom: 15px; color: #667eea;">📅</div>
-                            <h3 style="color: #666; margin-bottom: 8px; font-size: 20px;">No Events Available</h3>
-                            <p style="color: #999; font-size: 14px;">Check back soon for new events</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                upcomingEvents.forEach(event => {
-                    const eventCard = createEventCard(event);
-                    container.appendChild(eventCard);
-                });
-                
-            } catch (error) {
-                console.error('Error loading events:', error);
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 30px; grid-column: 1 / -1; color: #ef4444;">
-                        <p style="font-size: 14px;">Unable to load events</p>
-                    </div>
-                `;
-            }
-        }
-
-        function createEventCard(event) {
-            const div = document.createElement('div');
-            
-            // Format date if available
-            let dateInfo = 'No date set';
-            if (event.time) {
-                const eventDate = new Date(event.time);
-                dateInfo = eventDate.toLocaleDateString('en-US', {
-                    weekday: 'short',
-                    month: 'short',
-                    day: 'numeric'
-                });
-            }
-            
-            div.innerHTML = `
-                <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); height: 100%; display: flex; flex-direction: column;">
-                    <div style="padding: 20px; flex: 1;">
-                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
-                            <h3 style="font-size: 18px; color: #1f2937; margin: 0; font-weight: 600; line-height: 1.3;">
-                                ${event.name}
-                            </h3>
-                            <span style="background: ${event.type === 'news' ? '#e0e7ff' : '#f0f9ff'}; 
-                                  color: ${event.type === 'news' ? '#4f46e5' : '#0ea5e9'}; 
-                                  padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 500;">
-                                ${event.type === 'news' ? 'NEWS' : 'EVENT'}
-                            </span>
-                        </div>
-                        
-                        <div style="color: #6b7280; font-size: 12px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
-                            <span><i class="far fa-calendar"></i> ${dateInfo}</span>
-                        </div>
-                        
-                        <p style="color: #4b5563; font-size: 14px; line-height: 1.4; margin-bottom: 15px;">
-                            ${event.description.substring(0, 100)}${event.description.length > 100 ? '...' : ''}
-                        </p>
-                        
-                        <div style="color: #6b7280; font-size: 12px; margin-top: auto;">
-                            <i class="fas fa-phone-alt"></i> ${event.contact}
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            return div;
-        }
-
-        // Load Brands from Firebase
-        async function loadHomepageBrands() {
-            const container = document.getElementById('brands-container');
-            if (!container) return;
-            
-            try {
-                const snapshot = await database.ref('brands').once('value');
-                const brandsData = snapshot.val();
-                
-                if (!brandsData) {
-                    container.innerHTML = `
-                        <div style="text-align: center; padding: 30px; grid-column: 1 / -1;">
-                            <div style="font-size: 48px; margin-bottom: 15px; color: #667eea;">🏪</div>
-                            <h3 style="color: #666; margin-bottom: 8px; font-size: 20px;">No Brands Available</h3>
-                            <p style="color: #999; font-size: 14px;">Be the first to advertise here</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                const brands = Object.values(brandsData).slice(0, 3); // Show only 3 brands
-                container.innerHTML = '';
-                
-                brands.forEach(brand => {
-                    const brandCard = createBrandCard(brand);
-                    container.appendChild(brandCard);
-                });
-                
-            } catch (error) {
-                console.error('Error loading brands:', error);
-                container.innerHTML = `
-                    <div style="text-align: center; padding: 30px; grid-column: 1 / -1; color: #ef4444;">
-                        <p style="font-size: 14px;">Unable to load brands</p>
-                    </div>
-                `;
-            }
-        }
-
-        function createBrandCard(brand) {
-            const div = document.createElement('div');
-            
-            div.innerHTML = `
-                <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.08); height: 100%; display: flex; flex-direction: column;">
-                    <div style="padding: 20px; flex: 1;">
-                        <h3 style="font-size: 18px; color: #1f2937; margin: 0 0 10px 0; font-weight: 600; line-height: 1.3;">
-                            ${brand.name}
-                        </h3>
-                        
-                        <p style="color: #4b5563; font-size: 14px; line-height: 1.4; margin-bottom: 15px;">
-                            ${brand.description.substring(0, 100)}${brand.description.length > 100 ? '...' : ''}
-                        </p>
-                        
-                        <div style="color: #6b7280; font-size: 12px; margin-top: auto;">
-                            <i class="fas fa-phone-alt"></i> ${brand.contact}
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            return div;
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            loadHomepageEvents();
-            loadHomepageBrands();
-            
-            // Real-time updates
-            database.ref('events').on('value', loadHomepageEvents);
-            database.ref('brands').on('value', loadHomepageBrands);
-        });
-
-        // Back to top function
+        // Back to top button functionality
         window.addEventListener('scroll', function() {
             const button = document.querySelector('.back-to-top');
             if (window.scrollY > 300) {
-                button.classList.add('show');
+                button.style.display = 'flex';
             } else {
-                button.classList.remove('show');
+                button.style.display = 'none';
             }
         });
 
@@ -977,6 +793,20 @@
                 behavior: 'smooth'
             });
         }
+        
+        // Simple navigation highlighting
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                });
+            });
+        });
     </script>
 </body>
 </html>
