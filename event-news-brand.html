@@ -1071,22 +1071,32 @@ async function loadEvents() {
 
         eventsList.innerHTML = '';
         Object.entries(data).forEach(([key, item]) => {
-            // Determine if it's event or news
-            const isEvent = item.type === 'event';
-            const isNews = item.type === 'news';
+            // *** FIXED LOGIC: Determine if event or news ***
+            // 1. First check if item has 'type' field
+            // 2. If no type field, check if it has 'time' field (events have time, news don't)
+            // 3. If no type AND no time, it's probably old data - treat as news
             
-            // For backward compatibility
-            const actualType = item.type || (item.time ? 'event' : 'news');
-            const isEventFinal = actualType === 'event';
+            let isEvent = false;
+            let isNews = false;
             
-            // Get correct badge
-            const typeBadge = isEventFinal ? 
+            if (item.type) {
+                // Item has type field
+                isEvent = item.type === 'event';
+                isNews = item.type === 'news';
+            } else {
+                // Old item without type field
+                isEvent = item.time ? true : false;  // Has time = event
+                isNews = !item.time;                 // No time = news
+            }
+            
+            // *** FIXED: Use the correct type for display ***
+            const typeBadge = isEvent ? 
                 '<div class="type-badge event-badge">EVENT</div>' : 
                 '<div class="type-badge news-badge">NEWS</div>';
             
-            // Get correct date display
+            // *** FIXED: Date display ***
             let dateDisplay = '';
-            if (isEventFinal && item.time) {
+            if (isEvent && item.time) {
                 const itemDate = new Date(item.time);
                 dateDisplay = `${itemDate.toLocaleDateString()} at ${itemDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
             } else if (item.createdAt) {
@@ -1096,7 +1106,7 @@ async function loadEvents() {
                 dateDisplay = 'No date';
             }
             
-            const placeholderImage = isEventFinal ? 
+            const placeholderImage = isEvent ? 
                 'https://via.placeholder.com/300x200/667eea/ffffff?text=EVENT' :
                 'https://via.placeholder.com/300x200/059669/ffffff?text=NEWS';
             
@@ -1113,7 +1123,7 @@ async function loadEvents() {
                             <i class="fas fa-calendar"></i>
                             ${dateDisplay}
                         </div>
-                        ${isEventFinal && item.time ? `
+                        ${isEvent && item.time ? `
                         <div class="info-item">
                             <i class="fas fa-clock"></i>
                             ${new Date(item.time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
@@ -1196,23 +1206,24 @@ async function loadEvents() {
                 let eventsCount = 0;
                 let newsCount = 0;
                 
-                if (eventsData) {
-                    Object.values(eventsData).forEach(item => {
-                        // FIXED: Better type detection for existing items
-                        if (item.type === 'event') {
-                            eventsCount++;
-                        } else if (item.type === 'news') {
-                            newsCount++;
-                        } else {
-                            // For backward compatibility: items without type field
-                            if (item.time) {
-                                eventsCount++; // Has time field, probably an event
-                            } else {
-                                newsCount++; // No time field, probably news
-                            }
-                        }
-                    });
-                }
+                // Inside loadDashboard() function, update this part:
+if (eventsData) {
+    Object.values(eventsData).forEach(item => {
+        // Check if item has type field
+        if (item.type === 'event') {
+            eventsCount++;
+        } else if (item.type === 'news') {
+            newsCount++;
+        } else {
+            // Old item without type field
+            if (item.time) {
+                eventsCount++; // Has time = event
+            } else {
+                newsCount++; // No time = news
+            }
+        }
+    });
+}
                 
                 document.getElementById('eventsCount').textContent = eventsCount;
                 document.getElementById('newsCount').textContent = newsCount;
