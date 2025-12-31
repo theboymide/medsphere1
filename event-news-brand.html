@@ -540,7 +540,7 @@
                 <form id="eventForm">
                     <!-- TYPE SELECTOR -->
                     <div class="type-selector">
-                        <div class="type-option" id="eventTypeOption" onclick="selectType('event')">
+                        <div class="type-option selected" id="eventTypeOption" onclick="selectType('event')">
                             <i class="fas fa-calendar-day"></i> Event
                         </div>
                         <div class="type-option" id="newsTypeOption" onclick="selectType('news')">
@@ -551,9 +551,7 @@
                     <input type="hidden" id="itemType" value="event">
                     
                     <div class="form-group">
-                        <label for="eventName">
-                            <span id="titleLabel">Event</span> Title
-                        </label>
+                        <label for="eventName" id="titleLabel">Event Title</label>
                         <input type="text" id="eventName" placeholder="Enter title">
                     </div>
                     
@@ -591,7 +589,7 @@
                     </div>
                     
                     <button type="submit" class="submit-btn" id="eventSubmitBtn">
-                        <i class="fas fa-plus"></i> Add <span id="submitButtonText">Event</span>
+                        <i class="fas fa-plus"></i> Add Event
                     </button>
                 </form>
                 
@@ -683,7 +681,7 @@
             <form id="editForm">
                 <!-- TYPE SELECTOR FOR EDIT MODAL -->
                 <div class="type-selector" id="editTypeSelector">
-                    <div class="type-option" id="editEventTypeOption" onclick="selectEditType('event')">
+                    <div class="type-option selected" id="editEventTypeOption" onclick="selectEditType('event')">
                         <i class="fas fa-calendar-day"></i> Event
                     </div>
                     <div class="type-option" id="editNewsTypeOption" onclick="selectEditType('news')">
@@ -691,7 +689,7 @@
                     </div>
                 </div>
                 
-                <input type="hidden" id="editItemType">
+                <input type="hidden" id="editItemType" value="event">
                 
                 <div class="form-group">
                     <label for="editName">Title</label>
@@ -779,21 +777,21 @@
             const newsOption = document.getElementById('newsTypeOption');
             const dateFieldGroup = document.getElementById('dateFieldGroup');
             const titleLabel = document.getElementById('titleLabel');
-            const submitButtonText = document.getElementById('submitButtonText');
+            const submitBtn = document.getElementById('eventSubmitBtn');
             const itemTypeInput = document.getElementById('itemType');
             
             if (type === 'event') {
                 eventOption.classList.add('selected');
                 newsOption.classList.remove('selected');
                 dateFieldGroup.style.display = 'block';
-                titleLabel.textContent = 'Event';
-                submitButtonText.textContent = 'Event';
+                titleLabel.textContent = 'Event Title';
+                submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add Event';
             } else {
                 newsOption.classList.add('selected');
                 eventOption.classList.remove('selected');
                 dateFieldGroup.style.display = 'none';
-                titleLabel.textContent = 'News';
-                submitButtonText.textContent = 'News';
+                titleLabel.textContent = 'News Title';
+                submitBtn.innerHTML = '<i class="fas fa-plus"></i> Add News';
             }
             
             itemTypeInput.value = type;
@@ -1319,7 +1317,7 @@
                         extraFields.innerHTML = `
                             <div class="form-group" id="editDateFieldGroup">
                                 <label for="editTime">Date & Time</label>
-                                <input type="datetime-local" id="editTime" value="${item.time || new Date().toISOString().slice(0,16)}">
+                                <input type="datetime-local" id="editTime" value="${item.time ? item.time.slice(0,16) : new Date().toISOString().slice(0,16)}">
                             </div>
                         `;
                     } else {
