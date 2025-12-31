@@ -140,10 +140,6 @@
             font-size: 14px;
         }
         
-        .required {
-            color: #dc2626;
-        }
-        
         input, textarea {
             width: 100%;
             padding: 12px;
@@ -165,6 +161,57 @@
             resize: vertical;
         }
         
+        /* IMAGE PREVIEW */
+        .image-preview-container {
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .image-preview {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 8px;
+            border: 2px dashed #e2e8f0;
+            padding: 5px;
+            display: none;
+            margin: 10px auto;
+        }
+        
+        .image-preview.visible {
+            display: block;
+        }
+        
+        .preview-loading {
+            color: #64748b;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .preview-error {
+            color: #dc2626;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .preview-btn {
+            background: #e2e8f0;
+            color: #64748b;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .preview-btn:hover {
+            background: #cbd5e1;
+        }
+        
+        /* SUBMIT BUTTON */
         .submit-btn {
             background: linear-gradient(to right, #667eea, #764ba2);
             color: white;
@@ -427,28 +474,40 @@
                 
                 <form id="eventForm">
                     <div class="form-group">
-                        <label for="eventName">Event Name <span class="required">*</span></label>
-                        <input type="text" id="eventName" required placeholder="Enter event name">
+                        <label for="eventName">Event Name</label>
+                        <input type="text" id="eventName" placeholder="Enter event name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="eventDescription">Description <span class="required">*</span></label>
-                        <textarea id="eventDescription" required placeholder="Enter event description"></textarea>
+                        <label for="eventDescription">Description</label>
+                        <textarea id="eventDescription" placeholder="Enter event description"></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label for="eventImageUrl">Image URL <span class="required">*</span></label>
-                        <input type="text" id="eventImageUrl" required placeholder="https://example.com/image.jpg">
+                        <label for="eventImageUrl">Image URL</label>
+                        <input type="text" id="eventImageUrl" placeholder="https://example.com/image.jpg" oninput="previewImage('event')">
                         <div style="font-size: 12px; color: #64748b; margin-top: 5px;">
                             Use free image hosting: <a href="https://imgbb.com/" target="_blank">ImgBB</a>, 
                             <a href="https://imgur.com/" target="_blank">Imgur</a>, or 
                             <a href="https://postimages.org/" target="_blank">Postimages</a>
                         </div>
+                        <div id="eventPreviewContainer" class="image-preview-container">
+                            <img id="eventPreview" class="image-preview" alt="Image Preview">
+                            <div id="eventPreviewLoading" class="preview-loading" style="display: none;">
+                                <i class="fas fa-spinner fa-spin"></i> Loading preview...
+                            </div>
+                            <div id="eventPreviewError" class="preview-error" style="display: none;">
+                                <i class="fas fa-exclamation-triangle"></i> Unable to load image
+                            </div>
+                            <button type="button" id="eventPreviewBtn" class="preview-btn" onclick="forcePreview('event')" style="display: none;">
+                                <i class="fas fa-eye"></i> Show Preview
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="eventTime">Time <span class="required">*</span></label>
-                        <input type="datetime-local" id="eventTime" required>
+                        <label for="eventTime">Time</label>
+                        <input type="datetime-local" id="eventTime">
                     </div>
                     
                     <button type="submit" class="submit-btn" id="eventSubmitBtn">
@@ -476,38 +535,50 @@
                 
                 <form id="brandForm">
                     <div class="form-group">
-                        <label for="brandName">Brand Name <span class="required">*</span></label>
-                        <input type="text" id="brandName" required placeholder="Enter brand name">
+                        <label for="brandName">Brand Name</label>
+                        <input type="text" id="brandName" placeholder="Enter brand name">
                     </div>
                     
                     <div class="form-group">
-                        <label for="brandDescription">Description <span class="required">*</span></label>
-                        <textarea id="brandDescription" required placeholder="Enter brand description"></textarea>
+                        <label for="brandDescription">Description</label>
+                        <textarea id="brandDescription" placeholder="Enter brand description"></textarea>
                     </div>
                     
                     <div class="form-group">
-                        <label for="brandImageUrl">Image URL <span class="required">*</span></label>
-                        <input type="text" id="brandImageUrl" required placeholder="https://example.com/brand-logo.jpg">
+                        <label for="brandImageUrl">Image URL</label>
+                        <input type="text" id="brandImageUrl" placeholder="https://example.com/brand-logo.jpg" oninput="previewImage('brand')">
                         <div style="font-size: 12px; color: #64748b; margin-top: 5px;">
                             Use free image hosting: <a href="https://imgbb.com/" target="_blank">ImgBB</a>, 
                             <a href="https://imgur.com/" target="_blank">Imgur</a>, or 
                             <a href="https://postimages.org/" target="_blank">Postimages</a>
                         </div>
+                        <div id="brandPreviewContainer" class="image-preview-container">
+                            <img id="brandPreview" class="image-preview" alt="Image Preview">
+                            <div id="brandPreviewLoading" class="preview-loading" style="display: none;">
+                                <i class="fas fa-spinner fa-spin"></i> Loading preview...
+                            </div>
+                            <div id="brandPreviewError" class="preview-error" style="display: none;">
+                                <i class="fas fa-exclamation-triangle"></i> Unable to load image
+                            </div>
+                            <button type="button" id="brandPreviewBtn" class="preview-btn" onclick="forcePreview('brand')" style="display: none;">
+                                <i class="fas fa-eye"></i> Show Preview
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="brandPrize">Prize</label>
-                        <input type="text" id="brandPrize" placeholder="Enter prize details (optional)">
+                        <input type="text" id="brandPrize" placeholder="Enter prize details">
                     </div>
                     
                     <div class="form-group">
                         <label for="brandContact">Contact Info</label>
-                        <input type="text" id="brandContact" placeholder="Enter contact info (optional)">
+                        <input type="text" id="brandContact" placeholder="Enter contact info">
                     </div>
                     
                     <div class="form-group">
                         <label for="brandLocation">Location</label>
-                        <input type="text" id="brandLocation" placeholder="Enter location (optional)">
+                        <input type="text" id="brandLocation" placeholder="Enter location">
                     </div>
                     
                     <button type="submit" class="submit-btn" id="brandSubmitBtn">
@@ -531,18 +602,30 @@
             <div class="modal-title" id="modalTitle">Edit Item</div>
             <form id="editForm">
                 <div class="form-group">
-                    <label for="editName">Name <span class="required">*</span></label>
-                    <input type="text" id="editName" required>
+                    <label for="editName">Name</label>
+                    <input type="text" id="editName">
                 </div>
                 
                 <div class="form-group">
-                    <label for="editDescription">Description <span class="required">*</span></label>
-                    <textarea id="editDescription" required></textarea>
+                    <label for="editDescription">Description</label>
+                    <textarea id="editDescription"></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <label for="editImageUrl">Image URL <span class="required">*</span></label>
-                    <input type="text" id="editImageUrl" required>
+                    <label for="editImageUrl">Image URL</label>
+                    <input type="text" id="editImageUrl" oninput="previewImage('edit')">
+                    <div id="editPreviewContainer" class="image-preview-container">
+                        <img id="editPreview" class="image-preview" alt="Image Preview">
+                        <div id="editPreviewLoading" class="preview-loading" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i> Loading preview...
+                        </div>
+                        <div id="editPreviewError" class="preview-error" style="display: none;">
+                            <i class="fas fa-exclamation-triangle"></i> Unable to load image
+                        </div>
+                        <button type="button" id="editPreviewBtn" class="preview-btn" onclick="forcePreview('edit')" style="display: none;">
+                            <i class="fas fa-eye"></i> Show Preview
+                        </button>
+                    </div>
                 </div>
                 
                 <div id="editExtraFields"></div>
@@ -608,6 +691,86 @@
             }
         }
 
+        // Image Preview Function
+        async function previewImage(type) {
+            const urlInput = document.getElementById(`${type}ImageUrl`);
+            const previewImg = document.getElementById(`${type}Preview`);
+            const loadingDiv = document.getElementById(`${type}PreviewLoading`);
+            const errorDiv = document.getElementById(`${type}PreviewError`);
+            const previewBtn = document.getElementById(`${type}PreviewBtn`);
+            const url = urlInput.value.trim();
+            
+            // Hide all preview elements initially
+            previewImg.classList.remove('visible');
+            loadingDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            previewBtn.style.display = 'none';
+            
+            // If URL is empty, hide preview
+            if (!url) return;
+            
+            // Validate URL format
+            if (!url.startsWith('http')) {
+                previewBtn.style.display = 'block';
+                return;
+            }
+            
+            // Show loading indicator
+            loadingDiv.style.display = 'block';
+            
+            try {
+                // Create an image object to test if it loads
+                const testImage = new Image();
+                
+                testImage.onload = function() {
+                    // Success - show the preview
+                    previewImg.src = url;
+                    previewImg.classList.add('visible');
+                    loadingDiv.style.display = 'none';
+                    previewBtn.style.display = 'none';
+                };
+                
+                testImage.onerror = function() {
+                    // Error loading image
+                    loadingDiv.style.display = 'none';
+                    errorDiv.style.display = 'block';
+                    previewBtn.style.display = 'block';
+                };
+                
+                // Set a timeout to prevent hanging
+                setTimeout(() => {
+                    if (!previewImg.classList.contains('visible')) {
+                        loadingDiv.style.display = 'none';
+                        errorDiv.style.display = 'block';
+                        previewBtn.style.display = 'block';
+                    }
+                }, 5000);
+                
+                testImage.src = url;
+                
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                errorDiv.style.display = 'block';
+                previewBtn.style.display = 'block';
+            }
+        }
+
+        // Force preview button click
+        function forcePreview(type) {
+            const urlInput = document.getElementById(`${type}ImageUrl`);
+            const previewImg = document.getElementById(`${type}Preview`);
+            const previewBtn = document.getElementById(`${type}PreviewBtn`);
+            const errorDiv = document.getElementById(`${type}PreviewError`);
+            const url = urlInput.value.trim();
+            
+            if (url) {
+                previewImg.src = url;
+                previewImg.classList.add('visible');
+                previewBtn.style.display = 'none';
+                errorDiv.style.display = 'none';
+            }
+        }
+
         // Add Event
         document.getElementById('eventForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -622,14 +785,14 @@
                 const time = document.getElementById('eventTime').value;
                 const imageUrl = document.getElementById('eventImageUrl').value.trim();
 
-                // Validation
-                if (!name || !description || !time || !imageUrl) {
-                    showMessage('eventMessage', 'Please fill all required fields', 'error');
-                    throw new Error('Missing required fields');
+                // ALL FIELDS ARE NOW OPTIONAL - Create event with available data
+                if (!name && !description && !time && !imageUrl) {
+                    showMessage('eventMessage', 'Please fill at least one field', 'error');
+                    throw new Error('No data provided');
                 }
 
-                // Validate URL format
-                if (!isValidUrl(imageUrl)) {
+                // Validate URL format if provided
+                if (imageUrl && !isValidUrl(imageUrl)) {
                     showMessage('eventMessage', 'Please enter a valid image URL (start with http:// or https://)', 'error');
                     throw new Error('Invalid image URL');
                 }
@@ -638,10 +801,10 @@
                 const eventId = 'event_' + Date.now();
                 const eventData = {
                     id: eventId,
-                    name: name,
-                    description: description,
-                    time: time,
-                    imageUrl: imageUrl,
+                    name: name || 'Untitled Event',
+                    description: description || 'No description provided',
+                    time: time || new Date().toISOString(),
+                    imageUrl: imageUrl || 'https://via.placeholder.com/400x200/667eea/ffffff?text=No+Image',
                     createdAt: Date.now(),
                     updatedAt: Date.now()
                 };
@@ -656,6 +819,7 @@
                 
                 // Reset form
                 this.reset();
+                document.getElementById('eventPreview').classList.remove('visible');
                 
                 // Refresh
                 setTimeout(() => {
@@ -688,14 +852,14 @@
                 const location = document.getElementById('brandLocation').value.trim();
                 const imageUrl = document.getElementById('brandImageUrl').value.trim();
 
-                // Validation
-                if (!name || !description || !imageUrl) {
-                    showMessage('brandMessage', 'Please fill all required fields', 'error');
-                    throw new Error('Missing required fields');
+                // ALL FIELDS ARE NOW OPTIONAL - Create brand with available data
+                if (!name && !description && !imageUrl) {
+                    showMessage('brandMessage', 'Please fill at least one field', 'error');
+                    throw new Error('No data provided');
                 }
 
-                // Validate URL format
-                if (!isValidUrl(imageUrl)) {
+                // Validate URL format if provided
+                if (imageUrl && !isValidUrl(imageUrl)) {
                     showMessage('brandMessage', 'Please enter a valid image URL (start with http:// or https://)', 'error');
                     throw new Error('Invalid image URL');
                 }
@@ -704,9 +868,9 @@
                 const brandId = 'brand_' + Date.now();
                 const brandData = {
                     id: brandId,
-                    name: name,
-                    description: description,
-                    imageUrl: imageUrl,
+                    name: name || 'Untitled Brand',
+                    description: description || 'No description provided',
+                    imageUrl: imageUrl || 'https://via.placeholder.com/400x200/764ba2/ffffff?text=No+Image',
                     createdAt: Date.now(),
                     updatedAt: Date.now()
                 };
@@ -726,6 +890,7 @@
                 
                 // Reset form
                 this.reset();
+                document.getElementById('brandPreview').classList.remove('visible');
                 
                 // Refresh
                 setTimeout(() => {
@@ -942,8 +1107,8 @@
                 if (type === 'events') {
                     extraFields.innerHTML = `
                         <div class="form-group">
-                            <label for="editTime">Time <span class="required">*</span></label>
-                            <input type="datetime-local" id="editTime" required value="${item.time}">
+                            <label for="editTime">Time</label>
+                            <input type="datetime-local" id="editTime" value="${item.time}">
                         </div>
                     `;
                 } else if (type === 'brands') {
@@ -961,6 +1126,12 @@
                             <input type="text" id="editLocation" value="${item.location || ''}" placeholder="Location">
                         </div>
                     `;
+                }
+                
+                // Show preview if image exists
+                if (item.imageUrl) {
+                    document.getElementById('editPreview').src = item.imageUrl;
+                    document.getElementById('editPreview').classList.add('visible');
                 }
                 
                 // Show modal
@@ -983,41 +1154,26 @@
                 const description = document.getElementById('editDescription').value.trim();
                 const imageUrl = document.getElementById('editImageUrl').value.trim();
                 
-                // Validation
-                if (!name || !description || !imageUrl) {
-                    showMessage('Please fill all required fields', 'error');
-                    return;
-                }
-                
-                if (!isValidUrl(imageUrl)) {
-                    showMessage('Please enter a valid image URL', 'error');
-                    return;
-                }
-
                 // Get existing data
                 const snapshot = await database.ref(`${type}/${id}`).once('value');
                 const existingData = snapshot.val();
                 
-                // Prepare update data
+                // Prepare update data with existing values as fallback
                 const updateData = {
                     ...existingData,
-                    name: name,
-                    description: description,
-                    imageUrl: imageUrl,
+                    name: name || existingData.name,
+                    description: description || existingData.description,
+                    imageUrl: imageUrl || existingData.imageUrl || 'https://via.placeholder.com/400x200/667eea/ffffff?text=No+Image',
                     updatedAt: Date.now()
                 };
                 
                 // Add type-specific fields
                 if (type === 'events') {
-                    updateData.time = document.getElementById('editTime').value;
-                    if (!updateData.time) {
-                        showMessage('Please enter event time', 'error');
-                        return;
-                    }
+                    updateData.time = document.getElementById('editTime').value || existingData.time;
                 } else if (type === 'brands') {
-                    updateData.prize = document.getElementById('editPrize').value.trim();
-                    updateData.contact = document.getElementById('editContact').value.trim();
-                    updateData.location = document.getElementById('editLocation').value.trim();
+                    updateData.prize = document.getElementById('editPrize').value.trim() || existingData.prize || '';
+                    updateData.contact = document.getElementById('editContact').value.trim() || existingData.contact || '';
+                    updateData.location = document.getElementById('editLocation').value.trim() || existingData.location || '';
                 }
                 
                 // Update database
@@ -1061,6 +1217,7 @@
         function closeModal() {
             document.getElementById('editModal').classList.remove('active');
             document.getElementById('editForm').reset();
+            document.getElementById('editPreview').classList.remove('visible');
         }
 
         // Show Message
