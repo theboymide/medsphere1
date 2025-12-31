@@ -1,15 +1,94 @@
-// ======================
-// SUPABASE CONFIGURATION (AUTOMATIC SYNC)
-// ======================
+// Add this to your public website (themedsphere.vercel.app)
+// Firebase Config (same as admin panel)
+const firebaseConfig = {
+    apiKey: "AIzaSyA8XaUNfLDq6PYJu-LC0y_5ClAkGNfrLaw",
+    authDomain: "medsphere-c73e4.firebasestorage.app",
+    databaseURL: "https://medsphere-c73e4-default-rtdb.firebaseio.com",
+    projectId: "medsphere-c73e4",
+    storageBucket: "medsphere-c73e4.firebasestorage.app",
+    messagingSenderId: "289749352034",
+    appId: "1:289749352034:web:57fb380ac94433148bdb3b"
+};
 
-// 🔧 PUT YOUR ACTUAL SUPABASE KEYS HERE
-const SUPABASE_URL = 'https://cgcryscjzfoghaenxeuk.supabase.co';  // ← Replace with your URL
-const SUPABASE_KEY = 'sb_publishable_xEop6qs9UcrEGd8jYMTrlw_x4omRUxc';  // ← Replace with your anon key
-// Initialize Supabase (will work even if library not loaded)
-let supabase = null;
-if (typeof window.supabase !== 'undefined') {
-    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// Function to load events on your public website
+async function loadEventsOnWebsite() {
+    try {
+        const snapshot = await database.ref('events').once('value');
+        const events = snapshot.val();
+        
+        if (!events) {
+            console.log('No events found');
+            return;
+        }
+        
+        // Loop through events and display them
+        Object.values(events).forEach(event => {
+            // Create HTML for each event
+            const eventHTML = `
+                <div class="event-item">
+                    <img src="${event.imageUrl}" alt="${event.name}" 
+                         onerror="this.src='https://via.placeholder.com/300x200/667eea/ffffff?text=EVENT'">
+                    <h3>${event.name}</h3>
+                    <p>${event.description}</p>
+                    <p>Time: ${new Date(event.time).toLocaleString()}</p>
+                    ${event.contact ? `<p>Contact: ${event.contact}</p>` : ''}
+                </div>
+            `;
+            
+            // Add to your webpage
+            document.getElementById('events-container').innerHTML += eventHTML;
+        });
+        
+    } catch (error) {
+        console.error('Error loading events:', error);
+    }
 }
+
+// Function to load brands on your public website
+async function loadBrandsOnWebsite() {
+    try {
+        const snapshot = await database.ref('brands').once('value');
+        const brands = snapshot.val();
+        
+        if (!brands) {
+            console.log('No brands found');
+            return;
+        }
+        
+        // Loop through brands and display them
+        Object.values(brands).forEach(brand => {
+            // Create HTML for each brand
+            const brandHTML = `
+                <div class="brand-item">
+                    <img src="${brand.imageUrl}" alt="${brand.name}" 
+                         onerror="this.src='https://via.placeholder.com/300x200/667eea/ffffff?text=BRAND'">
+                    <h3>${brand.name}</h3>
+                    <p>${brand.description}</p>
+                    ${brand.prize ? `<p>Prize: ${brand.prize}</p>` : ''}
+                    ${brand.contact ? `<p>Contact: ${brand.contact}</p>` : ''}
+                    ${brand.location ? `<p>Location: ${brand.location}</p>` : ''}
+                </div>
+            `;
+            
+            // Add to your webpage
+            document.getElementById('brands-container').innerHTML += brandHTML;
+        });
+        
+    } catch (error) {
+        console.error('Error loading brands:', error);
+    }
+}
+
+// Call these functions when your website loads
+document.addEventListener('DOMContentLoaded', function() {
+    loadEventsOnWebsite();
+    loadBrandsOnWebsite();
+});
+
 
 // ======================
 // DATA SYNC FUNCTIONS
