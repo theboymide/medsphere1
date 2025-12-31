@@ -227,7 +227,7 @@
             font-size: 16px;
         }
         
-        .brand-grid {
+        .brand-grid, .event-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
@@ -695,6 +695,128 @@
                 font-size: 24px;
             }
         }
+        
+        /* Firebase Event/Brand Card Styles */
+        .firebase-event-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+        
+        .firebase-event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .event-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .event-content {
+            padding: 20px;
+        }
+        
+        .event-title {
+            color: var(--dark-text);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        
+        .event-description {
+            color: var(--medium-text);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .event-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--light-text);
+            font-size: 12px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        
+        .event-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .brand-image {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 12px 12px 0 0;
+            display: block;
+        }
+        
+        .brand-content {
+            padding: 20px;
+        }
+        
+        .brand-title {
+            color: var(--dark-text);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        
+        .brand-description {
+            color: var(--medium-text);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .brand-meta {
+            color: var(--light-text);
+            font-size: 12px;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        
+        .brand-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--medium-text);
+        }
+        
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #dc2626;
+            background: rgba(220, 38, 38, 0.05);
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(220, 38, 38, 0.1);
+        }
     </style>
 </head>
 <body>
@@ -740,25 +862,6 @@
                 <p class="hero-desc">
                     Connect with students, discover events, join conversations, and make campus life unforgettable. Everything campus, in one place.
                 </p>
-                
-                <div class="hero-stats">
-                    <div class="stat-item">
-                        <div class="stat-number">500+</div>
-                        <div class="stat-label">Active Students</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">50+</div>
-                        <div class="stat-label">Monthly Events</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">24/7</div>
-                        <div class="stat-label">Live Chat</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-number">30+</div>
-                        <div class="stat-label">Partner Brands</div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -777,32 +880,9 @@
                     Stay updated with campus activities, announcements, and trending topics
                 </p>
             </div>
-            
-            <div class="brand-grid">
-                <div class="event-card">
-                    <div class="event-date">Mar 15, 2024</div>
-                    <h3 style="color: var(--dark-text); margin-bottom: 15px; font-size: 20px;">Tech Symposium 2024</h3>
-                    <p style="color: var(--medium-text); margin-bottom: 20px; font-size: 14px;">
-                        Join industry leaders for a day of innovation, networking, and cutting-edge tech discussions.
-                    </p>
-                    <div class="event-features">
-                        <span class="event-tag"><i class="fas fa-users"></i> 200+ Attending</span>
-                        <span class="event-tag"><i class="fas fa-map-marker-alt"></i> Main Auditorium</span>
-                        <span class="event-tag"><i class="fas fa-clock"></i> 10:00 AM</span>
-                    </div>
-                </div>
-                
-                <div class="event-card">
-                    <div class="event-date">Mar 20, 2024</div>
-                    <h3 style="color: var(--dark-text); margin-bottom: 15px; font-size: 20px;">Career Fair Expo</h3>
-                    <p style="color: var(--medium-text); margin-bottom: 20px; font-size: 14px;">
-                        Connect with top employers and explore internship opportunities across various industries.
-                    </p>
-                    <div class="event-features">
-                        <span class="event-tag"><i class="fas fa-building"></i> 50+ Companies</span>
-                        <span class="event-tag"><i class="fas fa-briefcase"></i> Internships</span>
-                        <span class="event-tag"><i class="fas fa-clock"></i> 9:00 AM - 4:00 PM</span>
-                    </div>
+                <!-- ADD THIS CONTAINER FOR FIREBASE EVENTS -->
+                <div id="events-container">
+                    <!-- Events from Firebase will appear here automatically -->
                 </div>
             </div>
             
@@ -901,45 +981,9 @@
                     Discover trusted brands and businesses curated for student lifestyle
                 </p>
             </div>
-            
-            <div class="brand-grid">
-                <div class="brand-card">
-                    <div class="brand-icon">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    <h3 style="color: var(--dark-text); margin-bottom: 10px; font-size: 20px;">Campus Eats</h3>
-                    <p style="color: var(--medium-text); margin-bottom: 15px; font-size: 14px;">
-                        20% student discount on all food deliveries
-                    </p>
-                    <span class="event-tag" style="background: rgba(255, 107, 139, 0.1); color: var(--accent-coral);">
-                        Food & Dining
-                    </span>
-                </div>
-                
-                <div class="brand-card">
-                    <div class="brand-icon">
-                        <i class="fas fa-book-open"></i>
-                    </div>
-                    <h3 style="color: var(--dark-text); margin-bottom: 10px; font-size: 20px;">StudyPro Supplies</h3>
-                    <p style="color: var(--medium-text); margin-bottom: 15px; font-size: 14px;">
-                        Premium study materials & stationery
-                    </p>
-                    <span class="event-tag" style="background: rgba(45, 212, 191, 0.1); color: var(--accent-teal);">
-                        Education
-                    </span>
-                </div>
-                
-                <div class="brand-card">
-                    <div class="brand-icon">
-                        <i class="fas fa-shopping-bag"></i>
-                    </div>
-                    <h3 style="color: var(--dark-text); margin-bottom: 10px; font-size: 20px;">StudentStyle</h3>
-                    <p style="color: var(--medium-text); margin-bottom: 15px; font-size: 14px;">
-                        Affordable fashion for campus life
-                    </p>
-                    <span class="event-tag" style="background: rgba(251, 191, 36, 0.1); color: var(--accent-teal);">
-                        Fashion
-                    </span>
+                <!-- ADD THIS CONTAINER FOR FIREBASE BRANDS -->
+                <div id="brands-container">
+                    <!-- Brands from Firebase will appear here automatically -->
                 </div>
             </div>
             
@@ -1074,8 +1118,27 @@
         </div>
     </footer>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
     <!-- JavaScript -->
     <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8XaUNfLDq6PYJu-LC0y_5ClAkGNfrLaw",
+            authDomain: "medsphere-c73e4.firebasestorage.app",
+            databaseURL: "https://medsphere-c73e4-default-rtdb.firebaseio.com",
+            projectId: "medsphere-c73e4",
+            storageBucket: "medsphere-c73e4.firebasestorage.app",
+            messagingSenderId: "289749352034",
+            appId: "1:289749352034:web:57fb380ac94433148bdb3b"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         // Smooth scrolling for navigation
         document.querySelectorAll('.nav-link').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
@@ -1101,6 +1164,138 @@
                     }
                 }
             });
+        });
+
+        // Load Events from Firebase
+        async function loadEvents() {
+            const container = document.getElementById('events-container');
+            container.innerHTML = '<div class="loading">Loading events...</div>';
+            
+            try {
+                const snapshot = await database.ref('events').once('value');
+                const events = snapshot.val();
+                
+                if (!events) {
+                    container.innerHTML = '<div class="loading">No events added yet.</div>';
+                    // Update hero stats
+                    document.getElementById('totalEvents').textContent = '0';
+                    return;
+                }
+
+                // Update hero stats
+                const eventCount = Object.keys(events).length;
+                document.getElementById('totalEvents').textContent = eventCount + '+';
+                
+                let eventsHTML = '';
+                Object.values(events).forEach(event => {
+                    const eventDate = new Date(event.time);
+                    const formattedDate = eventDate.toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                    const formattedTime = eventDate.toLocaleTimeString('en-US', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                    
+                    eventsHTML += `
+                        <div class="firebase-event-card">
+                            <img src="${event.imageUrl}" alt="${event.name}" class="event-image" 
+                                 onerror="this.src='https://via.placeholder.com/400x200/667eea/ffffff?text=${encodeURIComponent(event.name.substring(0,15))}'">
+                            <div class="event-content">
+                                <h3 class="event-title">${event.name}</h3>
+                                <p class="event-description">${event.description}</p>
+                                <div class="event-meta">
+                                    <div class="event-meta-item">
+                                        <i class="fas fa-calendar"></i>
+                                        ${formattedDate}
+                                    </div>
+                                    <div class="event-meta-item">
+                                        <i class="fas fa-clock"></i>
+                                        ${formattedTime}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = eventsHTML;
+                
+            } catch (error) {
+                console.error('Error loading events:', error);
+                container.innerHTML = '<div class="error">Unable to load events. Please try again later.</div>';
+            }
+        }
+
+        // Load Brands from Firebase
+        async function loadBrands() {
+            const container = document.getElementById('brands-container');
+            container.innerHTML = '<div class="loading">Loading brands...</div>';
+            
+            try {
+                const snapshot = await database.ref('brands').once('value');
+                const brands = snapshot.val();
+                
+                if (!brands) {
+                    container.innerHTML = '<div class="loading">No brands added yet.</div>';
+                    // Update hero stats
+                    document.getElementById('totalBrands').textContent = '0';
+                    return;
+                }
+
+                // Update hero stats
+                const brandCount = Object.keys(brands).length;
+                document.getElementById('totalBrands').textContent = brandCount + '+';
+                
+                let brandsHTML = '';
+                Object.values(brands).forEach(brand => {
+                    brandsHTML += `
+                        <div class="firebase-event-card">
+                            <img src="${brand.imageUrl}" alt="${brand.name}" class="brand-image" 
+                                 onerror="this.src='https://via.placeholder.com/400x180/764ba2/ffffff?text=${encodeURIComponent(brand.name.substring(0,15))}'">
+                            <div class="brand-content">
+                                <h3 class="brand-title">${brand.name}</h3>
+                                <p class="brand-description">${brand.description}</p>
+                                <div class="brand-meta">
+                                    ${brand.prize ? `
+                                        <div class="brand-meta-item">
+                                            <i class="fas fa-trophy"></i>
+                                            ${brand.prize}
+                                        </div>
+                                    ` : ''}
+                                    ${brand.contact ? `
+                                        <div class="brand-meta-item">
+                                            <i class="fas fa-phone"></i>
+                                            ${brand.contact}
+                                        </div>
+                                    ` : ''}
+                                    ${brand.location ? `
+                                        <div class="brand-meta-item">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            ${brand.location}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = brandsHTML;
+                
+            } catch (error) {
+                console.error('Error loading brands:', error);
+                container.innerHTML = '<div class="error">Unable to load brands. Please try again later.</div>';
+            }
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadEvents();
+            loadBrands();
         });
     </script>
 </body>
