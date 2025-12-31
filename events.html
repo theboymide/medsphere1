@@ -26,15 +26,15 @@
         }
         
         /* Header */
-        /* Header - REMOVED sticky positioning */
-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 30px 0;
-    position: relative !important; /* Changed from sticky */
-    z-index: 1000;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 0;
+            position: relative;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
         .header-content {
             display: flex;
             justify-content: space-between;
@@ -152,6 +152,9 @@ header {
         .event-image {
             height: 200px;
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
         .event-image img {
@@ -263,23 +266,22 @@ header {
 </head>
 <body>
     <!-- Header -->
-    <!-- Header -->
-<header style="position: relative !important; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-    <div class="container">
-        <div class="header-content">
-            <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <div class="logo-text">The<span>MedSphere</span></div>
-            </a>
-            
-            <a href="index.html" class="back-home">
-                <i class="fas fa-home"></i> Back to Home
-            </a>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="logo-text">The<span>MedSphere</span></div>
+                </a>
+                
+                <a href="index.html" class="back-home">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
     
     <!-- Hero Section -->
     <section class="hero">
@@ -324,7 +326,7 @@ header {
         // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyA8XaUNfLDq6PYJu-LC0y_5ClAkGNfrLaw",
-            authDomain: "medsphere-c73e4.firebaseapp.com",
+            authDomain: "medsphere-c73e4.firebasestorage.app",
             databaseURL: "https://medsphere-c73e4-default-rtdb.firebaseio.com",
             projectId: "medsphere-c73e4",
             storageBucket: "medsphere-c73e4.firebasestorage.app",
@@ -419,33 +421,27 @@ header {
                 minute: '2-digit'
             });
             
-            // Get first image or use placeholder
-            const eventImage = event.images && event.images.length > 0 
-                ? event.images[0] 
-                : `https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(event.name?.substring(0, 20) || 'Event')}`;
+            // FIX: Check for imageUrl property (not images array)
+            const eventImage = event.imageUrl || `https://via.placeholder.com/400x200/667eea/ffffff?text=${encodeURIComponent(event.name?.substring(0, 20) || 'Event')}`;
             
             div.innerHTML = `
                 <div class="event-image">
                     <img src="${eventImage}" 
-                         alt="${event.name}"
-                         onerror="this.src='https://via.placeholder.com/400x300/667eea/ffffff?text=${encodeURIComponent(event.name?.substring(0, 20) || 'Event')}'">
+                         alt="${event.name || 'Event'}"
+                         onerror="this.src='https://via.placeholder.com/400x200/667eea/ffffff?text=${encodeURIComponent((event.name?.substring(0, 20) || 'Event'))}'">
                 </div>
                 <div class="event-content">
                     <div class="event-type">
-                        ${event.type === 'news' ? '📰 NEWS' : '🎉 EVENT'}
+                        EVENT
                     </div>
-                    <h3 class="event-title">${event.name}</h3>
+                    <h3 class="event-title">${event.name || 'Untitled Event'}</h3>
                     
                     <div class="event-meta">
                         <span><i class="far fa-calendar"></i> ${formattedDate}</span>
                         <span><i class="far fa-clock"></i> ${formattedTime}</span>
                     </div>
                     
-                    <p class="event-description">${event.description}</p>
-                    
-                    <div class="event-contact">
-                        <i class="fas fa-phone-alt"></i> Contact: ${event.contact}
-                    </div>
+                    <p class="event-description">${event.description || 'No description available'}</p>
                 </div>
             `;
             
@@ -460,7 +456,17 @@ header {
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            
+            // Find the clicked button
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                if (btn.textContent.includes(type === 'all' ? 'All' : 
+                                            type === 'event' ? 'Events' : 
+                                            type === 'news' ? 'News' : 
+                                            'Upcoming')) {
+                    btn.classList.add('active');
+                }
+            });
             
             let filteredEvents = allEvents;
             
@@ -479,9 +485,33 @@ header {
             displayEvents(filteredEvents);
         }
         
+        // Update filter button active state
+        function updateFilterButtons() {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if ((currentFilter === 'all' && btn.textContent.includes('All')) ||
+                    (currentFilter === 'event' && btn.textContent.includes('Events')) ||
+                    (currentFilter === 'news' && btn.textContent.includes('News')) ||
+                    (currentFilter === 'upcoming' && btn.textContent.includes('Upcoming'))) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+        
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadAllEvents();
+            
+            // Set up filter button click handlers
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const type = this.textContent.toLowerCase().includes('all') ? 'all' :
+                                 this.textContent.toLowerCase().includes('events') ? 'event' :
+                                 this.textContent.toLowerCase().includes('news') ? 'news' :
+                                 'upcoming';
+                    filterEvents(type);
+                });
+            });
             
             // Real-time updates
             database.ref('events').on('value', loadAllEvents);
