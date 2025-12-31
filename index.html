@@ -5,8 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TheMedSphere | Campus Community Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        /* ===== GLOBAL STYLES ===== */
+        :root {
+            --primary-light: #667eea;
+            --primary-dark: #764ba2;
+            --accent-teal: #2DD4BF;
+            --accent-coral: #FF6B8B;
+            --light-bg: #F9FAFB;
+            --dark-text: #2c3e50;
+            --medium-text: #666;
+            --white: #ffffff;
+            --shadow-sm: 0 2px 10px rgba(102, 126, 234, 0.08);
+            --shadow-md: 0 5px 20px rgba(102, 126, 234, 0.12);
+            --border-radius: 16px;
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -15,8 +30,8 @@
         
         body {
             font-family: 'Poppins', sans-serif;
-            background: white;
-            color: #333;
+            background-color: var(--white);
+            color: var(--dark-text);
             line-height: 1.6;
         }
         
@@ -26,14 +41,24 @@
             padding: 0 20px;
         }
         
-        /* HEADER */
+        /* ===== ENHANCED ANIMATIONS ===== */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* ===== MAIN HEADER - NOT FIXED ===== */
         .main-header {
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            width: 100%;
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
             padding: 20px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
         
         .navbar {
@@ -45,45 +70,73 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
             text-decoration: none;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            font-size: 36px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .logo-text {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2c3e50;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--dark-text);
         }
         
         .logo-text span {
-            color: #667eea;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
+        /* ===== NAVIGATION ===== */
         .main-nav {
             display: flex;
-            gap: 20px;
+            gap: 5px;
+            background: rgba(248, 249, 255, 0.8);
+            padding: 8px;
+            border-radius: 12px;
         }
         
         .nav-link {
-            color: #555;
+            color: var(--medium-text);
             text-decoration: none;
-            font-weight: 500;
-            padding: 8px 16px;
+            font-weight: 600;
+            font-size: 15px;
+            padding: 12px 20px;
             border-radius: 8px;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .nav-link:hover {
-            color: #667eea;
-            background: #f8f9ff;
+            color: var(--primary-dark);
+            background: var(--white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
         
-        /* HERO SECTION */
+        .nav-link.active {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* ===== HERO SECTION ===== */
         .hero {
             padding: 80px 0 40px;
             background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
-            border-radius: 0 0 30px 30px;
+            border-radius: 0 0 40px 40px;
             margin-bottom: 40px;
+            position: relative;
         }
         
         .hero-content {
@@ -94,19 +147,23 @@
         
         .hero-title {
             font-size: 42px;
-            font-weight: 700;
-            color: #2c3e50;
+            font-weight: 800;
             margin-bottom: 20px;
+            line-height: 1.2;
         }
         
         .hero-title .highlight {
-            color: #667eea;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .hero-desc {
             font-size: 18px;
-            color: #666;
+            color: var(--medium-text);
             margin-bottom: 30px;
+            line-height: 1.6;
         }
         
         .hero-stats {
@@ -123,168 +180,121 @@
         
         .stat-number {
             font-size: 32px;
-            font-weight: 700;
-            color: #667eea;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
         
         .stat-label {
-            color: #666;
+            color: var(--medium-text);
             font-size: 14px;
             margin-top: 5px;
         }
         
-        /* SECTION STYLES */
-        .section {
-            padding: 60px 0;
+        /* ===== SECTION STYLES ===== */
+        .section-spacing {
+            padding: 60px 20px;
         }
         
-        .section-header {
+        /* ===== EVENTS SECTION ===== */
+        #events-section {
+            background: var(--light-bg);
+        }
+        
+        .events-header {
             text-align: center;
             margin-bottom: 40px;
         }
         
-        .section-title {
-            font-size: 32px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 10px;
+        .section-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        
+        .purple-heading {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
         }
         
         .section-subtitle {
-            color: #666;
+            color: var(--medium-text);
             font-size: 16px;
         }
         
-        /* EVENTS SECTION */
-        .events-grid {
+        .brand-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 25px;
+            margin-top: 40px;
         }
         
         .event-card {
-            background: white;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.1);
         }
         
-        .event-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
-        .event-content {
-            padding: 25px;
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
         }
         
         .event-date {
             display: inline-block;
-            background: #667eea;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
             color: white;
-            padding: 6px 14px;
-            border-radius: 6px;
+            padding: 8px 16px;
+            border-radius: 8px;
             font-weight: 600;
-            margin-bottom: 15px;
-        }
-        
-        .event-title {
-            font-size: 22px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 12px;
-        }
-        
-        .event-desc {
-            color: #666;
-            font-size: 15px;
             margin-bottom: 20px;
-            line-height: 1.6;
         }
         
         .event-features {
             display: flex;
-            flex-direction: column;
+            flex-wrap: wrap;
             gap: 10px;
+            margin-top: 20px;
         }
         
-        .event-feature {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #555;
-            font-size: 14px;
-        }
-        
-        .event-feature i {
-            color: #667eea;
-        }
-        
-        /* BRANDS SECTION */
-        .brands-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-        }
-        
-        .brand-card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            border: 1px solid #eee;
-        }
-        
-        .brand-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 28px;
-            color: white;
-        }
-        
-        .brand-title {
-            font-size: 22px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 12px;
-        }
-        
-        .brand-desc {
-            color: #666;
-            font-size: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .brand-category {
-            display: inline-block;
-            background: #f0f2ff;
-            color: #667eea;
-            padding: 6px 14px;
+        .event-tag {
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--primary-dark);
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 500;
         }
         
-        /* CHAT SECTION */
+        /* ===== CHAT SECTION ===== */
         .chat-section {
-            background: #f8f9fa;
+            background: var(--white);
         }
         
         .chat-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 50px;
+            gap: 40px;
             align-items: center;
+        }
+        
+        .chat-text {
+            padding-right: 20px;
+        }
+        
+        .chat-desc {
+            color: var(--medium-text);
+            margin-bottom: 25px;
+            font-size: 16px;
+            line-height: 1.6;
         }
         
         .chat-features {
@@ -296,51 +306,87 @@
         
         .feature {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature:hover {
+            background: rgba(102, 126, 234, 0.05);
         }
         
         .feature-icon {
             width: 50px;
             height: 50px;
-            background: #667eea;
-            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-size: 20px;
+            flex-shrink: 0;
         }
         
-        .feature h4 {
-            color: #2c3e50;
+        .feature-text h4 {
+            color: var(--dark-text);
             margin-bottom: 5px;
             font-size: 18px;
         }
         
-        .feature p {
-            color: #666;
+        .feature-text p {
+            color: var(--medium-text);
             font-size: 14px;
         }
         
-        .chat-btn {
-            padding: 14px 28px;
-            background: #667eea;
+        .chat-actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .primary-btn {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
             color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            box-shadow: var(--shadow-sm);
             transition: all 0.3s ease;
-            text-decoration: none;
+            border: none;
+            cursor: pointer;
         }
         
-        .chat-btn:hover {
-            background: #5a6fd8;
-            transform: translateY(-2px);
+        .primary-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .accent-btn {
+            background: linear-gradient(135deg, var(--accent-teal) 0%, #0D9488 100%);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .accent-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(45, 212, 191, 0.3);
         }
         
         .chat-visual {
@@ -351,14 +397,14 @@
         .chat-phone {
             width: 280px;
             height: 450px;
-            background: #2c3e50;
+            background: var(--dark-text);
             border-radius: 25px;
             padding: 15px;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-md);
         }
         
         .phone-screen {
-            background: white;
+            background: var(--white);
             height: 100%;
             border-radius: 12px;
             padding: 15px;
@@ -386,7 +432,7 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: #667eea;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
             color: white;
             display: flex;
             align-items: center;
@@ -396,96 +442,155 @@
         
         .message.other .avatar {
             background: #e0e7ff;
-            color: #667eea;
+            color: var(--primary-light);
         }
         
         .text {
             padding: 10px 14px;
             border-radius: 15px;
             background: #f0f2ff;
-            color: #333;
+            color: var(--dark-text);
             font-size: 13px;
         }
         
         .message.user .text {
-            background: #667eea;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
             color: white;
         }
         
-        /* ADVERTISE SECTION */
-        .advertise-section {
-            background: white;
+        /* ===== BRANDS SECTION ===== */
+        #brands-section {
+            background: var(--light-bg);
+        }
+        
+        .brand-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+        
+        .brand-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .brand-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 28px;
+            color: var(--primary-dark);
+        }
+        
+        /* ===== PROMOTION SECTION ===== */
+        .promotion-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f9 100%);
+        }
+        
+        .contact-card {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
             text-align: center;
         }
         
-        .advertise-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 12px;
-            max-width: 500px;
-            margin: 0 auto;
+        /* ===== FEATURES SECTION ===== */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
         }
         
-        .advertise-title {
-            font-size: 28px;
-            margin-bottom: 15px;
-        }
-        
-        .advertise-desc {
-            margin-bottom: 25px;
-            opacity: 0.9;
-        }
-        
-        .advertise-btn {
-            padding: 12px 30px;
-            background: white;
-            color: #667eea;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
+        .feature-card {
+            background: var(--white);
+            padding: 30px 25px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
             transition: all 0.3s ease;
+            border: 1px solid rgba(102, 126, 234, 0.1);
         }
         
-        .advertise-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
         }
         
-        /* FOOTER */
-        footer {
-            background: #2c3e50;
+        .feature-card .icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 24px;
+            color: var(--primary-dark);
+        }
+        
+        /* ===== FOOTER ===== */
+        .main-footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #1a2530 100%);
             color: white;
-            padding: 40px 0 20px;
+            padding: 60px 20px 20px;
         }
         
         .footer-content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 40px;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
         
         .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-logo-icon {
+            font-size: 28px;
+            color: var(--primary-light);
+        }
+        
+        .footer-logo-text {
             font-size: 22px;
             font-weight: 700;
-            margin-bottom: 15px;
         }
         
-        .footer-logo span {
-            color: #667eea;
-        }
-        
-        .footer-desc {
-            color: #aaa;
-            font-size: 14px;
-            line-height: 1.6;
+        .footer-logo-text span {
+            color: var(--primary-light);
         }
         
         .footer-links h4 {
-            font-size: 18px;
+            color: white;
             margin-bottom: 20px;
+            font-size: 18px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-links h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary-light);
         }
         
         .footer-links ul {
@@ -499,49 +604,45 @@
         .footer-links a {
             color: #aaa;
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
         }
         
         .footer-links a:hover {
-            color: #667eea;
+            color: var(--primary-light);
         }
         
         .footer-bottom {
-            border-top: 1px solid #3a4a5d;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 20px;
             text-align: center;
             color: #aaa;
             font-size: 14px;
         }
         
-        /* BUTTONS */
-        .cta-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: #667eea;
-            color: white;
-            padding: 14px 32px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-        
-        .cta-button:hover {
-            background: #5a6fd8;
-            transform: translateY(-2px);
-        }
-        
-        /* RESPONSIVE */
+        /* ===== RESPONSIVE STYLES ===== */
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
-                gap: 15px;
+                gap: 20px;
+            }
+            
+            .main-nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 5px;
+            }
+            
+            .nav-link {
+                padding: 10px 15px;
+                font-size: 14px;
             }
             
             .hero-title {
                 font-size: 32px;
+            }
+            
+            .hero-desc {
+                font-size: 16px;
             }
             
             .chat-content {
@@ -549,17 +650,21 @@
                 gap: 30px;
             }
             
-            .hero-stats {
-                gap: 25px;
+            .chat-text {
+                padding-right: 0;
             }
             
-            .footer-content {
-                grid-template-columns: 1fr;
+            .chat-phone {
+                width: 250px;
+                height: 400px;
             }
             
-            .events-grid,
-            .brands-grid {
-                grid-template-columns: 1fr;
+            .hero {
+                padding: 60px 0 30px;
+            }
+            
+            .section-spacing {
+                padding: 40px 20px;
             }
         }
         
@@ -568,41 +673,73 @@
                 font-size: 28px;
             }
             
-            .section-title {
-                font-size: 26px;
+            .chat-actions {
+                flex-direction: column;
+            }
+            
+            .primary-btn, .accent-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .nav-link {
+                padding: 8px 12px;
+                font-size: 13px;
             }
             
             .hero-stats {
-                flex-direction: column;
                 gap: 20px;
+            }
+            
+            .stat-number {
+                font-size: 24px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- HEADER -->
-    <header class="main-header">
+    <!-- Main Header - NOT FIXED -->
+    <header class="main-header" id="mainHeader">
         <div class="container">
             <div class="navbar">
-                <a href="#" class="logo">
+                <a href="#home" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
                     <div class="logo-text">The<span>MedSphere</span></div>
                 </a>
+
                 <nav class="main-nav">
-                    <a href="#home" class="nav-link">Home</a>
-                    <a href="#events" class="nav-link">Events</a>
-                    <a href="#chat" class="nav-link">Chat</a>
-                    <a href="#brands" class="nav-link">Brands</a>
+                    <a href="#home" class="nav-link active">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                    <a href="#events-section" class="nav-link">
+                        <i class="fas fa-calendar-alt"></i> Events
+                    </a>
+                    <a href="#chat-section" class="nav-link">
+                        <i class="fas fa-comments"></i> Chat
+                    </a>
+                    <a href="#brands-section" class="nav-link">
+                        <i class="fas fa-store"></i> Brands
+                    </a>
+                    <a href="#promotion-section" class="nav-link">
+                        <i class="fas fa-bullhorn"></i> Advertise
+                    </a>
                 </nav>
             </div>
         </div>
     </header>
 
-    <!-- HERO SECTION -->
+    <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title">Welcome to <span class="highlight">TheMedSphere</span></h1>
-                <p class="hero-desc">Connect with students, discover events, join conversations, and make campus life unforgettable. Everything campus, in one place.</p>
+                <h1 class="hero-title">
+                    Welcome to <span class="highlight">TheMedSphere</span>
+                </h1>
+                <p class="hero-desc">
+                    Connect with students, discover events, join conversations, and make campus life unforgettable. Everything campus, in one place.
+                </p>
                 
                 <div class="hero-stats">
                     <div class="stat-item">
@@ -626,131 +763,77 @@
         </div>
     </section>
 
-    <!-- EVENTS SECTION -->
-    <section id="events" class="section">
+    <!-- Events Section -->
+    <section id="events-section" class="section-spacing">
         <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Campus Events & News</h2>
-                <p class="section-subtitle">Stay updated with campus activities and announcements</p>
+            <div class="events-header">
+                <div class="section-icon" style="color: var(--primary-light);">
+                    <i class="fas fa-calendar-star"></i>
+                </div>
+                <h2 class="purple-heading" style="font-size: 36px; margin-bottom: 15px;">
+                    Campus Events & News
+                </h2>
+                <p class="section-subtitle" style="font-size: 17px; max-width: 600px; margin: 0 auto;">
+                    Stay updated with campus activities, announcements, and trending topics
+                </p>
             </div>
             
-            <div class="events-grid">
+            <div class="brand-grid">
                 <div class="event-card">
-                    <div class="event-image"></div>
-                    <div class="event-content">
-                        <div class="event-date">Mar 15, 2024</div>
-                        <h3 class="event-title">Tech Symposium 2024</h3>
-                        <p class="event-desc">Join industry leaders for a day of innovation, networking, and cutting-edge tech discussions.</p>
-                        <div class="event-features">
-                            <div class="event-feature">
-                                <i class="fas fa-users"></i>
-                                <span>200+ Attending</span>
-                            </div>
-                            <div class="event-feature">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>Main Auditorium</span>
-                            </div>
-                            <div class="event-feature">
-                                <i class="fas fa-clock"></i>
-                                <span>10:00 AM</span>
-                            </div>
-                        </div>
+                    <div class="event-date">Mar 15, 2024</div>
+                    <h3 style="color: var(--dark-text); margin-bottom: 15px; font-size: 20px;">Tech Symposium 2024</h3>
+                    <p style="color: var(--medium-text); margin-bottom: 20px; font-size: 14px;">
+                        Join industry leaders for a day of innovation, networking, and cutting-edge tech discussions.
+                    </p>
+                    <div class="event-features">
+                        <span class="event-tag"><i class="fas fa-users"></i> 200+ Attending</span>
+                        <span class="event-tag"><i class="fas fa-map-marker-alt"></i> Main Auditorium</span>
+                        <span class="event-tag"><i class="fas fa-clock"></i> 10:00 AM</span>
                     </div>
                 </div>
                 
                 <div class="event-card">
-                    <div class="event-image"></div>
-                    <div class="event-content">
-                        <div class="event-date">Mar 20, 2024</div>
-                        <h3 class="event-title">Career Fair Expo</h3>
-                        <p class="event-desc">Connect with top employers and explore internship opportunities across various industries.</p>
-                        <div class="event-features">
-                            <div class="event-feature">
-                                <i class="fas fa-building"></i>
-                                <span>50+ Companies</span>
-                            </div>
-                            <div class="event-feature">
-                                <i class="fas fa-briefcase"></i>
-                                <span>Internships</span>
-                            </div>
-                            <div class="event-feature">
-                                <i class="fas fa-clock"></i>
-                                <span>9:00 AM - 4:00 PM</span>
-                            </div>
-                        </div>
+                    <div class="event-date">Mar 20, 2024</div>
+                    <h3 style="color: var(--dark-text); margin-bottom: 15px; font-size: 20px;">Career Fair Expo</h3>
+                    <p style="color: var(--medium-text); margin-bottom: 20px; font-size: 14px;">
+                        Connect with top employers and explore internship opportunities across various industries.
+                    </p>
+                    <div class="event-features">
+                        <span class="event-tag"><i class="fas fa-building"></i> 50+ Companies</span>
+                        <span class="event-tag"><i class="fas fa-briefcase"></i> Internships</span>
+                        <span class="event-tag"><i class="fas fa-clock"></i> 9:00 AM - 4:00 PM</span>
                     </div>
                 </div>
             </div>
             
-            <div style="text-align: center; margin-top: 40px;">
-                <a href="events.html" class="cta-button">
-                    <i class="fas fa-calendar-alt"></i> View All Events
+            <div style="text-align: center; margin-top: 50px;">
+                <a href="events.html" target="_blank" class="primary-btn">
+                    <i class="fas fa-calendar-alt"></i> View All Events & News
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- BRANDS SECTION -->
-    <section id="brands" class="section" style="background: #f8f9fa;">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Sponsored Brands</h2>
-                <p class="section-subtitle">Discover trusted brands and businesses curated for student lifestyle</p>
-            </div>
-            
-            <div class="brands-grid">
-                <div class="brand-card">
-                    <div class="brand-icon">
-                        <i class="fas fa-utensils"></i>
-                    </div>
-                    <h3 class="brand-title">Campus Eats</h3>
-                    <p class="brand-desc">20% student discount on all food deliveries</p>
-                    <span class="brand-category">Food & Dining</span>
-                </div>
-                
-                <div class="brand-card">
-                    <div class="brand-icon">
-                        <i class="fas fa-book-open"></i>
-                    </div>
-                    <h3 class="brand-title">StudyPro Supplies</h3>
-                    <p class="brand-desc">Premium study materials & stationery</p>
-                    <span class="brand-category">Education</span>
-                </div>
-                
-                <div class="brand-card">
-                    <div class="brand-icon">
-                        <i class="fas fa-shopping-bag"></i>
-                    </div>
-                    <h3 class="brand-title">StudentStyle</h3>
-                    <p class="brand-desc">Affordable fashion for campus life</p>
-                    <span class="brand-category">Fashion</span>
-                </div>
-            </div>
-            
-            <div style="text-align: center; margin-top: 40px;">
-                <a href="brands.html" class="cta-button">
-                    <i class="fas fa-store"></i> View All Brands
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- CHAT SECTION -->
-    <section id="chat" class="section chat-section">
+    <!-- Chat Section -->
+    <section id="chat-section" class="chat-section section-spacing">
         <div class="container">
             <div class="chat-content">
                 <div class="chat-text">
-                    <h2 class="section-title" style="text-align: left; margin-bottom: 20px;">Campus Chat & Connect</h2>
-                    <p class="section-subtitle" style="text-align: left; margin-bottom: 30px;">Join thousands of students in real-time conversations. Form study groups, discuss events, and make new friends across campus.</p>
+                    <h2 class="purple-heading" style="font-size: 36px; margin-bottom: 20px;">
+                        Campus Chat & Connect
+                    </h2>
+                    <p class="chat-desc">
+                        Join thousands of students in real-time conversations. Form study groups, discuss events, share resources, and make new friends across campus—all in a secure, student-only environment.
+                    </p>
                     
                     <div class="chat-features">
                         <div class="feature">
                             <div class="feature-icon">
                                 <i class="fas fa-bolt"></i>
                             </div>
-                            <div>
+                            <div class="feature-text">
                                 <h4>Real-time Messaging</h4>
-                                <p>Instant chat with fellow students</p>
+                                <p>Instant chat with fellow students, group conversations, and study groups</p>
                             </div>
                         </div>
                         
@@ -758,16 +841,28 @@
                             <div class="feature-icon">
                                 <i class="fas fa-shield-alt"></i>
                             </div>
-                            <div>
-                                <h4>Secure & Private</h4>
-                                <p>Your conversations are protected</p>
+                            <div class="feature-text">
+                                <h4>Secure & Verified</h4>
+                                <p>Student-verified accounts ensure a safe and trusted community</p>
+                            </div>
+                        </div>
+                        
+                        <div class="feature">
+                            <div class="feature-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="feature-text">
+                                <h4>Interest Groups</h4>
+                                <p>Join communities based on your courses, hobbies, and interests</p>
                             </div>
                         </div>
                     </div>
-                    
-                    <a href="chat-register.html" class="chat-btn">
-                        <i class="fas fa-comment-dots"></i> Start Chatting Now
-                    </a>
+
+                    <div class="chat-actions">
+                        <a href="chat-register.html" class="primary-btn">
+                            <i class="fas fa-comment-dots"></i> Start Chatting Now
+                        </a>
+                    </div>
                 </div>
                 
                 <div class="chat-visual">
@@ -775,15 +870,15 @@
                         <div class="phone-screen">
                             <div class="message user">
                                 <div class="avatar">S</div>
-                                <div class="text">Anyone for study group?</div>
+                                <div class="text">Anyone for study group today?</div>
                             </div>
                             <div class="message other">
                                 <div class="avatar">M</div>
-                                <div class="text">I'm in! Library at 3?</div>
+                                <div class="text">I'm in! Library at 3 PM? 📚</div>
                             </div>
                             <div class="message user">
                                 <div class="avatar">S</div>
-                                <div class="text">Perfect! See you there 👋</div>
+                                <div class="text">Perfect! Should we review chapter 5?</div>
                             </div>
                         </div>
                     </div>
@@ -792,36 +887,182 @@
         </div>
     </section>
 
-    <!-- ADVERTISE SECTION -->
-    <section class="section advertise-section">
+    <!-- Brands Section -->
+    <section id="brands-section" class="section-spacing">
         <div class="container">
-            <div class="advertise-card">
-                <h3 class="advertise-title">Want to promote your business here?</h3>
-                <p class="advertise-desc">Reach thousands of students daily with our premium advertising space</p>
-                <a href="https://wa.me/2348124219028" class="advertise-btn">
-                    <i class="fab fa-whatsapp"></i> Contact for Advertising
+            <div class="events-header">
+                <div class="section-icon" style="color: var(--primary-dark);">
+                    <i class="fas fa-store"></i>
+                </div>
+                <h2 class="purple-heading" style="font-size: 36px; margin-bottom: 15px;">
+                    Sponsored Brands
+                </h2>
+                <p class="section-subtitle" style="font-size: 17px; max-width: 600px; margin: 0 auto;">
+                    Discover trusted brands and businesses curated for student lifestyle
+                </p>
+            </div>
+            
+            <div class="brand-grid">
+                <div class="brand-card">
+                    <div class="brand-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3 style="color: var(--dark-text); margin-bottom: 10px; font-size: 20px;">Campus Eats</h3>
+                    <p style="color: var(--medium-text); margin-bottom: 15px; font-size: 14px;">
+                        20% student discount on all food deliveries
+                    </p>
+                    <span class="event-tag" style="background: rgba(255, 107, 139, 0.1); color: var(--accent-coral);">
+                        Food & Dining
+                    </span>
+                </div>
+                
+                <div class="brand-card">
+                    <div class="brand-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3 style="color: var(--dark-text); margin-bottom: 10px; font-size: 20px;">StudyPro Supplies</h3>
+                    <p style="color: var(--medium-text); margin-bottom: 15px; font-size: 14px;">
+                        Premium study materials & stationery
+                    </p>
+                    <span class="event-tag" style="background: rgba(45, 212, 191, 0.1); color: var(--accent-teal);">
+                        Education
+                    </span>
+                </div>
+                
+                <div class="brand-card">
+                    <div class="brand-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <h3 style="color: var(--dark-text); margin-bottom: 10px; font-size: 20px;">StudentStyle</h3>
+                    <p style="color: var(--medium-text); margin-bottom: 15px; font-size: 14px;">
+                        Affordable fashion for campus life
+                    </p>
+                    <span class="event-tag" style="background: rgba(251, 191, 36, 0.1); color: var(--accent-teal);">
+                        Fashion
+                    </span>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 50px;">
+                <a href="brands.html" target="_blank" class="primary-btn">
+                    <i class="fas fa-store"></i> View All Sponsored Brands
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- FOOTER -->
-    <footer>
+    <!-- Promotion Section -->
+    <section id="promotion-section" class="promotion-section section-spacing">
+        <div class="container">
+            <div class="events-header">
+                <h2 class="purple-heading" style="font-size: 36px; margin-bottom: 10px;">
+                    Want to promote your business here?
+                </h2>
+                <p class="section-subtitle" style="font-size: 17px; max-width: 600px; margin: 0 auto;">
+                    Reach thousands of students daily with our premium advertising space
+                </p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 40px;">
+                <div class="contact-card">
+                    <div style="font-size: 48px; margin-bottom: 20px;">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <h4 style="font-size: 26px; margin-bottom: 10px; font-weight: 700;">Contact Us</h4>
+                    <p style="margin-bottom: 25px; opacity: 0.9; font-size: 16px; line-height: 1.5;">
+                        Get started with your advertising campaign today
+                    </p>
+                    <div style="background: rgba(255,255,255,0.15); padding: 15px; border-radius: 12px; margin-bottom: 25px;">
+                        <p style="font-size: 13px; opacity: 0.9; margin-bottom: 5px;">For advertising inquiries:</p>
+                        <p style="font-size: 18px; font-weight: 600;">WhatsApp Only</p>
+                    </div>
+                    <a href="https://wa.me/2348124219028" class="primary-btn" style="background: white; color: var(--primary-dark);">
+                        <i class="fab fa-whatsapp" style="font-size: 18px;"></i>
+                        Chat Now
+                    </a>
+                </div>
+            </div>
+            
+            <p style="color: var(--medium-text); font-size: 14px; text-align: center; margin-top: 30px; font-style: italic;">
+                Limited slots available • Responses within 24 hours
+            </p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section-spacing" style="background: var(--light-bg);">
+        <div class="container">
+            <div class="events-header">
+                <h2 class="purple-heading" style="font-size: 36px; margin-bottom: 15px;">
+                    Why Choose TheMedSphere?
+                </h2>
+                <p class="section-subtitle" style="font-size: 17px; max-width: 600px; margin: 0 auto;">
+                    Discover what makes us the preferred campus community platform
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4 style="color: var(--dark-text); margin-bottom: 12px; font-size: 20px;">High Engagement</h4>
+                    <p style="color: var(--medium-text); font-size: 14px;">Our active student community ensures your content gets maximum visibility and interaction.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon">
+                        <i class="fas fa-crosshairs"></i>
+                    </div>
+                    <h4 style="color: var(--dark-text); margin-bottom: 12px; font-size: 20px;">Targeted Audience</h4>
+                    <p style="color: var(--medium-text); font-size: 14px;">Reach students specifically interested in campus activities, events, and student life.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4 style="color: var(--dark-text); margin-bottom: 12px; font-size: 20px;">Quick Setup</h4>
+                    <p style="color: var(--medium-text); font-size: 14px;">Get your event listed or ad live within 24 hours of confirmation. Fast and efficient.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h4 style="color: var(--dark-text); margin-bottom: 12px; font-size: 20px;">Dedicated Support</h4>
+                    <p style="color: var(--medium-text); font-size: 14px;">Our team helps optimize your campaign for best results with personalized assistance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
         <div class="container">
             <div class="footer-content">
-                <div>
-                    <div class="footer-logo">The<span>MedSphere</span></div>
-                    <p class="footer-desc">Connecting campus communities through events, conversations, and meaningful interactions.</p>
+                <div class="footer-logo-section">
+                    <div class="footer-logo">
+                        <div class="footer-logo-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div class="footer-logo-text">
+                            The<span>MedSphere</span>
+                        </div>
+                    </div>
+                    <p style="color: #aaa; line-height: 1.6; font-size: 15px; max-width: 300px;">
+                        Connecting campus communities through events, conversations, and meaningful interactions. Your all-in-one campus hub.
+                    </p>
                 </div>
                 
                 <div class="footer-links">
-                    <h4>Explore</h4>
+                    <h4>Quick Links</h4>
                     <ul>
                         <li><a href="#home">Home</a></li>
                         <li><a href="events.html">Events</a></li>
-                        <li><a href="#chat">Campus Chat</a></li>
+                        <li><a href="#chat-section">Campus Chat</a></li>
                         <li><a href="brands.html">Brands</a></li>
-                        <li><a href="advertise.html">Advertise</a></li>
+                        <li><a href="#promotion-section">Advertise</a></li>
                     </ul>
                 </div>
             </div>
@@ -833,20 +1074,31 @@
         </div>
     </footer>
 
+    <!-- JavaScript -->
     <script>
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
+        // Smooth scrolling for navigation
+        document.querySelectorAll('.nav-link').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
                 
-                const targetElement = document.querySelector(targetId);
-                if(targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
+                // If it's a section link
+                if (href.startsWith('#')) {
+                    e.preventDefault();
+                    
+                    // Update active state
+                    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Scroll to section
+                    const targetId = href.substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 20,
+                            behavior: 'smooth'
+                        });
+                    }
                 }
             });
         });
