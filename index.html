@@ -227,51 +227,39 @@
             font-size: 16px;
         }
         
-        .brand-grid, .event-grid {
+        .preview-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
             margin-top: 40px;
         }
         
-        .event-card {
+        .preview-card {
             background: var(--white);
             border-radius: var(--border-radius);
             padding: 30px;
             box-shadow: var(--shadow-sm);
             transition: all 0.3s ease;
             border: 1px solid rgba(102, 126, 234, 0.1);
+            text-align: center;
         }
         
-        .event-card:hover {
+        .preview-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-md);
         }
         
-        .event-date {
-            display: inline-block;
+        .preview-icon {
+            width: 80px;
+            height: 80px;
             background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-        
-        .event-features {
+            border-radius: 50%;
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .event-tag {
-            background: rgba(102, 126, 234, 0.1);
-            color: var(--primary-dark);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 32px;
         }
         
         /* ===== CHAT SECTION ===== */
@@ -456,39 +444,6 @@
         .message.user .text {
             background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
             color: white;
-        }
-        
-        /* ===== BRANDS SECTION ===== */
-        #brands-section {
-            background: var(--light-bg);
-        }
-        
-        .brand-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 30px;
-            text-align: center;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(102, 126, 234, 0.1);
-        }
-        
-        .brand-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .brand-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 28px;
-            color: var(--primary-dark);
         }
         
         /* ===== PROMOTION SECTION ===== */
@@ -695,128 +650,6 @@
                 font-size: 24px;
             }
         }
-        
-        /* Firebase Event/Brand Card Styles */
-        .firebase-event-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(102, 126, 234, 0.1);
-        }
-        
-        .firebase-event-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .event-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            display: block;
-        }
-        
-        .event-content {
-            padding: 20px;
-        }
-        
-        .event-title {
-            color: var(--dark-text);
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-        
-        .event-description {
-            color: var(--medium-text);
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 15px;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .event-meta {
-            display: flex;
-            justify-content: space-between;
-            color: var(--light-text);
-            font-size: 12px;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            padding-top: 15px;
-            margin-top: 15px;
-        }
-        
-        .event-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .brand-image {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border-radius: 12px 12px 0 0;
-            display: block;
-        }
-        
-        .brand-content {
-            padding: 20px;
-        }
-        
-        .brand-title {
-            color: var(--dark-text);
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-        
-        .brand-description {
-            color: var(--medium-text);
-            font-size: 14px;
-            line-height: 1.5;
-            margin-bottom: 15px;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .brand-meta {
-            color: var(--light-text);
-            font-size: 12px;
-            border-top: 1px solid rgba(0,0,0,0.05);
-            padding-top: 15px;
-            margin-top: 15px;
-        }
-        
-        .brand-meta-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 5px;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: var(--medium-text);
-        }
-        
-        .error {
-            text-align: center;
-            padding: 40px;
-            color: #dc2626;
-            background: rgba(220, 38, 38, 0.05);
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(220, 38, 38, 0.1);
-        }
     </style>
 </head>
 <body>
@@ -835,13 +668,13 @@
                     <a href="#home" class="nav-link active">
                         <i class="fas fa-home"></i> Home
                     </a>
-                    <a href="#events-section" class="nav-link">
+                    <a href="events.html" class="nav-link" target="_blank">
                         <i class="fas fa-calendar-alt"></i> Events
                     </a>
                     <a href="#chat-section" class="nav-link">
                         <i class="fas fa-comments"></i> Chat
                     </a>
-                    <a href="#brands-section" class="nav-link">
+                    <a href="brands.html" class="nav-link" target="_blank">
                         <i class="fas fa-store"></i> Brands
                     </a>
                     <a href="#promotion-section" class="nav-link">
@@ -863,6 +696,21 @@
                     Connect with students, discover events, join conversations, and make campus life unforgettable. Everything campus, in one place.
                 </p>
             </div>
+            
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalEvents">50+</div>
+                    <div class="stat-label">Campus Events</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="activeChats">1000+</div>
+                    <div class="stat-label">Active Chats</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalBrands">30+</div>
+                    <div class="stat-label">Brands</div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -880,9 +728,36 @@
                     Stay updated with campus activities, announcements, and trending topics
                 </p>
             </div>
-                <!-- ADD THIS CONTAINER FOR FIREBASE EVENTS -->
-                <div id="events-container">
-                    <!-- Events from Firebase will appear here automatically -->
+            
+            <div class="preview-cards">
+                <div class="preview-card">
+                    <div class="preview-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h3 style="margin-bottom: 15px;">Concerts & Music</h3>
+                    <p style="color: var(--medium-text); margin-bottom: 20px; font-size: 14px;">
+                        Live performances, campus bands, and music festivals happening near you.
+                    </p>
+                </div>
+                
+                <div class="preview-card">
+                    <div class="preview-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 style="margin-bottom: 15px;">Academic Events</h3>
+                    <p style="color: var(--medium-text); margin-bottom: 20px; font-size: 14px;">
+                        Workshops, seminars, guest lectures, and academic conferences.
+                    </p>
+                </div>
+                
+                <div class="preview-card">
+                    <div class="preview-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 style="margin-bottom: 15px;">Social Gatherings</h3>
+                    <p style="color: var(--medium-text); margin-bottom: 20px; font-size: 14px;">
+                        Parties, meetups, networking events, and student organization activities.
+                    </p>
                 </div>
             </div>
             
@@ -981,9 +856,36 @@
                     Discover trusted brands and businesses curated for student lifestyle
                 </p>
             </div>
-                <!-- ADD THIS CONTAINER FOR FIREBASE BRANDS -->
-                <div id="brands-container">
-                    <!-- Brands from Firebase will appear here automatically -->
+            
+            <div class="preview-cards">
+                <div class="preview-card">
+                    <div class="preview-icon" style="background: linear-gradient(135deg, var(--accent-teal) 0%, #0D9488 100%);">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3 style="margin-bottom: 15px;">Food & Dining</h3>
+                    <p style="color: var(--medium-text); margin-bottom: 20px; font-size: 14px;">
+                        Student discounts, meal deals, and campus eateries.
+                    </p>
+                </div>
+                
+                <div class="preview-card">
+                    <div class="preview-icon" style="background: linear-gradient(135deg, var(--accent-coral) 0%, #e91e63 100%);">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <h3 style="margin-bottom: 15px;">Shopping</h3>
+                    <p style="color: var(--medium-text); margin-bottom: 20px; font-size: 14px;">
+                        Exclusive student discounts on fashion, electronics, and more.
+                    </p>
+                </div>
+                
+                <div class="preview-card">
+                    <div class="preview-icon" style="background: linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%);">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3 style="margin-bottom: 15px;">Study Resources</h3>
+                    <p style="color: var(--medium-text); margin-bottom: 20px; font-size: 14px;">
+                        Textbooks, stationery, and study aids with special offers.
+                    </p>
                 </div>
             </div>
             
@@ -1103,9 +1005,9 @@
                     <h4>Quick Links</h4>
                     <ul>
                         <li><a href="#home">Home</a></li>
-                        <li><a href="events.html">Events</a></li>
+                        <li><a href="events.html" target="_blank">Events</a></li>
                         <li><a href="#chat-section">Campus Chat</a></li>
-                        <li><a href="brands.html">Brands</a></li>
+                        <li><a href="brands.html" target="_blank">Brands</a></li>
                         <li><a href="#promotion-section">Advertise</a></li>
                     </ul>
                 </div>
@@ -1117,10 +1019,6 @@
             </div>
         </div>
     </footer>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 
     <!-- JavaScript -->
     <script>
@@ -1135,16 +1033,12 @@
             appId: "1:289749352034:web:57fb380ac94433148bdb3b"
         };
 
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
         // Smooth scrolling for navigation
         document.querySelectorAll('.nav-link').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
                 const href = this.getAttribute('href');
                 
-                // If it's a section link
+                // If it's a section link (starts with #)
                 if (href.startsWith('#')) {
                     e.preventDefault();
                     
@@ -1158,144 +1052,149 @@
                     
                     if (targetElement) {
                         window.scrollTo({
-                            top: targetElement.offsetTop - 20,
+                            top: targetElement.offsetTop - 80,
                             behavior: 'smooth'
                         });
                     }
                 }
+                // If it's an external link with target="_blank", let it open normally
             });
         });
 
-        // Load Events from Firebase
-        async function loadEvents() {
-            const container = document.getElementById('events-container');
-            container.innerHTML = '<div class="loading">Loading events...</div>';
+        // Update active nav link on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('section[id]');
+            const scrollPos = window.scrollY + 100;
             
-            try {
-                const snapshot = await database.ref('events').once('value');
-                const events = snapshot.val();
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                const sectionId = section.getAttribute('id');
                 
-                if (!events) {
-                    container.innerHTML = '<div class="loading">No events added yet.</div>';
-                    // Update hero stats
-                    document.getElementById('totalEvents').textContent = '0';
-                    return;
+                if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                    document.querySelectorAll('.nav-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
                 }
+            });
+        });
 
-                // Update hero stats
-                const eventCount = Object.keys(events).length;
-                document.getElementById('totalEvents').textContent = eventCount + '+';
+        // Load stats from Firebase
+        async function loadStats() {
+            try {
+                // Initialize Firebase
+                if (!firebase.apps.length) {
+                    firebase.initializeApp(firebaseConfig);
+                }
+                const database = firebase.database();
+
+                // Load events count
+                const eventsSnapshot = await database.ref('events').once('value');
+                const eventsData = eventsSnapshot.val();
+                const eventsCount = eventsData ? Object.keys(eventsData).length : 0;
+                document.getElementById('totalEvents').textContent = eventsCount + '+';
                 
-                let eventsHTML = '';
-                Object.values(events).forEach(event => {
-                    const eventDate = new Date(event.time);
-                    const formattedDate = eventDate.toLocaleDateString('en-US', { 
-                        weekday: 'long', 
-                        year: 'numeric', 
-                        month: 'long', 
-                        day: 'numeric' 
-                    });
-                    const formattedTime = eventDate.toLocaleTimeString('en-US', { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
-                    });
-                    
-                    eventsHTML += `
-                        <div class="firebase-event-card">
-                            <img src="${event.imageUrl}" alt="${event.name}" class="event-image" 
-                                 onerror="this.src='https://via.placeholder.com/400x200/667eea/ffffff?text=${encodeURIComponent(event.name.substring(0,15))}'">
-                            <div class="event-content">
-                                <h3 class="event-title">${event.name}</h3>
-                                <p class="event-description">${event.description}</p>
-                                <div class="event-meta">
-                                    <div class="event-meta-item">
-                                        <i class="fas fa-calendar"></i>
-                                        ${formattedDate}
-                                    </div>
-                                    <div class="event-meta-item">
-                                        <i class="fas fa-clock"></i>
-                                        ${formattedTime}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                container.innerHTML = eventsHTML;
+                // Load brands count
+                const brandsSnapshot = await database.ref('brands').once('value');
+                const brandsData = brandsSnapshot.val();
+                const brandsCount = brandsData ? Object.keys(brandsData).length : 0;
+                document.getElementById('totalBrands').textContent = brandsCount + '+';
                 
             } catch (error) {
-                console.error('Error loading events:', error);
-                container.innerHTML = '<div class="error">Unable to load events. Please try again later.</div>';
+                console.log('Error loading stats:', error);
+                // If Firebase fails, keep the default values
             }
         }
 
-        // Load Brands from Firebase
-        async function loadBrands() {
-            const container = document.getElementById('brands-container');
-            container.innerHTML = '<div class="loading">Loading brands...</div>';
-            
-            try {
-                const snapshot = await database.ref('brands').once('value');
-                const brands = snapshot.val();
-                
-                if (!brands) {
-                    container.innerHTML = '<div class="loading">No brands added yet.</div>';
-                    // Update hero stats
-                    document.getElementById('totalBrands').textContent = '0';
-                    return;
-                }
-
-                // Update hero stats
-                const brandCount = Object.keys(brands).length;
-                document.getElementById('totalBrands').textContent = brandCount + '+';
-                
-                let brandsHTML = '';
-                Object.values(brands).forEach(brand => {
-                    brandsHTML += `
-                        <div class="firebase-event-card">
-                            <img src="${brand.imageUrl}" alt="${brand.name}" class="brand-image" 
-                                 onerror="this.src='https://via.placeholder.com/400x180/764ba2/ffffff?text=${encodeURIComponent(brand.name.substring(0,15))}'">
-                            <div class="brand-content">
-                                <h3 class="brand-title">${brand.name}</h3>
-                                <p class="brand-description">${brand.description}</p>
-                                <div class="brand-meta">
-                                    ${brand.prize ? `
-                                        <div class="brand-meta-item">
-                                            <i class="fas fa-trophy"></i>
-                                            ${brand.prize}
-                                        </div>
-                                    ` : ''}
-                                    ${brand.contact ? `
-                                        <div class="brand-meta-item">
-                                            <i class="fas fa-phone"></i>
-                                            ${brand.contact}
-                                        </div>
-                                    ` : ''}
-                                    ${brand.location ? `
-                                        <div class="brand-meta-item">
-                                            <i class="fas fa-map-marker-alt"></i>
-                                            ${brand.location}
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                container.innerHTML = brandsHTML;
-                
-            } catch (error) {
-                console.error('Error loading brands:', error);
-                container.innerHTML = '<div class="error">Unable to load brands. Please try again later.</div>';
-            }
-        }
-
-        // Load data when page loads
+        // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            loadEvents();
-            loadBrands();
+            console.log('Page loaded successfully');
+            
+            // Add animation to hero section
+            const heroTitle = document.querySelector('.hero-title');
+            const heroDesc = document.querySelector('.hero-desc');
+            const heroStats = document.querySelector('.hero-stats');
+            
+            setTimeout(() => {
+                heroTitle.style.animation = 'fadeInUp 0.8s ease forwards';
+            }, 300);
+            
+            setTimeout(() => {
+                heroDesc.style.animation = 'fadeInUp 0.8s ease forwards';
+                heroDesc.style.opacity = '1';
+            }, 600);
+            
+            setTimeout(() => {
+                heroStats.style.animation = 'fadeInUp 0.8s ease forwards';
+                heroStats.style.opacity = '1';
+            }, 900);
+            
+            // Load stats
+            loadStats();
+            
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.preview-card, .feature-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+
+        // Add smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Add animation to elements when they come into view
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                }
+            });
+        }, observerOptions);
+
+        // Observe sections for animation
+        document.querySelectorAll('.preview-card, .feature-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            observer.observe(card);
+        });
+
+        // Handle external links
+        document.querySelectorAll('a[target="_blank"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Don't prevent default - let it open in new tab
+                console.log('Opening external link:', this.href);
+            });
         });
     </script>
 </body>
