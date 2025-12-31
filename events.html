@@ -148,6 +148,15 @@
         .event-card:hover {
             transform: translateY(-5px);
         }
+        .news-type {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white;
+}
+
+.event-type {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
         
         .event-image {
             height: 200px;
@@ -404,86 +413,101 @@
             });
         }
         
-        // Create event card
-        function createEventCard(event) {
-            const div = document.createElement('div');
-            div.className = 'event-card';
+        // Create event card - FIXED VERSION
+function createEventCard(event) {
+    const div = document.createElement('div');
+    div.className = 'event-card';
+    
+    const eventDate = event.time ? new Date(event.time) : new Date(event.createdAt);
+    const formattedDate = eventDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        month: 'long',
+        day: 'numeric',
+        year: 'numeric'
+    });
+    const formattedTime = eventDate.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    // Determine if it's EVENT or NEWS
+    const isEvent = event.type === 'event' || (!event.type && event.time);
+    const isNews = event.type === 'news' || (!event.type && !event.time);
+    
+    // Get the correct type badge
+    const eventType = isEvent ? 'EVENT' : 'NEWS';
+    const typeClass = isEvent ? 'event-type' : 'news-type';
+    
+    // Different placeholder images for events vs news
+    const placeholderColor = isEvent ? '667eea' : '059669';
+    const placeholderText = isEvent ? 'EVENT' : 'NEWS';
+    
+    const eventImage = event.imageUrl || `https://via.placeholder.com/400x200/${placeholderColor}/ffffff?text=${encodeURIComponent(event.name?.substring(0, 20) || placeholderText)}`;
+    
+    div.innerHTML = `
+        <div class="event-image">
+            <img src="${eventImage}" 
+                 alt="${event.name || placeholderText}"
+                 onerror="this.src='https://via.placeholder.com/400x200/${placeholderColor}/ffffff?text=${encodeURIComponent((event.name?.substring(0, 20) || placeholderText))}'">
+        </div>
+        <div class="event-content">
+            <div class="event-type ${typeClass}">
+                ${eventType}
+            </div>
+            <h3 class="event-title">${event.name || 'Untitled ' + (isEvent ? 'Event' : 'News')}</h3>
             
-            const eventDate = event.time ? new Date(event.time) : new Date(event.createdAt);
-            const formattedDate = eventDate.toLocaleDateString('en-US', {
-                weekday: 'long',
-                month: 'long',
-                day: 'numeric',
-                year: 'numeric'
-            });
-            const formattedTime = eventDate.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
+            <div class="event-meta">
+                <span><i class="far fa-calendar"></i> ${formattedDate}</span>
+                ${isEvent && event.time ? `<span><i class="far fa-clock"></i> ${formattedTime}</span>` : ''}
+            </div>
             
-            // FIX: Check for imageUrl property (not images array)
-            const eventImage = event.imageUrl || `https://via.placeholder.com/400x200/667eea/ffffff?text=${encodeURIComponent(event.name?.substring(0, 20) || 'Event')}`;
-            
-            div.innerHTML = `
-                <div class="event-image">
-                    <img src="${eventImage}" 
-                         alt="${event.name || 'Event'}"
-                         onerror="this.src='https://via.placeholder.com/400x200/667eea/ffffff?text=${encodeURIComponent((event.name?.substring(0, 20) || 'Event'))}'">
-                </div>
-                <div class="event-content">
-                    <div class="event-type">
-                        EVENT
-                    </div>
-                    <h3 class="event-title">${event.name || 'Untitled Event'}</h3>
-                    
-                    <div class="event-meta">
-                        <span><i class="far fa-calendar"></i> ${formattedDate}</span>
-                        <span><i class="far fa-clock"></i> ${formattedTime}</span>
-                    </div>
-                    
-                    <p class="event-description">${event.description || 'No description available'}</p>
-                </div>
-            `;
-            
-            return div;
-        }
+            <p class="event-description">${event.description || 'No description available'}</p>
+        </div>
+    `;
+    
+    return div;
+}
         
-        // Filter events
-        function filterEvents(type) {
-            currentFilter = type;
-            
-            // Update active button
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Find the clicked button
-            const buttons = document.querySelectorAll('.filter-btn');
-            buttons.forEach(btn => {
-                if (btn.textContent.includes(type === 'all' ? 'All' : 
-                                            type === 'event' ? 'Events' : 
-                                            type === 'news' ? 'News' : 
-                                            'Upcoming')) {
-                    btn.classList.add('active');
-                }
-            });
-            
-            let filteredEvents = allEvents;
-            
-            if (type === 'event') {
-                filteredEvents = allEvents.filter(event => event.type === 'event');
-            } else if (type === 'news') {
-                filteredEvents = allEvents.filter(event => event.type === 'news');
-            } else if (type === 'upcoming') {
-                const now = new Date();
-                filteredEvents = allEvents.filter(event => {
-                    const eventDate = event.time ? new Date(event.time) : new Date(event.createdAt);
-                    return eventDate >= now;
-                });
-            }
-            
-            displayEvents(filteredEvents);
+        // Filter events - FIXED VERSION
+function filterEvents(type) {
+    currentFilter = type;
+    
+    // Update active button
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Find the clicked button
+    const buttons = document.querySelectorAll('.filter-btn');
+    buttons.forEach(btn => {
+        if (btn.textContent.includes(type === 'all' ? 'All' : 
+                                    type === 'event' ? 'Events' : 
+                                    type === 'news' ? 'News' : 
+                                    'Upcoming')) {
+            btn.classList.add('active');
         }
+    });
+    
+    let filteredEvents = allEvents;
+    
+    if (type === 'event') {
+        filteredEvents = allEvents.filter(event => {
+            return event.type === 'event' || (!event.type && event.time);
+        });
+    } else if (type === 'news') {
+        filteredEvents = allEvents.filter(event => {
+            return event.type === 'news' || (!event.type && !event.time);
+        });
+    } else if (type === 'upcoming') {
+        const now = new Date();
+        filteredEvents = allEvents.filter(event => {
+            const eventDate = event.time ? new Date(event.time) : new Date(event.createdAt);
+            return eventDate >= now;
+        });
+    }
+    
+    displayEvents(filteredEvents);
+}
         
         // Update filter button active state
         function updateFilterButtons() {
