@@ -122,98 +122,96 @@
             transform: translateY(-5px);
         }
         
-       /* Updated Brand Image Size */
-.brand-image {
-    height: 280px; /* Increased from 200px to 280px */
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-/* Improved image styling */
-.brand-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.brand-card:hover .brand-image img {
-    transform: scale(1.03);
-}
-
-/* Updated brand content layout */
-.brand-content {
-    padding: 25px;
-}
-
-.brand-type {
-    display: inline-block;
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-    color: white;
-    padding: 6px 18px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    letter-spacing: 0.5px;
-}
-
-.brand-title {
-    font-size: 24px; /* Slightly larger title */
-    color: #1f2937;
-    margin-bottom: 20px;
-    line-height: 1.3;
-    font-weight: 700;
-}
-
-/* Updated brand meta - sectioned layout */
-.brand-meta {
-    margin-bottom: 20px;
-    background: #f8fafc;
-    border-radius: 12px;
-    padding: 20px;
-}
-
-.meta-item {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 12px;
-    font-size: 15px;
-}
-
-.meta-item:last-child {
-    margin-bottom: 0;
-}
-
-.meta-label {
-    font-weight: 700;
-    color: #374151;
-    min-width: 70px;
-    margin-right: 15px;
-}
-
-.meta-value {
-    color: #6b7280;
-    flex: 1;
-}
-
-.meta-item i {
-    color: #764ba2;
-    margin-right: 10px;
-    width: 20px;
-    text-align: center;
-}
-
-.brand-description {
-    color: #4b5563;
-    line-height: 1.6;
-    font-size: 15px;
-    border-top: 1px solid #e5e7eb;
-    padding-top: 20px;
-    margin-top: 20px;
-}
+        /* UPDATED: Larger Brand Image */
+        .brand-image {
+            height: 320px; /* Increased from 200px to 320px */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .brand-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .brand-card:hover .brand-image img {
+            transform: scale(1.03);
+        }
+        
+        .brand-content {
+            padding: 25px;
+        }
+        
+        .brand-type {
+            display: inline-block;
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+        
+        .brand-title {
+            font-size: 24px;
+            color: #1f2937;
+            margin-bottom: 20px;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+        
+        /* UPDATED: Structured Layout - Same as Events Page */
+        .brand-meta {
+            margin-bottom: 20px;
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 15px;
+        }
+        
+        .meta-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .meta-label {
+            font-weight: 700;
+            color: #374151;
+            min-width: 70px;
+            margin-right: 15px;
+        }
+        
+        .meta-value {
+            color: #6b7280;
+            flex: 1;
+        }
+        
+        .meta-item i {
+            color: #764ba2;
+            margin-right: 8px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .brand-description {
+            color: #4b5563;
+            line-height: 1.6;
+            font-size: 15px;
+            border-top: 1px solid #e5e7eb;
+            padding-top: 20px;
+            margin-top: 20px;
+        }
         
         /* No Brands Message */
         .no-brands {
@@ -257,6 +255,10 @@
                 flex-direction: column;
                 gap: 20px;
                 text-align: center;
+            }
+            
+            .brand-image {
+                height: 280px; /* Slightly smaller on mobile */
             }
         }
     </style>
@@ -387,93 +389,68 @@
             });
         }
         
-        // Create brand card
-        // Create brand card with structured layout
-function createBrandCard(brand) {
-    const div = document.createElement('div');
-    div.className = 'brand-card';
-    
-    // Change these lines in your existing code:
-
-// Line around 233:
-const brandImage = brand.imageUrl || `https://via.placeholder.com/400x280/764ba2/ffffff?text=${encodeURIComponent(brand.name?.substring(0, 20) || 'Brand')}`;
-
-    // Create structured meta HTML
-    let metaHTML = '';
-    
-    if (brand.prize) {
-        metaHTML += `
-            <div class="meta-item">
-                <i class="fas fa-trophy"></i>
-                <span class="meta-label">Offer:</span>
-                <span class="meta-value">${brand.prize}</span>
-            </div>
-        `;
-    }
-    
-    if (brand.contact) {
-        metaHTML += `
-            <div class="meta-item">
-                <i class="fas fa-phone-alt"></i>
-                <span class="meta-label">Contact:</span>
-                <span class="meta-value">${brand.contact}</span>
-            </div>
-        `;
-    }
-    
-    if (brand.location) {
-        metaHTML += `
-            <div class="meta-item">
-                <i class="fas fa-map-marker-alt"></i>
-                <span class="meta-label">Location:</span>
-                <span class="meta-value">${brand.location}</span>
-            </div>
-        `;
-    }
-    
-    // If there's additional custom fields, you can add them here
-    if (brand.category) {
-        metaHTML += `
-            <div class="meta-item">
-                <i class="fas fa-tag"></i>
-                <span class="meta-label">Category:</span>
-                <span class="meta-value">${brand.category}</span>
-            </div>
-        `;
-    }
-    
-    if (brand.website) {
-        metaHTML += `
-            <div class="meta-item">
-                <i class="fas fa-globe"></i>
-                <span class="meta-label">Website:</span>
-                <span class="meta-value">${brand.website}</span>
-            </div>
-        `;
-    }
-    
-    div.innerHTML = `
-        <div class="brand-image">
-            <img src="${brandImage}" 
-                 alt="${brand.name || 'Brand'}"
-                 onerror="this.src='https://via.placeholder.com/400x280/764ba2/ffffff?text=${encodeURIComponent((brand.name?.substring(0, 20) || 'Brand'))}'"
-        </div>
-        <div class="brand-content">
-            <div class="brand-type">
-                SPONSORED BRAND
-            </div>
-            <h3 class="brand-title">${brand.name || 'Untitled Brand'}</h3>
+        // UPDATED: Create brand card with structured layout - Same as Events
+        function createBrandCard(brand) {
+            const div = document.createElement('div');
+            div.className = 'brand-card';
             
-            <div class="brand-meta">
-                ${metaHTML || '<div class="meta-item"><i class="fas fa-info-circle"></i><span class="meta-label">Info:</span><span class="meta-value">No additional information available</span></div>'}
-            </div>
+            const brandImage = brand.imageUrl || `https://via.placeholder.com/400x320/764ba2/ffffff?text=${encodeURIComponent(brand.name?.substring(0, 20) || 'Brand')}`;
             
-            <p class="brand-description">${brand.description || 'No description available'}</p>
-        </div>
-    `;
-    
-    return div;
-}
+            // Create structured meta HTML - Same format as events
+            let metaHTML = '';
+            
+            if (brand.prize) {
+                metaHTML += `
+                    <div class="meta-item">
+                        <i class="fas fa-trophy"></i>
+                        <span class="meta-label">Offer:</span>
+                        <span class="meta-value">${brand.prize}</span>
+                    </div>
+                `;
+            }
+            
+            if (brand.contact) {
+                metaHTML += `
+                    <div class="meta-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <span class="meta-label">Contact:</span>
+                        <span class="meta-value">${brand.contact}</span>
+                    </div>
+                `;
+            }
+            
+            if (brand.location) {
+                metaHTML += `
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span class="meta-label">Location:</span>
+                        <span class="meta-value">${brand.location}</span>
+                    </div>
+                `;
+            }
+            
+            div.innerHTML = `
+                <div class="brand-image">
+                    <img src="${brandImage}" 
+                         alt="${brand.name || 'Brand'}"
+                         onerror="this.src='https://via.placeholder.com/400x320/764ba2/ffffff?text=${encodeURIComponent((brand.name?.substring(0, 20) || 'Brand'))}'">
+                </div>
+                <div class="brand-content">
+                    <div class="brand-type">
+                        SPONSORED BRAND
+                    </div>
+                    <h3 class="brand-title">${brand.name || 'Untitled Brand'}</h3>
+                    
+                    <div class="brand-meta">
+                        ${metaHTML || '<div class="meta-item"><i class="fas fa-info-circle"></i><span class="meta-label">Info:</span><span class="meta-value">No additional information available</span></div>'}
+                    </div>
+                    
+                    <p class="brand-description">${brand.description || 'No description available'}</p>
+                </div>
+            `;
+            
+            return div;
+        }
         
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
