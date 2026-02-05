@@ -27,6 +27,8 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             overflow: hidden;
             height: 100vh;
+            position: fixed;
+            width: 100%;
         }
         
         .bg-wrapper {
@@ -37,17 +39,9 @@
             height: 100%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             z-index: -1;
-            animation: gradientBG 15s ease infinite;
-            background-size: 400% 400%;
         }
         
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        
-        /* TOP NAVIGATION - IMPROVED */
+        /* TOP NAVIGATION */
         .top-nav {
             position: fixed;
             top: 0;
@@ -143,7 +137,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
-        /* SIDEBAR - SIMPLIFIED */
+        /* SIDEBAR */
         .sidebar {
             position: fixed;
             top: 70px;
@@ -335,12 +329,73 @@
             color: var(--gray);
         }
         
-        /* MAIN CHAT AREA - IMPROVED */
+        /* MAIN CHAT AREA */
         .chat-area {
-            margin-top: 70px;
-            height: calc(100vh - 150px);
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 80px;
             display: flex;
             flex-direction: column;
+        }
+        
+        /* REPLY PREVIEW BAR */
+        .reply-preview {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-left: 4px solid var(--primary);
+            padding: 12px 20px;
+            margin: 0;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+            z-index: 5;
+            position: relative;
+        }
+        
+        .reply-info {
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .reply-author {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 13px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .reply-author::before {
+            content: "↪";
+            font-size: 10px;
+        }
+        
+        .reply-text {
+            font-size: 14px;
+            color: var(--dark);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .cancel-reply {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 5px;
+            margin-left: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .cancel-reply:hover {
+            transform: scale(1.2);
         }
         
         .messages-container {
@@ -395,6 +450,8 @@
             border: 1px solid rgba(102, 126, 234, 0.1);
             transition: all 0.3s;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
         
         .message-content:hover {
@@ -435,6 +492,50 @@
             color: rgba(255,255,255,0.8);
         }
         
+        /* REPLY PREVIEW INSIDE MESSAGE */
+        .reply-preview-message {
+            background: rgba(102, 126, 234, 0.08);
+            border-left: 4px solid var(--primary);
+            padding: 10px 15px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+            cursor: default;
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .reply-preview-message .reply-author {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 12px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .reply-preview-message .reply-author::before {
+            content: "↪";
+            font-size: 10px;
+        }
+        
+        .reply-preview-message .reply-text {
+            font-size: 13px;
+            color: var(--dark);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .message.sent .reply-preview-message {
+            background: rgba(255, 255, 255, 0.15);
+            border-left-color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .message.sent .reply-preview-message .reply-author {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
         .message-text {
             font-size: 15px;
             line-height: 1.5;
@@ -445,7 +546,7 @@
             font-size: 12px;
             color: var(--gray);
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-end;
             align-items: center;
             padding-top: 8px;
             border-top: 1px solid rgba(102, 126, 234, 0.1);
@@ -454,6 +555,38 @@
         .message.sent .message-footer {
             color: rgba(255,255,255,0.8);
             border-top-color: rgba(255,255,255,0.2);
+        }
+        
+        /* SWIPE TO REPLY FEATURE */
+        .message-content.swiping {
+            transition: transform 0.1s;
+        }
+        
+        .swipe-indicator {
+            position: absolute;
+            right: -120px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .swipe-indicator.show {
+            opacity: 1;
+            animation: slideIn 0.3s forwards;
+        }
+        
+        @keyframes slideIn {
+            to {
+                right: 20px;
+            }
         }
         
         .system-message {
@@ -478,7 +611,7 @@
         
         /* STICKER SELECTOR */
         .sticker-selector {
-            position: absolute;
+            position: fixed;
             bottom: 90px;
             left: 20px;
             right: 20px;
@@ -801,7 +934,6 @@
             <div class="user-info">
                 <h3 id="profileName">Not Logged In</h3>
                 <p id="profileUsername">Please login first</p>
-                <p id="profileDetails">Tap profile to login</p>
                 <div class="user-status">
                     <span></span> Offline
                 </div>
@@ -853,6 +985,15 @@
     
     <!-- MAIN CHAT AREA -->
     <div class="chat-area">
+        <!-- REPLY PREVIEW -->
+        <div class="reply-preview" id="replyPreview">
+            <div class="reply-info">
+                <div class="reply-author" id="replyAuthor">Replying to User</div>
+                <div class="reply-text" id="replyText">Message text</div>
+            </div>
+            <button class="cancel-reply" onclick="cancelReply()">×</button>
+        </div>
+        
         <div class="messages-container" id="messagesContainer">
             <!-- Messages will load here -->
         </div>
@@ -915,7 +1056,13 @@
         let database, messagesRef, onlineUsersRef, userOnlineRef;
         let currentUser = null;
         let stickersVisible = false;
+        let replyingTo = null;
         let processedMessages = new Set();
+        let swipeStartX = 0;
+        let swipeStartY = 0;
+        let isSwiping = false;
+        let currentSwipeElement = null;
+        let replyMessageCache = new Map();
         
         // ========== INITIALIZATION ==========
         function initializeChat() {
@@ -924,6 +1071,7 @@
             if (currentUser) {
                 initFirebase();
                 setupEventListeners();
+                setupSwipeToReply();
             }
         }
         
@@ -985,7 +1133,6 @@
             
             document.getElementById('profileName').textContent = "Not Logged In";
             document.getElementById('profileUsername').textContent = "Please login first";
-            document.getElementById('profileDetails').textContent = "Tap profile to login";
             document.getElementById('onlineCount').textContent = "0";
             
             const profileAvatar = document.getElementById('profileAvatar');
@@ -1025,7 +1172,12 @@
                     
                     if (!processedMessages.has(message.id)) {
                         processedMessages.add(message.id);
-                        addMessageToUI(message);
+                        
+                        if (message.replyTo) {
+                            getReplyMessage(message.replyTo, message);
+                        } else {
+                            addMessageToUI(message);
+                        }
                     }
                 });
                 
@@ -1042,6 +1194,188 @@
             } catch (error) {
                 console.error('❌ Firebase error:', error);
             }
+        }
+        
+        // ========== SWIPE TO REPLY ==========
+        function setupSwipeToReply() {
+            const messagesContainer = document.getElementById('messagesContainer');
+            
+            messagesContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+            messagesContainer.addEventListener('touchmove', handleTouchMove, { passive: false });
+            messagesContainer.addEventListener('touchend', handleTouchEnd, { passive: true });
+            
+            // Also support mouse for desktop testing
+            messagesContainer.addEventListener('mousedown', handleMouseStart);
+            messagesContainer.addEventListener('mousemove', handleMouseMove);
+            messagesContainer.addEventListener('mouseup', handleMouseEnd);
+            messagesContainer.addEventListener('mouseleave', handleMouseEnd);
+        }
+        
+        function handleTouchStart(e) {
+            const messageElement = e.target.closest('.message.received .message-content');
+            if (!messageElement) return;
+            
+            if (messageElement.closest('.system-message')) return;
+            
+            swipeStartX = e.touches[0].clientX;
+            swipeStartY = e.touches[0].clientY;
+            isSwiping = false;
+            currentSwipeElement = messageElement;
+        }
+        
+        function handleTouchMove(e) {
+            if (!currentSwipeElement) return;
+            
+            const touch = e.touches[0];
+            const deltaX = touch.clientX - swipeStartX;
+            const deltaY = touch.clientY - swipeStartY;
+            
+            // Check if it's a horizontal swipe
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+                isSwiping = true;
+                e.preventDefault();
+                
+                // Limit swipe distance
+                const maxSwipe = 150;
+                const swipeAmount = Math.min(Math.max(deltaX, 0), maxSwipe);
+                
+                // Apply visual feedback
+                currentSwipeElement.style.transform = `translateX(${swipeAmount}px)`;
+                currentSwipeElement.classList.add('swiping');
+                
+                // Show/hide swipe indicator
+                let indicator = currentSwipeElement.querySelector('.swipe-indicator');
+                if (!indicator) {
+                    indicator = document.createElement('div');
+                    indicator.className = 'swipe-indicator';
+                    indicator.textContent = 'Swipe to reply →';
+                    currentSwipeElement.appendChild(indicator);
+                }
+                
+                if (swipeAmount > 50) {
+                    indicator.classList.add('show');
+                } else {
+                    indicator.classList.remove('show');
+                }
+            }
+        }
+        
+        function handleTouchEnd(e) {
+            if (!currentSwipeElement || !isSwiping) {
+                resetSwipe();
+                return;
+            }
+            
+            const touch = e.changedTouches[0];
+            const deltaX = touch.clientX - swipeStartX;
+            
+            // If swiped enough, trigger reply
+            if (deltaX > 80) {
+                const messageElement = currentSwipeElement.closest('.message');
+                const messageId = messageElement.id.replace('message-', '');
+                const messageText = messageElement.querySelector('.message-text').textContent;
+                const messageUser = messageElement.querySelector('.message-user').textContent;
+                
+                setReplyTo(messageId, messageUser, messageText);
+                
+                // Visual feedback
+                currentSwipeElement.style.background = 'rgba(102, 126, 234, 0.1)';
+                setTimeout(() => {
+                    currentSwipeElement.style.background = '';
+                }, 500);
+            }
+            
+            // Reset after delay
+            setTimeout(resetSwipe, 300);
+        }
+        
+        // Mouse handlers for desktop testing
+        function handleMouseStart(e) {
+            if (e.button !== 0) return; // Only left click
+            
+            const messageElement = e.target.closest('.message.received .message-content');
+            if (!messageElement) return;
+            
+            if (messageElement.closest('.system-message')) return;
+            
+            swipeStartX = e.clientX;
+            swipeStartY = e.clientY;
+            isSwiping = false;
+            currentSwipeElement = messageElement;
+        }
+        
+        function handleMouseMove(e) {
+            if (!currentSwipeElement || !isSwiping) return;
+            
+            const deltaX = e.clientX - swipeStartX;
+            const deltaY = e.clientY - swipeStartY;
+            
+            // Apply visual feedback
+            const maxSwipe = 150;
+            const swipeAmount = Math.min(Math.max(deltaX, 0), maxSwipe);
+            currentSwipeElement.style.transform = `translateX(${swipeAmount}px)`;
+            
+            // Show/hide indicator
+            let indicator = currentSwipeElement.querySelector('.swipe-indicator');
+            if (swipeAmount > 50) {
+                if (!indicator) {
+                    indicator = document.createElement('div');
+                    indicator.className = 'swipe-indicator';
+                    indicator.textContent = 'Swipe to reply →';
+                    currentSwipeElement.appendChild(indicator);
+                }
+                indicator.classList.add('show');
+            } else if (indicator) {
+                indicator.classList.remove('show');
+            }
+        }
+        
+        function handleMouseEnd(e) {
+            if (!currentSwipeElement || !isSwiping) {
+                resetSwipe();
+                return;
+            }
+            
+            const deltaX = e.clientX - swipeStartX;
+            
+            if (deltaX > 80) {
+                const messageElement = currentSwipeElement.closest('.message');
+                const messageId = messageElement.id.replace('message-', '');
+                const messageText = messageElement.querySelector('.message-text').textContent;
+                const messageUser = messageElement.querySelector('.message-user').textContent;
+                
+                setReplyTo(messageId, messageUser, messageText);
+            }
+            
+            resetSwipe();
+        }
+        
+        function resetSwipe() {
+            if (currentSwipeElement) {
+                currentSwipeElement.style.transform = '';
+                currentSwipeElement.classList.remove('swiping');
+                const indicator = currentSwipeElement.querySelector('.swipe-indicator');
+                if (indicator) indicator.remove();
+            }
+            isSwiping = false;
+            currentSwipeElement = null;
+        }
+        
+        function setReplyTo(messageId, userName, messageText) {
+            replyingTo = messageId;
+            
+            const replyPreview = document.getElementById('replyPreview');
+            document.getElementById('replyAuthor').textContent = `Replying to ${userName}`;
+            document.getElementById('replyText').textContent = 
+                messageText.length > 50 ? messageText.substring(0, 50) + '...' : messageText;
+            replyPreview.style.display = 'flex';
+            
+            document.getElementById('messageInput').focus();
+        }
+        
+        function cancelReply() {
+            replyingTo = null;
+            document.getElementById('replyPreview').style.display = 'none';
         }
         
         // ========== MESSAGE FUNCTIONS ==========
@@ -1073,7 +1407,10 @@
             const currentTime = Date.now();
             
             Object.entries(users).forEach(([userId, user]) => {
+                // Skip if user is yourself
                 if (userId === currentUser.id) return;
+                
+                // Skip if offline (more than 2 minutes)
                 if (currentTime - user.lastSeen > 120000) return;
                 
                 count++;
@@ -1086,7 +1423,7 @@
                         <div class="user-avatar-small">${user.avatar || '?'}</div>
                         <div class="user-details">
                             <div class="user-name">${user.name}</div>
-                            <div class="user-meta">@${user.username} • ${user.faculty} • Level ${user.level}</div>
+                            <div class="user-meta">@${user.username}</div>
                             <div style="font-size: 11px; color: var(--success); margin-top: 3px;">
                                 ${lastSeenText}
                             </div>
@@ -1128,15 +1465,42 @@
                 Object.entries(messages).forEach(([id, message]) => {
                     message.id = id;
                     processedMessages.add(id);
-                    addMessageToUI(message);
+                    
+                    // Check if this is a reply to another message
+                    if (message.replyTo) {
+                        getReplyMessage(message.replyTo, message);
+                    } else {
+                        addMessageToUI(message);
+                    }
                 });
                 
+                // Scroll to bottom
                 const container = document.getElementById('messagesContainer');
                 container.scrollTop = container.scrollHeight;
             });
         }
         
-        function addMessageToUI(message) {
+        function getReplyMessage(replyToId, message) {
+            // Check cache first
+            if (replyMessageCache.has(replyToId)) {
+                addMessageToUI(message, replyMessageCache.get(replyToId));
+                return;
+            }
+            
+            // Fetch from Firebase
+            messagesRef.child(replyToId).once('value', (snapshot) => {
+                const replyMessage = snapshot.val();
+                if (replyMessage) {
+                    replyMessageCache.set(replyToId, replyMessage);
+                    addMessageToUI(message, replyMessage);
+                } else {
+                    // If original message not found, just show the reply without preview
+                    addMessageToUI(message);
+                }
+            });
+        }
+        
+        function addMessageToUI(message, replyToMessage = null) {
             const container = document.getElementById('messagesContainer');
             const isCurrentUser = message.userId === currentUser?.id;
             const isSystem = message.type === 'system';
@@ -1171,12 +1535,23 @@
                             <span class="message-time">${formatTime(message.timestamp)}</span>
                         </div>
                         <div class="message-text" style="font-size: 48px; line-height: 1; text-align: center;">${message.text}</div>
-                        <div class="message-footer">
-                            <span>${message.faculty} • Level ${message.level}</span>
-                        </div>
                     </div>
                 `;
             } else {
+                // Check if this is a reply
+                let replyPreviewHTML = '';
+                if (replyToMessage) {
+                    const replyText = replyToMessage.text || '';
+                    const replyName = replyToMessage.name || 'Unknown';
+                    
+                    replyPreviewHTML = `
+                        <div class="reply-preview-message">
+                            <div class="reply-author">${replyName}</div>
+                            <div class="reply-text">${replyText.length > 50 ? replyText.substring(0, 50) + '...' : replyText}</div>
+                        </div>
+                    `;
+                }
+                
                 messageContent = `
                     <div class="message-avatar">
                         <div class="user-avatar-small">${message.avatar || '?'}</div>
@@ -1186,10 +1561,8 @@
                             <span class="message-user">${message.name}</span>
                             <span class="message-time">${formatTime(message.timestamp)}</span>
                         </div>
+                        ${replyPreviewHTML}
                         <div class="message-text">${message.text}</div>
-                        <div class="message-footer">
-                            <span>${message.faculty} • Level ${message.level}</span>
-                        </div>
                     </div>
                 `;
             }
@@ -1197,6 +1570,7 @@
             messageDiv.innerHTML = messageContent;
             container.appendChild(messageDiv);
             
+            // Auto-scroll if near bottom
             if (container.scrollHeight - container.scrollTop - container.clientHeight < 100) {
                 container.scrollTop = container.scrollHeight;
             }
@@ -1240,12 +1614,21 @@
                 name: currentUser.name,
                 username: currentUser.username,
                 avatar: currentUser.avatar,
-                faculty: currentUser.faculty,
-                level: currentUser.level,
                 text: text,
                 timestamp: Date.now(),
                 type: 'text'
             };
+            
+            // Add reply info if replying
+            if (replyingTo) {
+                message.replyTo = replyingTo;
+                
+                // Also tag the user in the message
+                const replyAuthor = document.getElementById('replyAuthor').textContent.replace('Replying to ', '');
+                message.text = `@${replyAuthor.split(' ')[0]} ${message.text}`;
+                
+                cancelReply();
+            }
             
             if (messagesRef) {
                 messagesRef.push(message);
@@ -1268,8 +1651,6 @@
                 name: currentUser.name,
                 username: currentUser.username,
                 avatar: currentUser.avatar,
-                faculty: currentUser.faculty,
-                level: currentUser.level,
                 text: sticker,
                 timestamp: Date.now(),
                 type: 'sticker'
@@ -1344,7 +1725,6 @@
             
             document.getElementById('profileName').textContent = currentUser.name;
             document.getElementById('profileUsername').textContent = '@' + currentUser.username;
-            document.getElementById('profileDetails').textContent = `${currentUser.faculty} • Level ${currentUser.level}`;
             
             const profileAvatar = document.getElementById('profileAvatar');
             profileAvatar.textContent = currentUser.avatar;
