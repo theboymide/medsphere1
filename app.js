@@ -1,14 +1,13 @@
 // Add this to your public website (themedsphere.vercel.app)
 // Firebase Config (same as admin panel)
-const firebaseConfig = {
-    apiKey: "AIzaSyA8XaUNfLDq6PYJu-LC0y_5ClAkGNfrLaw",
-    authDomain: "medsphere-c73e4.firebasestorage.app",
-    databaseURL: "https://medsphere-c73e4-default-rtdb.firebaseio.com",
-    projectId: "medsphere-c73e4",
-    storageBucket: "medsphere-c73e4.firebasestorage.app",
-    messagingSenderId: "289749352034",
-    appId: "1:289749352034:web:57fb380ac94433148bdb3b"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJCZ9_AW-fSXSOG84pcWjOXGYoEMRGiw0",
+    authDomain: "themedsphere-261c5.firebaseapp.com",
+    projectId: "themedsphere-261c5",
+    storageBucket: "themedsphere-261c5.firebasestorage.app",
+    messagingSenderId: "1022854801062",
+    appId: "1:1022854801062:web:4679cec5d407f0fcba3667"
+  };
 
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
