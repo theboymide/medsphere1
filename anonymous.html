@@ -2,18 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedSphere - Anonymous Presentation Room</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MedSphere - Anonymous Chat Room</title>
     <style>
         :root {
             --primary: #667eea;
             --secondary: #764ba2;
+            --accent: #FF6B8B;
             --success: #48bb78;
             --danger: #f56565;
             --warning: #ed8936;
             --light: #f7fafc;
             --dark: #2d3748;
             --gray: #718096;
+            --anonymous-bg: #f8f9ff;
+            --anonymous-msg: #ffffff;
+            --anonymous-other: #f0f2ff;
         }
         
         * {
@@ -24,369 +28,296 @@
         }
         
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            overflow: hidden;
+            height: 100vh;
+            position: fixed;
+            width: 100%;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        .bg-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            z-index: -1;
+        }
+        
+        /* TOP NAVIGATION */
+        .top-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            overflow: hidden;
             display: flex;
-            flex-direction: column;
-            height: calc(100vh - 40px);
-        }
-        
-        /* HEADER */
-        .header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 25px 30px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .header-top {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
         }
         
-        .logo {
-            font-size: 28px;
-            font-weight: bold;
+        .nav-left {
             display: flex;
             align-items: center;
             gap: 15px;
         }
         
-        .presenter-badge {
-            background: rgba(255,255,255,0.2);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 14px;
+        .back-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            font-size: 22px;
+            cursor: pointer;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .logo {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .room-info {
+            background: rgba(255, 107, 139, 0.1);
+            padding: 8px 15px;
+            border-radius: 12px;
+            color: var(--accent);
             font-weight: 600;
+            font-size: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
-        .status-indicator {
+        .online-count {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 8px 15px;
+            border-radius: 12px;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 14px;
             display: flex;
             align-items: center;
+            gap: 8px;
+        }
+        
+        /* MAIN CHAT AREA */
+        .chat-area {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 120px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .messages-container {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
             gap: 15px;
         }
         
-        .online-count {
-            background: rgba(255,255,255,0.2);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-weight: 600;
-        }
-        
-        .viewer-mode {
-            background: rgba(255,255,255,0.2);
-            padding: 8px 20px;
-            border-radius: 50px;
-            font-size: 14px;
-            font-weight: 600;
-            color: rgba(255,255,255,0.9);
-        }
-        
-        .header h1 {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-        
-        .header p {
-            opacity: 0.9;
-            font-size: 15px;
-        }
-        
-        /* MAIN CONTENT */
-        .main-content {
+        /* ANONYMOUS MESSAGE STYLES */
+        .message {
             display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-        
-        /* PRESENTER PANEL */
-        .presenter-panel {
-            width: 400px;
-            background: rgba(102, 126, 234, 0.05);
-            border-right: 1px solid rgba(102, 126, 234, 0.1);
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .panel-section {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            border: 1px solid rgba(102, 126, 234, 0.1);
-        }
-        
-        .panel-title {
-            color: var(--dark);
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .panel-title i {
-            font-size: 20px;
-        }
-        
-        .link-input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .link-input {
-            flex: 1;
-            padding: 15px;
-            border: 2px solid rgba(102, 126, 234, 0.2);
-            border-radius: 12px;
-            font-size: 15px;
-            transition: all 0.3s;
-        }
-        
-        .link-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            padding: 15px 25px;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-        }
-        
-        .link-list {
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        
-        .link-item {
-            background: rgba(102, 126, 234, 0.05);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            border-left: 4px solid var(--primary);
-            word-break: break-all;
-        }
-        
-        .link-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .link-time {
-            font-size: 12px;
-            color: var(--gray);
-        }
-        
-        .link-url {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 14px;
-        }
-        
-        .link-url:hover {
-            text-decoration: underline;
-        }
-        
-        .screenshot-area {
-            border: 2px dashed rgba(102, 126, 234, 0.3);
-            border-radius: 15px;
-            padding: 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 20px;
-            background: rgba(102, 126, 234, 0.02);
-        }
-        
-        .screenshot-area:hover {
-            background: rgba(102, 126, 234, 0.05);
-            border-color: var(--primary);
-        }
-        
-        .screenshot-area i {
-            font-size: 40px;
-            color: var(--primary);
-            margin-bottom: 15px;
-            display: block;
-        }
-        
-        .screenshot-preview {
+            gap: 12px;
+            max-width: 85%;
             position: relative;
-            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: messageAppear 0.3s ease forwards;
         }
         
-        .screenshot-preview img {
-            width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        
-        .remove-screenshot {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--danger);
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            line-height: 1;
-        }
-        
-        .screenshot-list {
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        
-        .screenshot-item {
-            margin-bottom: 15px;
-            position: relative;
-        }
-        
-        .screenshot-item img {
-            width: 100%;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-        
-        .screenshot-item img:hover {
-            transform: scale(1.02);
-        }
-        
-        .screenshot-caption {
-            font-size: 12px;
-            color: var(--gray);
-            margin-top: 5px;
-        }
-        
-        /* VIEWER AREA */
-        .viewer-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 25px;
-            background: white;
-        }
-        
-        .content-display {
-            flex: 1;
-            background: rgba(102, 126, 234, 0.03);
-            border-radius: 15px;
-            padding: 30px;
-            overflow-y: auto;
-            border: 1px solid rgba(102, 126, 234, 0.1);
-            margin-bottom: 25px;
-        }
-        
-        .content-item {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-            border: 1px solid rgba(102, 126, 234, 0.1);
-            animation: slideIn 0.3s ease;
-        }
-        
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
+        @keyframes messageAppear {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
         
-        .content-header {
+        .message.other {
+            align-self: flex-start;
+        }
+        
+        .message.own {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+        
+        .anonymous-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #FF8E53);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .message.own .anonymous-avatar {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+        
+        .message-content {
+            background: var(--anonymous-msg);
+            padding: 15px;
+            border-radius: 18px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            max-width: 85%;
+            word-wrap: break-word;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .message.other .message-content {
+            background: var(--anonymous-other);
+            border: 1px solid rgba(255, 107, 139, 0.1);
+        }
+        
+        .message.own .message-content {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .message-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+            margin-bottom: 8px;
         }
         
-        .content-type {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 6px 15px;
-            border-radius: 50px;
+        .message-user {
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .message.other .message-user {
+            color: var(--accent);
+        }
+        
+        .message.own .message-user {
+            color: rgba(255,255,255,0.95);
+        }
+        
+        .message-time {
             font-size: 12px;
-            font-weight: 600;
+            opacity: 0.8;
         }
         
-        .content-time {
-            font-size: 13px;
+        .message.other .message-time {
             color: var(--gray);
         }
         
-        .link-content {
-            word-break: break-all;
+        .message.own .message-time {
+            color: rgba(255,255,255,0.8);
         }
         
-        .link-content a {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
+        .message-text {
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 8px;
         }
         
-        .link-content a:hover {
-            text-decoration: underline;
+        .message-image {
+            margin-top: 10px;
+            border-radius: 12px;
+            overflow: hidden;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
         
-        .screenshot-content img {
-            max-width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        .message-image img {
+            width: 100%;
+            height: auto;
+            display: block;
             cursor: pointer;
-            margin-bottom: 10px;
+            transition: transform 0.3s;
         }
         
-        .screenshot-modal {
+        .message-image img:hover {
+            transform: scale(1.02);
+        }
+        
+        .image-caption {
+            font-size: 13px;
+            color: var(--gray);
+            margin-top: 8px;
+            font-style: italic;
+        }
+        
+        .message.own .image-caption {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .system-message {
+            text-align: center;
+            margin: 10px 0;
+            animation: none;
+            opacity: 1;
+            transform: none;
+            align-self: center;
+            max-width: 80%;
+        }
+        
+        .system-message .message-content {
+            background: linear-gradient(135deg, rgba(255, 107, 139, 0.1), rgba(255, 142, 83, 0.1));
+            color: var(--dark);
+            font-style: italic;
+            display: inline-block;
+            padding: 12px 20px;
+            border: 1px solid rgba(255, 107, 139, 0.2);
+            cursor: default;
+        }
+        
+        /* IMAGE MODAL */
+        .image-modal {
             display: none;
             position: fixed;
             top: 0;
@@ -401,11 +332,17 @@
             padding: 20px;
         }
         
-        .screenshot-modal.active {
+        .image-modal.active {
             display: flex;
+            animation: fadeIn 0.3s;
         }
         
-        .screenshot-modal img {
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-image {
             max-width: 90%;
             max-height: 90%;
             border-radius: 10px;
@@ -427,64 +364,249 @@
             backdrop-filter: blur(10px);
         }
         
-        .viewer-notice {
-            text-align: center;
-            padding: 40px;
-            color: var(--gray);
-        }
-        
-        .viewer-notice i {
-            font-size: 60px;
-            color: rgba(102, 126, 234, 0.3);
-            margin-bottom: 20px;
-            display: block;
-        }
-        
-        .viewer-controls {
+        /* CHAT INPUT AREA */
+        .chat-input-area {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
             padding: 20px;
-            background: rgba(102, 126, 234, 0.05);
-            border-radius: 15px;
+            border-top: 1px solid rgba(102, 126, 234, 0.1);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            align-items: flex-end;
+            gap: 15px;
+            z-index: 1000;
+            height: 120px;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.08);
         }
         
-        .refresh-btn {
+        .input-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 16px 20px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 12px;
+            font-size: 15px;
+            resize: none;
+            max-height: 120px;
+            line-height: 1.5;
+            font-family: inherit;
+            background: rgba(102, 126, 234, 0.05);
+            transition: all 0.3s;
+        }
+        
+        .message-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+        
+        .file-preview {
+            display: none;
+            background: rgba(255, 107, 139, 0.05);
+            border: 2px dashed rgba(255, 107, 139, 0.3);
+            border-radius: 10px;
+            padding: 12px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .file-preview.active {
+            display: flex;
+            animation: slideUp 0.3s;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), #FF8E53);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+        
+        .file-name {
+            font-size: 14px;
+            color: var(--dark);
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 200px;
+        }
+        
+        .remove-file {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 20px;
+            padding: 5px;
+            transition: transform 0.3s;
+        }
+        
+        .remove-file:hover {
+            transform: scale(1.2);
+        }
+        
+        .input-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .input-btn {
             background: rgba(102, 126, 234, 0.1);
             border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
+            font-size: 22px;
+            cursor: pointer;
+            padding: 12px;
             color: var(--primary);
-            font-weight: 600;
-            cursor: pointer;
+            border-radius: 12px;
+            width: 52px;
+            height: 52px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
             transition: all 0.3s;
         }
         
-        .refresh-btn:hover {
+        .input-btn:hover {
             background: rgba(102, 126, 234, 0.2);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
         
-        .clear-btn {
-            background: rgba(245, 101, 101, 0.1);
+        .input-btn.file-btn {
+            background: rgba(255, 107, 139, 0.1);
+            color: var(--accent);
+        }
+        
+        .input-btn.file-btn:hover {
+            background: rgba(255, 107, 139, 0.2);
+            box-shadow: 0 5px 15px rgba(255, 107, 139, 0.3);
+        }
+        
+        .send-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
-            color: var(--danger);
-            font-weight: 600;
-            cursor: pointer;
+            border-radius: 12px;
+            width: 52px;
+            height: 52px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            flex-shrink: 0;
             transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
         
-        .clear-btn:hover {
-            background: rgba(245, 101, 101, 0.2);
-            transform: translateY(-2px);
+        .send-btn:hover {
+            opacity: 0.95;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        }
+        
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* WELCOME SCREEN */
+        .welcome-screen {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--dark);
+        }
+        
+        .welcome-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+        
+        .welcome-screen h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+        
+        .welcome-screen p {
+            color: var(--gray);
+            margin-bottom: 30px;
+            font-size: 16px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .start-btn {
+            background: linear-gradient(135deg, var(--accent), #FF8E53);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(255, 107, 139, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 auto;
+        }
+        
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(255, 107, 139, 0.5);
+        }
+        
+        /* ANONYMOUS RULES */
+        .rules-notice {
+            background: linear-gradient(135deg, rgba(255, 107, 139, 0.1), rgba(255, 142, 83, 0.1));
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--dark);
         }
         
         /* SCROLLBAR */
@@ -506,121 +628,144 @@
             background: linear-gradient(135deg, #5a67d8, #6b46c1);
         }
         
-        /* BACK BUTTON */
-        .back-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border: none;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-            z-index: 1000;
-            transition: all 0.3s;
-            text-decoration: none;
+        /* LOADING STATE */
+        .loading {
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 40px;
+            color: var(--gray);
+            font-size: 15px;
         }
         
-        .back-btn:hover {
-            transform: translateY(-3px) scale(1.1);
-            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+        .loading-spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(102, 126, 234, 0.2);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .top-nav {
+                padding: 0 15px;
+            }
+            
+            .logo {
+                font-size: 18px;
+            }
+            
+            .room-info, .online-count {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            
+            .messages-container {
+                padding: 15px;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .message-image {
+                max-width: 250px;
+            }
+            
+            .chat-input-area {
+                padding: 15px;
+                height: 110px;
+            }
+            
+            .input-btn, .send-btn {
+                width: 48px;
+                height: 48px;
+                font-size: 18px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .message {
+                max-width: 95%;
+            }
+            
+            .message-image {
+                max-width: 200px;
+            }
+            
+            .file-name {
+                max-width: 150px;
+            }
         }
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-btn">←</a>
+    <div class="bg-wrapper"></div>
     
-    <div class="container">
-        <!-- HEADER -->
-        <div class="header">
-            <div class="header-top">
-                <div class="logo">
-                    🎤 Anonymous Presentation Room
-                    <div class="presenter-badge">
-                        <span>👑</span> You are the Presenter
-                    </div>
-                </div>
-                <div class="status-indicator">
-                    <div class="online-count">
-                        👥 <span id="viewerCount">0</span> Viewers
-                    </div>
-                    <div class="viewer-mode">Read-only Mode for Viewers</div>
-                </div>
+    <!-- TOP NAVIGATION -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <a href="index.html" class="back-btn">←</a>
+            <div class="logo">
+                <span>🕵️</span> Anonymous Chat
             </div>
-            <h1>Share links and screenshots with your audience</h1>
-            <p>Only you can post content. Viewers can see updates in real-time but cannot post.</p>
         </div>
-        
-        <!-- MAIN CONTENT -->
-        <div class="main-content">
-            <!-- PRESENTER PANEL -->
-            <div class="presenter-panel">
-                <div class="panel-section">
-                    <div class="panel-title">
-                        🔗 Share Links
-                    </div>
-                    <div class="link-input-group">
-                        <input type="text" class="link-input" id="linkInput" placeholder="https://example.com">
-                        <button class="btn-primary" onclick="postLink()">Post Link</button>
-                    </div>
-                    <div class="link-list" id="linkList">
-                        <!-- Links will appear here -->
-                    </div>
-                </div>
-                
-                <div class="panel-section">
-                    <div class="panel-title">
-                        📸 Share Screenshots
-                    </div>
-                    <div class="screenshot-area" onclick="document.getElementById('fileInput').click()">
-                        <div>🖼️</div>
-                        <div style="font-weight: 600; margin-bottom: 8px;">Click to upload screenshot</div>
-                        <div style="font-size: 13px; color: var(--gray);">PNG, JPG up to 5MB</div>
-                    </div>
-                    <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
-                    
-                    <div class="screenshot-preview" id="screenshotPreview" style="display: none;">
-                        <img id="previewImage" src="" alt="Preview">
-                        <button class="remove-screenshot" onclick="clearPreview()">×</button>
-                        <input type="text" class="link-input" id="captionInput" placeholder="Add a caption (optional)" style="margin-top: 10px;">
-                        <button class="btn-primary" onclick="postScreenshot()" style="margin-top: 10px; width: 100%;">Post Screenshot</button>
-                    </div>
-                    
-                    <div class="screenshot-list" id="screenshotList">
-                        <!-- Screenshot history will appear here -->
-                    </div>
-                </div>
+        <div class="nav-right">
+            <div class="room-info">
+                <span>🔒</span> Everyone is Anonymous
             </div>
-            
-            <!-- VIEWER AREA -->
-            <div class="viewer-area">
-                <div class="content-display" id="contentDisplay">
-                    <!-- Content will appear here for both presenter and viewers -->
-                </div>
-                
-                <div class="viewer-controls">
-                    <button class="refresh-btn" onclick="refreshContent()">
-                        🔄 Refresh View
-                    </button>
-                    <button class="clear-btn" onclick="clearAllContent()">
-                        🗑️ Clear All (Presenter Only)
-                    </button>
-                </div>
+            <div class="online-count">
+                <span>👥</span> <span id="onlineCount">0</span> Online
             </div>
+        </div>
+    </nav>
+    
+    <!-- IMAGE MODAL -->
+    <div class="image-modal" id="imageModal" onclick="closeImageModal()">
+        <img class="modal-image" id="modalImage" src="" alt="Full size">
+        <button class="close-modal" onclick="closeImageModal()">×</button>
+    </div>
+    
+    <!-- MAIN CHAT AREA -->
+    <div class="chat-area">
+        <div class="messages-container" id="messagesContainer">
+            <!-- Messages will load here -->
         </div>
     </div>
     
-    <!-- SCREENSHOT MODAL -->
-    <div class="screenshot-modal" id="screenshotModal" onclick="closeModal()">
-        <img id="modalImage" src="" alt="Full size">
-        <button class="close-modal" onclick="closeModal()">×</button>
+    <!-- CHAT INPUT -->
+    <div class="chat-input-area">
+        <div class="input-wrapper">
+            <textarea class="message-input" id="messageInput" 
+                      placeholder="Type your anonymous message here..." 
+                      rows="1"></textarea>
+            
+            <div class="file-preview" id="filePreview">
+                <div class="file-info">
+                    <div class="file-icon">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <div class="file-name" id="fileName">image.jpg</div>
+                </div>
+                <button class="remove-file" onclick="removeFile()">×</button>
+            </div>
+        </div>
+        
+        <div class="input-buttons">
+            <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+            <button class="input-btn file-btn" onclick="document.getElementById('fileInput').click()">
+                📷
+            </button>
+            <button class="send-btn" onclick="sendMessage()" id="sendButton">↑</button>
+        </div>
     </div>
 
     <!-- Firebase SDK -->
@@ -641,208 +786,322 @@
         
         // ========== GLOBAL VARIABLES ==========
         let database, storage;
-        let contentRef, viewersRef, presenterRef;
+        let messagesRef, onlineUsersRef, userOnlineRef;
         let currentUser = null;
-        let isPresenter = false;
         let selectedFile = null;
-        let viewerId = null;
+        let userId = null;
+        let userColor = null;
+        let processedMessages = new Set();
         
         // ========== INITIALIZATION ==========
-        async function initializeApp() {
-            // Generate unique ID for this viewer/presenter
-            viewerId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        function initializeChat() {
+            // Generate anonymous user ID and color
+            userId = 'anon_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            userColor = generateRandomColor();
             
-            // Check if user wants to be presenter
-            const urlParams = new URLSearchParams(window.location.search);
-            isPresenter = urlParams.has('presenter') || localStorage.getItem('presenter_key') === 'true';
-            
-            if (isPresenter) {
-                localStorage.setItem('presenter_key', 'true');
-            } else {
-                // Check for secret presenter key
-                const storedKey = localStorage.getItem('presenter_key');
-                if (storedKey === 'true') {
-                    isPresenter = true;
-                }
-            }
-            
-            initializeFirebase();
+            initFirebase();
             setupEventListeners();
-            loadContent();
+            showWelcomeScreen();
+        }
+        
+        function generateRandomColor() {
+            const colors = [
+                '#FF6B8B', '#FF8E53', '#48bb78', '#667eea', 
+                '#764ba2', '#ed8936', '#f56565', '#2DD4BF'
+            ];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+        
+        function getAnonymousName() {
+            const adjectives = ['Mysterious', 'Secret', 'Hidden', 'Unknown', 'Silent', 'Quiet', 'Shadow', 'Ghost'];
+            const animals = ['Fox', 'Owl', 'Panther', 'Wolf', 'Raven', 'Hawk', 'Lynx', 'Falcon'];
+            const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
+            const animal = animals[Math.floor(Math.random() * animals.length)];
+            return `${adj} ${animal}`;
+        }
+        
+        function showWelcomeScreen() {
+            const messagesContainer = document.getElementById('messagesContainer');
+            const anonymousName = getAnonymousName();
             
-            if (isPresenter) {
-                markPresenterOnline();
-                showPresenterControls();
-            } else {
-                showViewerNotice();
+            messagesContainer.innerHTML = `
+                <div class="welcome-screen">
+                    <div class="welcome-icon">🕵️‍♂️</div>
+                    <h2>Welcome to Anonymous Chat</h2>
+                    <p>Chat with other students completely anonymously. Your identity is hidden, and everyone gets a random name.</p>
+                    <div class="rules-notice">
+                        <strong>Rules:</strong> Be respectful. No personal information. No harassment.
+                    </div>
+                    <p>Your anonymous name: <strong style="color: ${userColor};">${anonymousName}</strong></p>
+                    <button class="start-btn" onclick="enterChat('${anonymousName}')">
+                        <i class="fas fa-door-open"></i> Enter Chat Room
+                    </button>
+                </div>
+            `;
+            
+            // Disable input until user enters
+            document.getElementById('messageInput').disabled = true;
+            document.getElementById('sendButton').disabled = true;
+        }
+        
+        function enterChat(anonymousName) {
+            currentUser = {
+                id: userId,
+                name: anonymousName,
+                color: userColor,
+                avatar: getAvatarLetter(anonymousName)
+            };
+            
+            // Enable input
+            document.getElementById('messageInput').disabled = false;
+            document.getElementById('sendButton').disabled = false;
+            document.getElementById('messageInput').focus();
+            
+            // Clear welcome screen
+            const messagesContainer = document.getElementById('messagesContainer');
+            messagesContainer.innerHTML = '';
+            
+            // Add welcome message
+            const welcomeMessage = {
+                id: 'welcome_' + Date.now(),
+                type: 'system',
+                text: `👤 ${anonymousName} has entered the chat`,
+                timestamp: Date.now()
+            };
+            
+            if (messagesRef) {
+                messagesRef.push(welcomeMessage);
             }
         }
         
-        function initializeFirebase() {
+        function getAvatarLetter(name) {
+            return name.split(' ').map(word => word[0]).join('').toUpperCase().substring(0, 2);
+        }
+        
+        function initFirebase() {
             try {
                 firebase.initializeApp(firebaseConfig);
                 database = firebase.database();
                 storage = firebase.storage();
                 
-                contentRef = database.ref('anonymous_content');
-                viewersRef = database.ref('anonymous_viewers');
-                presenterRef = database.ref('presenter_status');
+                messagesRef = database.ref('anonymous_messages');
+                onlineUsersRef = database.ref('anonymous_online');
                 
-                // Mark viewer as online
-                const viewerData = {
-                    id: viewerId,
-                    lastSeen: Date.now(),
-                    isPresenter: isPresenter
-                };
-                
-                const viewerOnlineRef = viewersRef.child(viewerId);
-                viewerOnlineRef.set(viewerData);
-                viewerOnlineRef.onDisconnect().remove();
-                
-                // Listen for content updates
-                contentRef.on('child_added', (snapshot) => {
-                    const content = snapshot.val();
-                    content.id = snapshot.key;
-                    addContentToDisplay(content);
-                });
-                
-                contentRef.on('child_removed', (snapshot) => {
-                    const contentId = snapshot.key;
-                    removeContentFromDisplay(contentId);
-                });
-                
-                // Update viewer count
-                viewersRef.on('value', (snapshot) => {
-                    updateViewerCount(snapshot.val());
-                });
+                // Mark user as online
+                markUserOnline();
                 
                 console.log('✅ Firebase initialized');
+                
+                // Load recent messages
+                loadMessages();
+                
+                // Listen for new messages
+                messagesRef.on('child_added', (snapshot) => {
+                    const message = snapshot.val();
+                    message.id = snapshot.key;
+                    
+                    if (!processedMessages.has(message.id)) {
+                        processedMessages.add(message.id);
+                        addMessageToUI(message);
+                    }
+                });
+                
+                messagesRef.on('child_removed', (snapshot) => {
+                    const messageId = snapshot.key;
+                    processedMessages.delete(messageId);
+                    removeMessageFromUI(messageId);
+                });
+                
+                // Update online users count
+                onlineUsersRef.on('value', (snapshot) => {
+                    updateOnlineCount(snapshot.val());
+                });
                 
             } catch (error) {
                 console.error('❌ Firebase error:', error);
             }
         }
         
-        function markPresenterOnline() {
-            if (!presenterRef || !isPresenter) return;
+        function markUserOnline() {
+            if (!onlineUsersRef) return;
             
-            presenterRef.set({
-                online: true,
-                lastActive: Date.now(),
-                viewerId: viewerId
-            });
+            const userData = {
+                id: userId,
+                lastSeen: Date.now(),
+                name: currentUser ? currentUser.name : 'Anonymous'
+            };
             
-            presenterRef.onDisconnect().set({
-                online: false,
-                lastActive: Date.now()
-            });
+            userOnlineRef = onlineUsersRef.child(userId);
+            userOnlineRef.set(userData);
+            userOnlineRef.onDisconnect().remove();
         }
         
-        function updateViewerCount(viewers) {
-            if (!viewers) {
-                document.getElementById('viewerCount').textContent = '0';
+        function updateOnlineCount(users) {
+            if (!users) {
+                document.getElementById('onlineCount').textContent = '0';
                 return;
             }
             
             let count = 0;
             const currentTime = Date.now();
             
-            Object.values(viewers).forEach(viewer => {
+            Object.values(users).forEach(user => {
                 // Count as online if seen within 2 minutes
-                if (currentTime - viewer.lastSeen < 120000) {
+                if (currentTime - user.lastSeen < 120000) {
                     count++;
                 }
             });
             
-            document.getElementById('viewerCount').textContent = count;
+            document.getElementById('onlineCount').textContent = count;
         }
         
-        // ========== CONTENT FUNCTIONS ==========
-        async function postLink() {
-            if (!isPresenter) {
-                alert('Only the presenter can post links!');
+        // ========== MESSAGE FUNCTIONS ==========
+        function loadMessages() {
+            if (!messagesRef) return;
+            
+            messagesRef.limitToLast(50).once('value', (snapshot) => {
+                const messages = snapshot.val();
+                if (!messages) return;
+                
+                Object.entries(messages).forEach(([id, message]) => {
+                    message.id = id;
+                    processedMessages.add(id);
+                    addMessageToUI(message);
+                });
+                
+                // Scroll to bottom
+                const container = document.getElementById('messagesContainer');
+                container.scrollTop = container.scrollHeight;
+            });
+        }
+        
+        function addMessageToUI(message) {
+            const container = document.getElementById('messagesContainer');
+            
+            // Check if already exists
+            if (document.getElementById(`message-${message.id}`)) return;
+            
+            const isCurrentUser = message.userId === userId;
+            const isSystem = message.type === 'system';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isCurrentUser ? 'own' : 'other'} ${isSystem ? 'system-message' : ''}`;
+            messageDiv.id = `message-${message.id}`;
+            
+            const time = new Date(message.timestamp).toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            
+            let messageContent = '';
+            
+            if (isSystem) {
+                messageContent = `
+                    <div class="message-content">
+                        ${message.text}
+                    </div>
+                `;
+            } else {
+                const userColor = message.color || '#667eea';
+                const avatarLetter = message.avatar || '??';
+                
+                messageContent = `
+                    <div class="message-avatar">
+                        <div class="anonymous-avatar" style="background: ${userColor};">${avatarLetter}</div>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <div class="message-user" style="color: ${userColor};">
+                                <i class="fas fa-user-secret"></i> ${message.name}
+                            </div>
+                            <div class="message-time">${time}</div>
+                        </div>
+                        ${message.text ? `<div class="message-text">${message.text}</div>` : ''}
+                        ${message.imageUrl ? `
+                            <div class="message-image">
+                                <img src="${message.imageUrl}" alt="Shared image" onclick="openImageModal('${message.imageUrl}')">
+                                ${message.caption ? `<div class="image-caption">${message.caption}</div>` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+            
+            messageDiv.innerHTML = messageContent;
+            container.appendChild(messageDiv);
+            
+            // Auto-scroll if near bottom
+            if (container.scrollHeight - container.scrollTop - container.clientHeight < 100) {
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+        
+        function removeMessageFromUI(messageId) {
+            const messageElement = document.getElementById(`message-${messageId}`);
+            if (messageElement) {
+                messageElement.remove();
+            }
+        }
+        
+        async function sendMessage() {
+            if (!currentUser) {
+                alert('Please enter the chat first!');
                 return;
             }
             
-            const linkInput = document.getElementById('linkInput');
-            const url = linkInput.value.trim();
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
             
-            if (!url) {
-                alert('Please enter a URL');
-                return;
+            // Check if we have either text or file
+            if (!text && !selectedFile) return;
+            
+            let imageUrl = null;
+            let caption = null;
+            
+            // Upload image if selected
+            if (selectedFile) {
+                try {
+                    imageUrl = await uploadImage(selectedFile);
+                    caption = text || 'Shared image';
+                } catch (error) {
+                    console.error('Upload error:', error);
+                    alert('Error uploading image. Please try again.');
+                    return;
+                }
             }
             
-            // Validate URL
-            try {
-                new URL(url);
-            } catch {
-                alert('Please enter a valid URL');
-                return;
-            }
-            
-            const content = {
-                type: 'link',
-                url: url,
+            const message = {
+                userId: userId,
+                name: currentUser.name,
+                color: currentUser.color,
+                avatar: currentUser.avatar,
+                text: text,
+                imageUrl: imageUrl,
+                caption: caption,
                 timestamp: Date.now(),
-                presenterId: viewerId,
-                caption: `Shared link: ${url}`
+                type: 'message'
             };
             
-            if (contentRef) {
-                await contentRef.push(content);
-                linkInput.value = '';
-                
-                // Add to local history
-                addLinkToHistory(url);
+            if (messagesRef) {
+                await messagesRef.push(message);
             }
+            
+            // Clear input
+            input.value = '';
+            input.style.height = 'auto';
+            
+            // Clear file selection
+            removeFile();
         }
         
-        async function postScreenshot() {
-            if (!isPresenter) {
-                alert('Only the presenter can post screenshots!');
-                return;
-            }
-            
-            if (!selectedFile) {
-                alert('Please select an image first');
-                return;
-            }
-            
-            const captionInput = document.getElementById('captionInput');
-            const caption = captionInput.value.trim() || 'Screenshot shared by presenter';
-            
-            // Upload to Firebase Storage
+        async function uploadImage(file) {
             const storageRef = storage.ref();
-            const fileRef = storageRef.child(`screenshots/${Date.now()}_${selectedFile.name}`);
+            const fileRef = storageRef.child(`anonymous_images/${Date.now()}_${file.name}`);
             
-            try {
-                const snapshot = await fileRef.put(selectedFile);
-                const downloadURL = await snapshot.ref.getDownloadURL();
-                
-                const content = {
-                    type: 'screenshot',
-                    imageUrl: downloadURL,
-                    caption: caption,
-                    timestamp: Date.now(),
-                    presenterId: viewerId,
-                    fileName: selectedFile.name
-                };
-                
-                if (contentRef) {
-                    await contentRef.push(content);
-                    
-                    // Clear preview
-                    clearPreview();
-                    captionInput.value = '';
-                    
-                    // Add to local history
-                    addScreenshotToHistory(downloadURL, caption);
-                }
-                
-            } catch (error) {
-                console.error('Upload error:', error);
-                alert('Error uploading screenshot. Please try again.');
-            }
+            const snapshot = await fileRef.put(file);
+            const downloadURL = await snapshot.ref.getDownloadURL();
+            
+            return downloadURL;
         }
         
         function handleFileSelect(event) {
@@ -864,270 +1123,72 @@
             selectedFile = file;
             
             // Show preview
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('previewImage').src = e.target.result;
-                document.getElementById('screenshotPreview').style.display = 'block';
-            };
-            reader.readAsDataURL(file);
+            const preview = document.getElementById('filePreview');
+            const fileName = document.getElementById('fileName');
+            
+            fileName.textContent = file.name.length > 30 ? file.name.substring(0, 27) + '...' : file.name;
+            preview.classList.add('active');
         }
         
-        function clearPreview() {
+        function removeFile() {
             selectedFile = null;
-            document.getElementById('screenshotPreview').style.display = 'none';
             document.getElementById('fileInput').value = '';
-        }
-        
-        function loadContent() {
-            if (!contentRef) return;
-            
-            contentRef.limitToLast(20).once('value', (snapshot) => {
-                const contents = snapshot.val();
-                if (!contents) {
-                    if (isPresenter) {
-                        addContentToDisplay({
-                            id: 'welcome',
-                            type: 'system',
-                            caption: 'Welcome! Start sharing links and screenshots with your audience.',
-                            timestamp: Date.now()
-                        });
-                    }
-                    return;
-                }
-                
-                Object.entries(contents).forEach(([id, content]) => {
-                    content.id = id;
-                    addContentToDisplay(content);
-                });
-                
-                // Scroll to bottom
-                const container = document.getElementById('contentDisplay');
-                container.scrollTop = container.scrollHeight;
-            });
-        }
-        
-        function addContentToDisplay(content) {
-            const container = document.getElementById('contentDisplay');
-            
-            // Check if already exists
-            if (document.getElementById(`content-${content.id}`)) return;
-            
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'content-item';
-            contentDiv.id = `content-${content.id}`;
-            
-            const time = new Date(content.timestamp).toLocaleTimeString([], { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            
-            let contentHTML = '';
-            
-            if (content.type === 'link') {
-                contentHTML = `
-                    <div class="content-header">
-                        <div class="content-type">🔗 LINK</div>
-                        <div class="content-time">${time}</div>
-                    </div>
-                    <div class="link-content">
-                        <a href="${content.url}" target="_blank" rel="noopener noreferrer">
-                            ${content.url}
-                        </a>
-                        ${content.caption ? `<p style="margin-top: 10px; color: var(--gray);">${content.caption}</p>` : ''}
-                    </div>
-                `;
-            } else if (content.type === 'screenshot') {
-                contentHTML = `
-                    <div class="content-header">
-                        <div class="content-type">📸 SCREENSHOT</div>
-                        <div class="content-time">${time}</div>
-                    </div>
-                    <div class="screenshot-content">
-                        <img src="${content.imageUrl}" 
-                             alt="${content.caption || 'Screenshot'}"
-                             onclick="openModal('${content.imageUrl}')">
-                        <p style="margin-top: 10px; color: var(--gray);">${content.caption}</p>
-                    </div>
-                `;
-            } else if (content.type === 'system') {
-                contentHTML = `
-                    <div class="content-header">
-                        <div class="content-type">ℹ️ SYSTEM</div>
-                        <div class="content-time">${time}</div>
-                    </div>
-                    <div style="color: var(--gray);">
-                        ${content.caption}
-                    </div>
-                `;
-            }
-            
-            contentDiv.innerHTML = contentHTML;
-            container.appendChild(contentDiv);
-            
-            // Auto-scroll if near bottom
-            if (container.scrollHeight - container.scrollTop - container.clientHeight < 100) {
-                container.scrollTop = container.scrollHeight;
-            }
-        }
-        
-        function removeContentFromDisplay(contentId) {
-            const element = document.getElementById(`content-${contentId}`);
-            if (element) {
-                element.remove();
-            }
-        }
-        
-        function addLinkToHistory(url) {
-            const linkList = document.getElementById('linkList');
-            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            
-            const linkItem = document.createElement('div');
-            linkItem.className = 'link-item';
-            linkItem.innerHTML = `
-                <div class="link-item-header">
-                    <div>🔗</div>
-                    <div class="link-time">${time}</div>
-                </div>
-                <a href="${url}" class="link-url" target="_blank">${url}</a>
-            `;
-            
-            linkList.prepend(linkItem);
-            
-            // Limit history to 10 items
-            const items = linkList.querySelectorAll('.link-item');
-            if (items.length > 10) {
-                items[items.length - 1].remove();
-            }
-        }
-        
-        function addScreenshotToHistory(imageUrl, caption) {
-            const screenshotList = document.getElementById('screenshotList');
-            const shortCaption = caption.length > 30 ? caption.substring(0, 30) + '...' : caption;
-            
-            const screenshotItem = document.createElement('div');
-            screenshotItem.className = 'screenshot-item';
-            screenshotItem.innerHTML = `
-                <img src="${imageUrl}" alt="${shortCaption}" onclick="openModal('${imageUrl}')">
-                <div class="screenshot-caption">${shortCaption}</div>
-            `;
-            
-            screenshotList.prepend(screenshotItem);
-            
-            // Limit history to 5 items
-            const items = screenshotList.querySelectorAll('.screenshot-item');
-            if (items.length > 5) {
-                items[items.length - 1].remove();
-            }
+            document.getElementById('filePreview').classList.remove('active');
         }
         
         // ========== UI FUNCTIONS ==========
-        function showPresenterControls() {
-            // Presenter controls are already visible by default
-            document.querySelector('.presenter-panel').style.display = 'flex';
-        }
-        
-        function showViewerNotice() {
-            const presenterPanel = document.querySelector('.presenter-panel');
-            if (presenterPanel) {
-                presenterPanel.innerHTML = `
-                    <div class="panel-section" style="text-align: center;">
-                        <div style="font-size: 60px; color: rgba(102, 126, 234, 0.3); margin-bottom: 20px;">👀</div>
-                        <h3 style="margin-bottom: 10px;">You are a Viewer</h3>
-                        <p style="color: var(--gray); margin-bottom: 20px;">
-                            You can see what the presenter shares in real-time, but cannot post content.
-                        </p>
-                        <button class="btn-primary" onclick="becomePresenter()" style="width: 100%;">
-                            Become Presenter
-                        </button>
-                        <p style="font-size: 12px; color: var(--gray); margin-top: 10px;">
-                            Only if you have the presenter link
-                        </p>
-                    </div>
-                `;
-            }
-        }
-        
-        function becomePresenter() {
-            const key = prompt('Enter presenter key:');
-            if (key === 'medsphere2024') {
-                localStorage.setItem('presenter_key', 'true');
-                location.reload();
-            } else {
-                alert('Invalid presenter key');
-            }
-        }
-        
-        function openModal(imageUrl) {
+        function openImageModal(imageUrl) {
             document.getElementById('modalImage').src = imageUrl;
-            document.getElementById('screenshotModal').classList.add('active');
+            document.getElementById('imageModal').classList.add('active');
         }
         
-        function closeModal() {
-            document.getElementById('screenshotModal').classList.remove('active');
-        }
-        
-        function refreshContent() {
-            const container = document.getElementById('contentDisplay');
-            container.scrollTop = container.scrollHeight;
-        }
-        
-        async function clearAllContent() {
-            if (!isPresenter) {
-                alert('Only the presenter can clear content!');
-                return;
-            }
-            
-            if (!confirm('Are you sure you want to clear all content? This cannot be undone.')) {
-                return;
-            }
-            
-            if (contentRef) {
-                await contentRef.remove();
-                
-                // Clear local history
-                document.getElementById('linkList').innerHTML = '';
-                document.getElementById('screenshotList').innerHTML = '';
-                document.getElementById('contentDisplay').innerHTML = '';
-                
-                // Add welcome message
-                addContentToDisplay({
-                    id: 'cleared',
-                    type: 'system',
-                    caption: 'Content cleared. Presenter can start sharing new content.',
-                    timestamp: Date.now()
-                });
-            }
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.remove('active');
         }
         
         function setupEventListeners() {
-            // Auto-focus link input for presenter
-            if (isPresenter) {
-                setTimeout(() => {
-                    const linkInput = document.getElementById('linkInput');
-                    if (linkInput) linkInput.focus();
-                }, 500);
-            }
+            const input = document.getElementById('messageInput');
             
-            // Close modal on escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeModal();
+            input.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+            
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
                 }
             });
             
-            // Handle Enter key in link input
-            const linkInput = document.getElementById('linkInput');
-            if (linkInput) {
-                linkInput.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') {
-                        postLink();
-                    }
-                });
-            }
+            // Close modal on escape
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeImageModal();
+                }
+            });
         }
         
         // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', initializeApp);
+        document.addEventListener('DOMContentLoaded', initializeChat);
+        
+        // Handle page unload
+        window.addEventListener('beforeunload', function() {
+            if (userOnlineRef) {
+                userOnlineRef.remove();
+            }
+            
+            // Send leave message if user was in chat
+            if (currentUser && messagesRef) {
+                const leaveMessage = {
+                    type: 'system',
+                    text: `👤 ${currentUser.name} has left the chat`,
+                    timestamp: Date.now()
+                };
+                
+                messagesRef.push(leaveMessage);
+            }
+        });
     </script>
 </body>
 </html>
