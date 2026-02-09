@@ -135,6 +135,18 @@
             box-shadow: var(--shadow-md);
         }
         
+        /* ANONYMOUS BUTTON STYLE */
+        .nav-link.anonymous-btn {
+            background: linear-gradient(135deg, #FF6B8B 0%, #FF8E53 100%);
+            color: white;
+        }
+        
+        .nav-link.anonymous-btn:hover {
+            background: linear-gradient(135deg, #FF8E53 0%, #FF6B8B 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 107, 139, 0.3);
+        }
+        
         /* ===== HERO SECTION ===== */
         .hero {
             padding: 80px 0 40px;
@@ -676,6 +688,10 @@
                     </a>
                     <a href="#chat-section" class="nav-link">
                         <i class="fas fa-comments"></i> Chat
+                    </a>
+                    <!-- ADDED ANONYMOUS CHAT BUTTON -->
+                    <a href="anonymous.html" class="nav-link anonymous-btn" target="_blank">
+                        <i class="fas fa-user-secret"></i> Anonymous
                     </a>
                 </nav>
             </div>
