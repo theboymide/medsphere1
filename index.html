@@ -21,7 +21,7 @@
     --bio: #00e676;
     --phy: #00d4ff;
     --chem: #ff6b35;
-    --math: #ffd600;
+    --eng: #c084fc;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -74,10 +74,7 @@
     animation: fadeDown 0.6s ease both;
   }
 
-  .logo-badge::before {
-    content: '●';
-    animation: pulse 1.5s ease infinite;
-  }
+  .logo-badge::before { content: '●'; animation: pulse 1.5s ease infinite; }
 
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
   @keyframes fadeDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:none} }
@@ -98,647 +95,143 @@
     -webkit-text-fill-color: transparent;
   }
 
-  .subtitle {
-    font-size: 1.05rem;
-    color: var(--muted);
-    margin-bottom: 3rem;
-    animation: fadeDown 0.7s 0.2s ease both;
-  }
+  .subtitle { font-size: 1.05rem; color: var(--muted); margin-bottom: 3rem; animation: fadeDown 0.7s 0.2s ease both; }
 
-  .stats-row {
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 3rem;
-    animation: fadeUp 0.7s 0.3s ease both;
-  }
+  .stats-row { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 3rem; animation: fadeUp 0.7s 0.3s ease both; }
 
-  .stat-pill {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
-    text-align: center;
-  }
+  .stat-pill { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.5rem; text-align: center; }
+  .stat-pill .num { font-size: 1.8rem; font-weight: 800; display: block; }
+  .stat-pill .lbl { font-size: 0.75rem; color: var(--muted); font-family: 'Space Mono', monospace; letter-spacing: 0.05em; }
 
-  .stat-pill .num {
-    font-size: 1.8rem;
-    font-weight: 800;
-    display: block;
-  }
+  .subject-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 3rem; max-width: 420px; width: 100%; animation: fadeUp 0.7s 0.4s ease both; }
 
-  .stat-pill .lbl {
-    font-size: 0.75rem;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 0.05em;
-  }
-
-  .subject-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-    margin-bottom: 3rem;
-    max-width: 420px;
-    width: 100%;
-    animation: fadeUp 0.7s 0.4s ease both;
-  }
-
-  .subject-tag {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-  }
-
-  .subject-tag .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-
+  .subject-tag { display: flex; align-items: center; gap: 0.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.75rem 1rem; font-size: 0.9rem; font-weight: 600; }
+  .subject-tag .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
   .dot-bio { background: var(--bio); }
   .dot-phy { background: var(--phy); }
   .dot-chem { background: var(--chem); }
-  .dot-math { background: var(--math); }
+  .dot-eng { background: var(--eng); }
 
-  .info-box {
-    background: rgba(255,214,0,0.07);
-    border: 1px solid rgba(255,214,0,0.2);
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
-    font-size: 0.85rem;
-    color: var(--yellow);
-    margin-bottom: 2.5rem;
-    max-width: 420px;
-    animation: fadeUp 0.7s 0.5s ease both;
-    font-family: 'Space Mono', monospace;
-  }
+  .info-box { background: rgba(255,214,0,0.07); border: 1px solid rgba(255,214,0,0.2); border-radius: 12px; padding: 1rem 1.5rem; font-size: 0.85rem; color: var(--yellow); margin-bottom: 2.5rem; max-width: 420px; animation: fadeUp 0.7s 0.5s ease both; font-family: 'Space Mono', monospace; }
 
-  .btn-start {
-    background: linear-gradient(135deg, var(--accent), #7b61ff);
-    color: #fff;
-    border: none;
-    border-radius: 14px;
-    padding: 1.1rem 3rem;
-    font-size: 1.1rem;
-    font-weight: 700;
-    font-family: 'Syne', sans-serif;
-    cursor: pointer;
-    letter-spacing: 0.03em;
-    transition: transform 0.2s, box-shadow 0.2s;
-    animation: fadeUp 0.7s 0.6s ease both;
-    box-shadow: 0 0 30px rgba(0,212,255,0.25);
-  }
-
+  .btn-start { background: linear-gradient(135deg, var(--accent), #7b61ff); color: #fff; border: none; border-radius: 14px; padding: 1.1rem 3rem; font-size: 1.1rem; font-weight: 700; font-family: 'Syne', sans-serif; cursor: pointer; letter-spacing: 0.03em; transition: transform 0.2s, box-shadow 0.2s; animation: fadeUp 0.7s 0.6s ease both; box-shadow: 0 0 30px rgba(0,212,255,0.25); }
   .btn-start:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,212,255,0.4); }
-  .btn-start:active { transform: translateY(0); }
 
-  /* ---- EXAM SCREEN ---- */
-  #exam {
-    display: none;
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
-    padding: 0;
-  }
+  /* ---- EXAM ---- */
+  #exam { display: none; position: relative; z-index: 1; min-height: 100vh; }
 
-  .exam-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(10,14,26,0.95);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: 0.75rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
-
-  .exam-title {
-    font-size: 1rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-  }
-
+  .exam-header { position: sticky; top: 0; z-index: 100; background: rgba(10,14,26,0.95); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); padding: 0.75rem 1.5rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .exam-title { font-size: 1rem; font-weight: 700; letter-spacing: 0.02em; }
   .exam-title span { color: var(--accent); }
 
-  .timer-box {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 0.5rem 1rem;
-    font-family: 'Space Mono', monospace;
-    font-size: 1.1rem;
-    font-weight: 700;
-    min-width: 90px;
-    justify-content: center;
-  }
-
+  .timer-box { display: flex; align-items: center; gap: 0.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 0.5rem 1rem; font-family: 'Space Mono', monospace; font-size: 1.1rem; font-weight: 700; min-width: 90px; justify-content: center; }
   .timer-box.warning { border-color: var(--yellow); color: var(--yellow); }
   .timer-box.danger { border-color: var(--red); color: var(--red); animation: timerFlash 0.5s ease infinite alternate; }
   @keyframes timerFlash { from{background:var(--card)} to{background:rgba(255,61,90,0.15)} }
 
-  .progress-info {
-    font-size: 0.8rem;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-  }
+  .progress-info { font-size: 0.8rem; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .progress-bar-wrap { width: 100%; height: 3px; background: rgba(255,255,255,0.05); }
+  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent), #7b61ff); transition: width 0.3s ease; }
 
-  .progress-bar-wrap {
-    width: 100%;
-    height: 3px;
-    background: rgba(255,255,255,0.05);
-  }
+  .exam-body { display: flex; min-height: calc(100vh - 80px); }
 
-  .progress-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), #7b61ff);
-    transition: width 0.3s ease;
-  }
+  .nav-sidebar { width: 220px; flex-shrink: 0; background: var(--surface); border-right: 1px solid var(--border); padding: 1rem; overflow-y: auto; max-height: calc(100vh - 80px); position: sticky; top: 80px; }
+  .nav-sidebar h3 { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 0.75rem; text-transform: uppercase; }
 
-  .exam-body {
-    display: flex;
-    gap: 0;
-    min-height: calc(100vh - 80px);
-  }
+  .nav-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
 
-  /* Sidebar nav */
-  .nav-sidebar {
-    width: 220px;
-    flex-shrink: 0;
-    background: var(--surface);
-    border-right: 1px solid var(--border);
-    padding: 1rem;
-    overflow-y: auto;
-    max-height: calc(100vh - 80px);
-    position: sticky;
-    top: 80px;
-  }
-
-  .nav-sidebar h3 {
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    margin-bottom: 0.75rem;
-    text-transform: uppercase;
-  }
-
-  .nav-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 4px;
-  }
-
-  .nav-btn {
-    aspect-ratio: 1;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--muted);
-    font-size: 0.65rem;
-    font-family: 'Space Mono', monospace;
-    cursor: pointer;
-    transition: all 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
+  .nav-btn { aspect-ratio: 1; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 0.65rem; font-family: 'Space Mono', monospace; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; }
   .nav-btn:hover { border-color: var(--accent); color: var(--accent); }
   .nav-btn.answered { background: rgba(0,230,118,0.15); border-color: var(--green); color: var(--green); }
   .nav-btn.active { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 700; }
   .nav-btn.answered.active { background: var(--green); border-color: var(--green); color: #000; }
 
-  .legend {
-    margin-top: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
+  .legend { margin-top: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.7rem; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0; }
 
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.7rem;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-  }
+  .question-panel { flex: 1; padding: 2rem; max-width: 780px; }
 
-  .legend-dot {
-    width: 10px; height: 10px;
-    border-radius: 3px;
-    flex-shrink: 0;
-  }
-
-  /* Question panel */
-  .question-panel {
-    flex: 1;
-    padding: 2rem;
-    max-width: 780px;
-  }
-
-  .q-subject-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    border-radius: 6px;
-    padding: 0.25rem 0.75rem;
-    font-size: 0.7rem;
-    font-family: 'Space Mono', monospace;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    margin-bottom: 1rem;
-    border: 1px solid;
-  }
-
+  .q-subject-badge { display: inline-flex; align-items: center; gap: 0.4rem; border-radius: 6px; padding: 0.25rem 0.75rem; font-size: 0.7rem; font-family: 'Space Mono', monospace; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 1rem; border: 1px solid; }
   .q-subject-badge.bio { background: rgba(0,230,118,0.1); color: var(--bio); border-color: rgba(0,230,118,0.3); }
   .q-subject-badge.phy { background: rgba(0,212,255,0.1); color: var(--phy); border-color: rgba(0,212,255,0.3); }
   .q-subject-badge.chem { background: rgba(255,107,53,0.1); color: var(--chem); border-color: rgba(255,107,53,0.3); }
-  .q-subject-badge.math { background: rgba(255,214,0,0.1); color: var(--math); border-color: rgba(255,214,0,0.3); }
+  .q-subject-badge.eng { background: rgba(192,132,252,0.1); color: var(--eng); border-color: rgba(192,132,252,0.3); }
 
-  .q-number {
-    font-size: 0.75rem;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    margin-bottom: 0.5rem;
-  }
+  .q-number { font-size: 0.75rem; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 0.5rem; }
+  .q-text { font-size: 1.05rem; line-height: 1.6; margin-bottom: 1.75rem; font-weight: 600; }
 
-  .q-text {
-    font-size: 1.05rem;
-    line-height: 1.6;
-    margin-bottom: 1.75rem;
-    font-weight: 600;
-  }
+  .options-list { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 2rem; }
 
-  .options-list {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    margin-bottom: 2rem;
-  }
-
-  .option-btn {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 0.9rem 1.2rem;
-    cursor: pointer;
-    transition: all 0.15s;
-    text-align: left;
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    font-size: 0.95rem;
-  }
-
+  .option-btn { display: flex; align-items: center; gap: 1rem; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 0.9rem 1.2rem; cursor: pointer; transition: all 0.15s; text-align: left; color: var(--text); font-family: 'Syne', sans-serif; font-size: 0.95rem; }
   .option-btn:hover { border-color: var(--accent); background: rgba(0,212,255,0.05); }
+  .option-btn.selected { border-color: var(--accent); background: rgba(0,212,255,0.12); }
 
-  .option-btn.selected {
-    border-color: var(--accent);
-    background: rgba(0,212,255,0.12);
-  }
+  .option-letter { width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; transition: all 0.15s; }
+  .option-btn.selected .option-letter { background: var(--accent); border-color: var(--accent); color: #000; }
 
-  .option-letter {
-    width: 28px; height: 28px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Space Mono', monospace;
-    font-size: 0.75rem;
-    font-weight: 700;
-    flex-shrink: 0;
-    transition: all 0.15s;
-  }
+  .nav-buttons { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
 
-  .option-btn.selected .option-letter {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #000;
-  }
-
-  .nav-buttons {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .btn-nav {
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 10px;
-    padding: 0.7rem 1.5rem;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
+  .btn-nav { background: var(--card); border: 1px solid var(--border); color: var(--text); border-radius: 10px; padding: 0.7rem 1.5rem; font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.15s; }
   .btn-nav:hover { border-color: var(--accent); color: var(--accent); }
   .btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
 
-  .btn-submit {
-    background: linear-gradient(135deg, var(--accent2), #ff3d5a);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    padding: 0.7rem 1.8rem;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.15s;
-    margin-left: auto;
-    box-shadow: 0 0 20px rgba(255,107,53,0.3);
-  }
-
+  .btn-submit { background: linear-gradient(135deg, var(--accent2), #ff3d5a); color: #fff; border: none; border-radius: 10px; padding: 0.7rem 1.8rem; font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.15s; margin-left: auto; box-shadow: 0 0 20px rgba(255,107,53,0.3); }
   .btn-submit:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(255,107,53,0.5); }
 
   /* ---- RESULTS ---- */
-  #results {
-    display: none;
-    position: relative;
-    z-index: 1;
-    padding: 2rem;
-    min-height: 100vh;
-  }
+  #results { display: none; position: relative; z-index: 1; padding: 2rem; min-height: 100vh; }
 
-  .results-header {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
+  .results-header { text-align: center; margin-bottom: 3rem; }
 
-  .score-circle {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    margin: 0 auto 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
+  .score-circle { width: 160px; height: 160px; border-radius: 50%; margin: 0 auto 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+  .score-circle svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+  .score-inner { position: relative; z-index: 1; text-align: center; }
+  .score-num { font-size: 2.5rem; font-weight: 800; line-height: 1; }
+  .score-total { font-size: 0.8rem; color: var(--muted); font-family: 'Space Mono', monospace; }
 
-  .score-circle svg {
-    position: absolute;
-    top: 0; left: 0;
-    transform: rotate(-90deg);
-  }
+  .grade-badge { display: inline-block; border-radius: 50px; padding: 0.4rem 1.5rem; font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .grade-message { font-size: 0.9rem; color: var(--muted); }
 
-  .score-inner {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-  }
+  .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; max-width: 900px; margin: 0 auto 2.5rem; }
 
-  .score-num {
-    font-size: 2.5rem;
-    font-weight: 800;
-    line-height: 1;
-  }
+  .result-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem; }
+  .result-card .rc-label { font-size: 0.7rem; color: var(--muted); font-family: 'Space Mono', monospace; letter-spacing: 0.05em; margin-bottom: 0.5rem; text-transform: uppercase; }
+  .result-card .rc-val { font-size: 1.6rem; font-weight: 800; }
+  .result-card .rc-sub { font-size: 0.8rem; color: var(--muted); }
 
-  .score-total {
-    font-size: 0.8rem;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-  }
+  .subject-breakdown { max-width: 900px; margin: 0 auto 2.5rem; background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; }
+  .subject-breakdown h3 { font-size: 0.8rem; letter-spacing: 0.1em; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 1.25rem; text-transform: uppercase; }
 
-  .grade-badge {
-    display: inline-block;
-    border-radius: 50px;
-    padding: 0.4rem 1.5rem;
-    font-size: 1.1rem;
-    font-weight: 800;
-    margin-bottom: 0.5rem;
-  }
+  .sb-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+  .sb-label { width: 110px; font-size: 0.85rem; font-weight: 600; flex-shrink: 0; }
+  .sb-bar-wrap { flex: 1; height: 8px; background: rgba(255,255,255,0.05); border-radius: 50px; overflow: hidden; }
+  .sb-bar-fill { height: 100%; border-radius: 50px; transition: width 1s ease; }
+  .sb-score { font-size: 0.8rem; color: var(--muted); font-family: 'Space Mono', monospace; width: 55px; text-align: right; flex-shrink: 0; }
 
-  .grade-message {
-    font-size: 0.9rem;
-    color: var(--muted);
-  }
+  .review-section { max-width: 900px; margin: 0 auto 2rem; }
+  .review-section h3 { font-size: 0.8rem; letter-spacing: 0.1em; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 1.25rem; text-transform: uppercase; }
 
-  .results-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    max-width: 900px;
-    margin: 0 auto 2.5rem;
-  }
+  .review-q { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; margin-bottom: 0.75rem; }
+  .review-q .rq-num { font-size: 0.7rem; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 0.25rem; }
+  .review-q .rq-text { font-size: 0.9rem; margin-bottom: 0.75rem; line-height: 1.5; font-weight: 600; }
+  .review-q .rq-answers { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 
-  .result-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 1.25rem;
-  }
-
-  .result-card .rc-label {
-    font-size: 0.7rem;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-  }
-
-  .result-card .rc-val {
-    font-size: 1.6rem;
-    font-weight: 800;
-  }
-
-  .result-card .rc-sub {
-    font-size: 0.8rem;
-    color: var(--muted);
-  }
-
-  .subject-breakdown {
-    max-width: 900px;
-    margin: 0 auto 2.5rem;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 1.5rem;
-  }
-
-  .subject-breakdown h3 {
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    margin-bottom: 1.25rem;
-    text-transform: uppercase;
-  }
-
-  .sb-row {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-  }
-
-  .sb-label {
-    width: 90px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    flex-shrink: 0;
-  }
-
-  .sb-bar-wrap {
-    flex: 1;
-    height: 8px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 50px;
-    overflow: hidden;
-  }
-
-  .sb-bar-fill {
-    height: 100%;
-    border-radius: 50px;
-    transition: width 1s ease;
-  }
-
-  .sb-score {
-    font-size: 0.8rem;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    width: 55px;
-    text-align: right;
-    flex-shrink: 0;
-  }
-
-  .review-section {
-    max-width: 900px;
-    margin: 0 auto 2rem;
-  }
-
-  .review-section h3 {
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    margin-bottom: 1.25rem;
-    text-transform: uppercase;
-  }
-
-  .review-q {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.25rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .review-q .rq-num {
-    font-size: 0.7rem;
-    color: var(--muted);
-    font-family: 'Space Mono', monospace;
-    margin-bottom: 0.25rem;
-  }
-
-  .review-q .rq-text {
-    font-size: 0.9rem;
-    margin-bottom: 0.75rem;
-    line-height: 1.5;
-    font-weight: 600;
-  }
-
-  .review-q .rq-answers {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
-
-  .rq-tag {
-    padding: 0.25rem 0.75rem;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-family: 'Space Mono', monospace;
-  }
-
+  .rq-tag { padding: 0.25rem 0.75rem; border-radius: 6px; font-size: 0.75rem; font-family: 'Space Mono', monospace; }
   .rq-tag.correct { background: rgba(0,230,118,0.15); color: var(--green); border: 1px solid rgba(0,230,118,0.3); }
   .rq-tag.wrong { background: rgba(255,61,90,0.15); color: var(--red); border: 1px solid rgba(255,61,90,0.3); }
   .rq-tag.unanswered { background: rgba(255,214,0,0.1); color: var(--yellow); border: 1px solid rgba(255,214,0,0.3); }
 
-  .btn-retry {
-    display: block;
-    margin: 0 auto 3rem;
-    background: linear-gradient(135deg, var(--accent), #7b61ff);
-    color: #fff;
-    border: none;
-    border-radius: 14px;
-    padding: 1rem 3rem;
-    font-size: 1rem;
-    font-weight: 700;
-    font-family: 'Syne', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 0 30px rgba(0,212,255,0.25);
-  }
-
-  .btn-retry:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,212,255,0.4); }
+  .finished-note { text-align: center; padding: 2rem; font-size: 0.85rem; color: var(--muted); font-family: 'Space Mono', monospace; margin-bottom: 2rem; }
 
   /* Modal */
-  .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 999;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(4px);
-  }
-
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 999; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
   .modal-overlay.show { display: flex; }
-
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 2rem;
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-  }
-
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 2rem; max-width: 400px; width: 90%; text-align: center; }
   .modal h2 { font-size: 1.4rem; margin-bottom: 0.75rem; }
   .modal p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.75rem; line-height: 1.6; }
-
   .modal-btns { display: flex; gap: 0.75rem; justify-content: center; }
-
-  .modal-btn {
-    border-radius: 10px;
-    padding: 0.7rem 1.5rem;
-    font-family: 'Syne', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 700;
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s;
-  }
-
+  .modal-btn { border-radius: 10px; padding: 0.7rem 1.5rem; font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; cursor: pointer; border: none; transition: all 0.15s; }
   .modal-btn.cancel { background: var(--card); color: var(--text); border: 1px solid var(--border); }
   .modal-btn.confirm { background: linear-gradient(135deg, var(--accent2), #ff3d5a); color: #fff; }
 
@@ -776,10 +269,10 @@
     <div class="subject-tag"><span class="dot dot-bio"></span>Biology (25 Qs)</div>
     <div class="subject-tag"><span class="dot dot-phy"></span>Physics (25 Qs)</div>
     <div class="subject-tag"><span class="dot dot-chem"></span>Chemistry (25 Qs)</div>
-    <div class="subject-tag"><span class="dot dot-math"></span>Mathematics (25 Qs)</div>
+    <div class="subject-tag"><span class="dot dot-eng"></span>English (25 Qs)</div>
   </div>
 
-  <div class="info-box">⚠ Timer starts immediately. Unanswered questions score zero.</div>
+  <div class="info-box">⚠ Timer starts immediately. Questions are shuffled. Unanswered questions score zero.</div>
 
   <button class="btn-start" onclick="startExam()">BEGIN EXAMINATION →</button>
 </div>
@@ -827,7 +320,7 @@
 <div class="modal-overlay" id="submitModal">
   <div class="modal">
     <h2>Submit Examination?</h2>
-    <p id="modalMsg">Are you sure you want to submit? You still have unanswered questions.</p>
+    <p id="modalMsg">Are you sure you want to submit?</p>
     <div class="modal-btns">
       <button class="modal-btn cancel" onclick="closeModal()">Review</button>
       <button class="modal-btn confirm" onclick="submitExam()">Submit Now</button>
@@ -837,131 +330,146 @@
 
 <script>
 // ============================================================
-// QUESTIONS BANK — 100 questions (25 per subject, medium level)
+// QUESTIONS BANK — 100 questions: 25 Bio, 25 Phy, 25 Chem, 25 Eng
+// Harder / more application-based than standard set
 // ============================================================
-const QUESTIONS = [
-  // ---- BIOLOGY (1–25) ----
-  {s:'bio', q:"Which organelle is primarily responsible for ATP synthesis during aerobic respiration?", o:["Ribosome","Mitochondria","Nucleus","Golgi apparatus"], a:1},
-  {s:'bio', q:"During mitosis, chromosomes align at the metaphase plate in which stage?", o:["Prophase","Anaphase","Metaphase","Telophase"], a:2},
-  {s:'bio', q:"The process by which a cell engulfs large solid particles is called:", o:["Osmosis","Pinocytosis","Phagocytosis","Active transport"], a:2},
-  {s:'bio', q:"Which blood group is the universal donor?", o:["A","B","AB","O"], a:3},
-  {s:'bio', q:"Insulin is produced by which cells in the pancreas?", o:["Alpha cells","Beta cells","Delta cells","PP cells"], a:1},
-  {s:'bio', q:"The Bowman's capsule is part of which structure in the kidney?", o:["Loop of Henle","Nephron","Collecting duct","Renal pelvis"], a:1},
-  {s:'bio', q:"Which enzyme breaks down lactose into glucose and galactose?", o:["Amylase","Lipase","Lactase","Protease"], a:2},
-  {s:'bio', q:"Photosynthesis occurs in which part of the chloroplast?", o:["Stroma only","Thylakoid membranes only","Both stroma and thylakoid membranes","Cell wall"], a:2},
-  {s:'bio', q:"Which hormone is responsible for the 'fight or flight' response?", o:["Insulin","Glucagon","Adrenaline","Thyroxine"], a:2},
-  {s:'bio', q:"The test used to confirm the presence of reducing sugars in food is:", o:["Biuret test","Iodine test","Benedict's test","Emulsion test"], a:2},
-  {s:'bio', q:"Which type of vertebrate has a three-chambered heart?", o:["Birds","Mammals","Reptiles","Amphibians"], a:3},
-  {s:'bio', q:"In genetics, the term 'phenotype' refers to:", o:["The genetic makeup of an organism","The physical expression of genes","The number of chromosomes","The location of genes on chromosomes"], a:1},
-  {s:'bio', q:"Tuberculosis is caused by which type of organism?", o:["Virus","Fungus","Bacterium","Protozoan"], a:2},
-  {s:'bio', q:"Which plant hormone promotes cell elongation and is responsible for phototropism?", o:["Gibberellin","Cytokinin","Abscisic acid","Auxin"], a:3},
-  {s:'bio', q:"The process by which water moves from a region of high water potential to low water potential through a semi-permeable membrane is:", o:["Diffusion","Active transport","Osmosis","Facilitated diffusion"], a:2},
-  {s:'bio', q:"Which part of the neuron receives signals from other neurons?", o:["Axon","Dendrite","Myelin sheath","Synapse"], a:1},
-  {s:'bio', q:"Organisms that can produce their own food through photosynthesis are called:", o:["Heterotrophs","Autotrophs","Decomposers","Parasites"], a:1},
-  {s:'bio', q:"The condition where the lens of the eye becomes cloudy is called:", o:["Glaucoma","Myopia","Cataract","Astigmatism"], a:2},
-  {s:'bio', q:"Which phylum includes organisms with segmented bodies, jointed appendages, and an exoskeleton?", o:["Annelida","Mollusca","Arthropoda","Echinodermata"], a:2},
-  {s:'bio', q:"During blood clotting, the protein that forms a mesh to trap blood cells is:", o:["Thrombin","Fibrinogen","Fibrin","Prothrombin"], a:2},
-  {s:'bio', q:"The site of protein synthesis in a cell is the:", o:["Nucleus","Ribosome","Endoplasmic reticulum","Lysosome"], a:1},
-  {s:'bio', q:"Which vitamin is essential for blood clotting and is synthesized by bacteria in the gut?", o:["Vitamin A","Vitamin C","Vitamin D","Vitamin K"], a:3},
-  {s:'bio', q:"Metamorphosis in insects where there is no pupal stage is called:", o:["Complete metamorphosis","Incomplete metamorphosis","Direct development","Indirect development"], a:1},
-  {s:'bio', q:"The transfer of food materials from the leaves to other parts of a plant is called:", o:["Transpiration","Translocation","Absorption","Assimilation"], a:1},
-  {s:'bio', q:"Which gas is released during the light-dependent stage of photosynthesis?", o:["Carbon dioxide","Nitrogen","Oxygen","Hydrogen"], a:2},
+const RAW_QUESTIONS = [
 
-  // ---- PHYSICS (26–50) ----
-  {s:'phy', q:"A car accelerates uniformly from rest to 20 m/s in 5 seconds. What is its acceleration?", o:["2 m/s²","4 m/s²","5 m/s²","10 m/s²"], a:1},
-  {s:'phy', q:"Newton's third law states that for every action, there is:", o:["A greater reaction","An equal and opposite reaction","A smaller reaction","No reaction"], a:1},
-  {s:'phy', q:"A body of mass 5 kg moving at 10 m/s. Its momentum is:", o:["2 kg·m/s","15 kg·m/s","50 kg·m/s","0.5 kg·m/s"], a:2},
-  {s:'phy', q:"The SI unit of power is:", o:["Joule","Newton","Watt","Pascal"], a:2},
-  {s:'phy', q:"Which law states that the pressure of a gas is inversely proportional to its volume at constant temperature?", o:["Charles' Law","Gay-Lussac's Law","Boyle's Law","Dalton's Law"], a:2},
-  {s:'phy', q:"A concave mirror with a focal length of 10 cm. An object is placed 30 cm away. Using 1/v + 1/u = 1/f, the image distance is:", o:["15 cm","20 cm","25 cm","10 cm"], a:0},
-  {s:'phy', q:"The refractive index of glass is 1.5. If light travels at 3 × 10⁸ m/s in air, its speed in glass is:", o:["4.5 × 10⁸ m/s","2.0 × 10⁸ m/s","1.5 × 10⁸ m/s","2.5 × 10⁸ m/s"], a:1},
-  {s:'phy', q:"A transformer has 200 primary turns and 1000 secondary turns. If the primary voltage is 50V, the secondary voltage is:", o:["10 V","250 V","200 V","100 V"], a:1},
-  {s:'phy', q:"The specific heat capacity of water is 4200 J/kg·K. The heat needed to raise 2 kg of water by 5°C is:", o:["21,000 J","8,400 J","42,000 J","4,200 J"], a:2},
-  {s:'phy', q:"Which type of wave requires a medium for propagation?", o:["Radio waves","Light waves","Sound waves","Gamma rays"], a:2},
-  {s:'phy', q:"A resistor of 10 Ω is connected in parallel with another of 15 Ω. The combined resistance is:", o:["25 Ω","6 Ω","12.5 Ω","5 Ω"], a:1},
-  {s:'phy', q:"Alpha particles are deflected by electric and magnetic fields. This shows they are:", o:["Uncharged","Negatively charged","Positively charged","Electromagnetic waves"], a:2},
-  {s:'phy', q:"Which instrument is used to measure very small lengths between 0 mm and 25 mm to 0.01 mm accuracy?", o:["Vernier caliper","Metre rule","Micrometer screw gauge","Spirit level"], a:2},
-  {s:'phy', q:"A body in simple harmonic motion has maximum velocity when:", o:["At maximum displacement","At the equilibrium position","At half displacement","Just starting to move"], a:1},
-  {s:'phy', q:"The latent heat of fusion is the heat required to:", o:["Raise temperature of a solid","Change a liquid to gas","Change a solid to liquid at constant temperature","Change a gas to liquid"], a:2},
-  {s:'phy', q:"Ohm's law states that current through a conductor is directly proportional to voltage, provided:", o:["Temperature varies","Resistance changes","Temperature and physical conditions remain constant","The conductor is non-metallic"], a:2},
-  {s:'phy', q:"A bullet of mass 0.02 kg is fired from a gun of mass 2 kg at 500 m/s. The recoil velocity of the gun is:", o:["5 m/s","50 m/s","0.5 m/s","25 m/s"], a:0},
-  {s:'phy', q:"Which electromagnetic wave has the highest frequency?", o:["X-rays","Microwaves","Gamma rays","Ultraviolet rays"], a:2},
-  {s:'phy', q:"The half-life of a radioactive substance is 10 years. After 30 years, the fraction remaining is:", o:["1/4","1/8","1/6","1/3"], a:1},
-  {s:'phy', q:"An electric iron rated 1000 W is used for 2 hours. The energy consumed in kilowatt-hours is:", o:["500 kWh","2 kWh","0.5 kWh","20 kWh"], a:1},
-  {s:'phy', q:"The Doppler effect describes the change in observed frequency when:", o:["A wave enters a new medium","There is relative motion between source and observer","A wave reflects off a surface","Temperature changes"], a:1},
-  {s:'phy', q:"Centripetal force acts in which direction relative to circular motion?", o:["Tangentially","Away from the center","Toward the center","Perpendicular to centripetal acceleration"], a:2},
-  {s:'phy', q:"A myopic (short-sighted) eye is corrected using a:", o:["Convex lens","Plane lens","Concave lens","Bifocal lens"], a:2},
-  {s:'phy', q:"The temperature –40°C in Fahrenheit is:", o:["–40°F","32°F","0°F","–72°F"], a:0},
-  {s:'phy', q:"Which property of a wave determines its pitch in sound?", o:["Amplitude","Speed","Frequency","Wavelength"], a:2},
+  // ---- BIOLOGY (25) ----
+  {s:'bio', q:"In oxidative phosphorylation, the enzyme directly responsible for synthesizing ATP from ADP and inorganic phosphate is:", o:["NADH dehydrogenase","Cytochrome c oxidase","ATP synthase (Complex V)","Succinate dehydrogenase"], a:2},
+  {s:'bio', q:"A cell line lacks functional p53. Which of the following consequences is most likely?", o:["Enhanced apoptosis in response to DNA damage","Continued cell division despite DNA damage","Increased expression of tumour suppressor genes","Arrest at S phase of the cell cycle"], a:1},
+  {s:'bio', q:"During meiosis I, crossing-over (chiasma formation) occurs in which sub-stage?", o:["Leptotene","Zygotene","Pachytene","Diplotene"], a:2},
+  {s:'bio', q:"The enzyme responsible for unwinding the DNA double helix ahead of the replication fork is:", o:["DNA ligase","Primase","Topoisomerase / Helicase","DNA polymerase III"], a:2},
+  {s:'bio', q:"Sickle-cell anaemia is caused by a single amino acid substitution in haemoglobin. Which amino acid replaces glutamic acid?", o:["Lysine","Valine","Alanine","Glycine"], a:1},
+  {s:'bio', q:"Which of the following best describes the role of the sinoatrial (SA) node?", o:["It receives impulses from the AV node","It is the pacemaker that initiates each heartbeat","It delays impulses between atria and ventricles","It conducts impulses via the Bundle of His"], a:1},
+  {s:'bio', q:"The C4 photosynthetic pathway is an adaptation that primarily prevents:", o:["Photorespiration","Transpiration","Photooxidation","Dark respiration"], a:0},
+  {s:'bio', q:"A hormone that acts on the same cell that secretes it is said to have a(n) ________ mode of action:", o:["Paracrine","Endocrine","Autocrine","Juxtacrine"], a:2},
+  {s:'bio', q:"In a dihybrid cross between two AaBb parents, the expected ratio of offspring showing both dominant traits is:", o:["3:1","1:2:1","9:3:3:1","1:1:1:1"], a:2},
+  {s:'bio', q:"The Hardy–Weinberg equilibrium requires all of the following EXCEPT:", o:["Random mating","No gene flow","A small population","No natural selection"], a:2},
+  {s:'bio', q:"Which immunoglobulin class is the first to be produced in a primary immune response?", o:["IgG","IgA","IgM","IgE"], a:2},
+  {s:'bio', q:"Damage to the medulla oblongata is immediately life-threatening primarily because it controls:", o:["Voluntary muscle movement","Heart rate, breathing, and vasomotor tone","Higher cognition and decision-making","Hormonal regulation via the hypothalamus"], a:1},
+  {s:'bio', q:"In active transport via the sodium-potassium ATPase, for every ATP hydrolyzed:", o:["3 Na⁺ are pumped in and 2 K⁺ are pumped out","2 Na⁺ are pumped out and 3 K⁺ are pumped in","3 Na⁺ are pumped out and 2 K⁺ are pumped in","2 Na⁺ are pumped in and 3 K⁺ are pumped out"], a:2},
+  {s:'bio', q:"Kwashiorkor differs from marasmus primarily in that kwashiorkor involves:", o:["Total caloric deficiency","Adequate caloric intake but severe protein deficiency","Vitamin A deficiency causing night blindness","Iron-deficiency anaemia"], a:1},
+  {s:'bio', q:"The zona glomerulosa of the adrenal cortex secretes:", o:["Cortisol","Adrenaline","Aldosterone","Androgens"], a:2},
+  {s:'bio', q:"Which type of epithelium lines the alveoli of the lungs to facilitate gas exchange?", o:["Stratified squamous","Simple cuboidal","Transitional","Simple squamous"], a:3},
+  {s:'bio', q:"Malaria parasites develop into sporozoites inside the mosquito in which organ?", o:["Midgut","Haemolymph","Salivary glands","Malpighian tubules"], a:2},
+  {s:'bio', q:"Restriction enzymes recognise specific DNA sequences called:", o:["Primer sites","Palindromic sequences","Okazaki fragments","Promoter regions"], a:1},
+  {s:'bio', q:"Which receptor type, when activated, directly opens an ion channel without a second messenger?", o:["G-protein coupled receptor","Receptor tyrosine kinase","Ionotropic (ligand-gated) receptor","Nuclear receptor"], a:2},
+  {s:'bio', q:"In the human female, the surge in luteinising hormone (LH) triggers:", o:["Implantation of the blastocyst","Ovulation","Menstruation","Corpus luteum regression"], a:1},
+  {s:'bio', q:"Myelin sheaths are produced in the peripheral nervous system by:", o:["Astrocytes","Oligodendrocytes","Schwann cells","Microglia"], a:2},
+  {s:'bio', q:"Which stage of cellular respiration produces the most ATP per molecule of glucose?", o:["Glycolysis","Pyruvate oxidation","Krebs (citric acid) cycle","Oxidative phosphorylation (electron transport chain)"], a:3},
+  {s:'bio', q:"A child inherits a disease only if both parents are carriers and the trait skips generations. This pattern is consistent with:", o:["Autosomal dominant","X-linked recessive","Autosomal recessive","Y-linked inheritance"], a:2},
+  {s:'bio', q:"Bile salts aid digestion by:", o:["Chemically breaking ester bonds in fats","Emulsifying fats to increase surface area for lipase","Denaturing dietary proteins","Neutralising gastric acid in the duodenum"], a:1},
+  {s:'bio', q:"Which plant tissue is responsible for lateral (secondary) growth in woody plants?", o:["Apical meristem","Lateral meristem (vascular cambium)","Intercalary meristem","Pericycle"], a:1},
 
-  // ---- CHEMISTRY (51–75) ----
-  {s:'chem', q:"The electronic configuration of a calcium ion (Ca²⁺) is:", o:["2,8,8,2","2,8,10","2,8,8","2,8,6"], a:2},
-  {s:'chem', q:"Which type of bonding exists in sodium chloride (NaCl)?", o:["Covalent bond","Metallic bond","Ionic bond","Hydrogen bond"], a:2},
-  {s:'chem', q:"In the Contact Process, which catalyst is used to oxidize SO₂ to SO₃?", o:["Iron","Platinum","Vanadium(V) oxide","Nickel"], a:2},
-  {s:'chem', q:"A reaction with ΔG < 0 is:", o:["Non-spontaneous","Spontaneous","At equilibrium","Endothermic"], a:1},
-  {s:'chem', q:"The oxidation state of manganese in KMnO₄ is:", o:["+ 4","+5","+7","+6"], a:2},
-  {s:'chem', q:"Which gas law states that at constant pressure, the volume of a gas is directly proportional to its absolute temperature?", o:["Boyle's law","Charles' law","Gay-Lussac's law","Dalton's law"], a:1},
-  {s:'chem', q:"The Haber process is used for the industrial manufacture of:", o:["Sulphuric acid","Nitric acid","Ammonia","Hydrochloric acid"], a:2},
-  {s:'chem', q:"In electrolysis, oxidation occurs at the:", o:["Cathode","Electrolyte","Anode","External circuit"], a:2},
-  {s:'chem', q:"The functional group –COOH is found in:", o:["Alcohols","Aldehydes","Carboxylic acids","Esters"], a:2},
-  {s:'chem', q:"Which allotrope of carbon is used as a lubricant?", o:["Diamond","Graphite","Buckminsterfullerene","Coal"], a:1},
-  {s:'chem', q:"A solution with pH = 9 is:", o:["Strongly acidic","Neutral","Weakly acidic","Alkaline"], a:3},
-  {s:'chem', q:"The molar mass of H₂SO₄ is:", o:["96 g/mol","98 g/mol","94 g/mol","100 g/mol"], a:1},
-  {s:'chem', q:"Which reaction describes the halogenation of benzene?", o:["Addition reaction","Substitution reaction","Elimination reaction","Polymerization"], a:1},
-  {s:'chem', q:"In a flame test, potassium gives a flame color of:", o:["Brick red","Yellow","Lilac/violet","Green"], a:2},
-  {s:'chem', q:"The number of moles in 44 g of CO₂ (molar mass = 44 g/mol) is:", o:["2 moles","0.5 moles","1 mole","44 moles"], a:2},
-  {s:'chem', q:"Which type of isomerism involves the same molecular formula but different arrangement of atoms in space?", o:["Chain isomerism","Positional isomerism","Functional group isomerism","Stereoisomerism"], a:3},
-  {s:'chem', q:"Brass is an alloy of:", o:["Copper and tin","Copper and zinc","Iron and carbon","Aluminium and copper"], a:1},
-  {s:'chem', q:"An exothermic reaction is one that:", o:["Absorbs heat from surroundings","Releases heat to surroundings","Has no change in enthalpy","Only occurs at high temperatures"], a:1},
-  {s:'chem', q:"The product when ethanol is oxidized completely is:", o:["Ethanal","Ethanoic acid","Ethene","Ethanediol"], a:1},
-  {s:'chem', q:"Normal saline solution contains sodium chloride at a concentration of:", o:["0.5%","0.9%","1.5%","2.0%"], a:1},
-  {s:'chem', q:"Which element has the highest electronegativity?", o:["Oxygen","Nitrogen","Chlorine","Fluorine"], a:3},
-  {s:'chem', q:"The process of converting alkenes into alkanes by adding hydrogen is called:", o:["Halogenation","Hydrogenation","Dehydration","Polymerization"], a:1},
-  {s:'chem', q:"A 2M solution of NaOH (molar mass = 40 g/mol) means:", o:["2 g/L","80 g/L","40 g/L","20 g/L"], a:1},
-  {s:'chem', q:"Which indicator turns red in acid and blue in base?", o:["Phenolphthalein","Methyl orange","Litmus","Universal indicator"], a:2},
-  {s:'chem', q:"sp³ hybridization is found in which molecule?", o:["CO₂","BF₃","CH₄","C₂H₂"], a:2},
+  // ---- PHYSICS (25) ----
+  {s:'phy', q:"A projectile is launched at 30° to the horizontal with initial speed 40 m/s (g = 10 m/s²). Its maximum height is:", o:["20 m","40 m","60 m","80 m"], a:0},
+  {s:'phy', q:"Two point charges of +3 μC and –3 μC are separated by 0.3 m. The magnitude of the electrostatic force between them (k = 9 × 10⁹ N·m²/C²) is:", o:["0.3 N","0.9 N","3.0 N","9.0 N"], a:1},
+  {s:'phy', q:"A uniform rod of length 2 m and mass 4 kg is pivoted at one end. Its moment of inertia about the pivot is:", o:["2 kg·m²","8/3 kg·m²","4 kg·m²","16/3 kg·m²"], a:1},
+  {s:'phy', q:"Using the equation of continuity, water flows through a pipe of radius 4 cm at 2 m/s. Its speed in a section of radius 2 cm is:", o:["4 m/s","6 m/s","8 m/s","16 m/s"], a:2},
+  {s:'phy', q:"A 0.5 kg mass on a spring (k = 200 N/m) undergoes simple harmonic motion. Its angular frequency ω is:", o:["10 rad/s","20 rad/s","25 rad/s","40 rad/s"], a:1},
+  {s:'phy', q:"The work function of a metal is 3.2 eV. What is the threshold frequency for the photoelectric effect? (h = 6.63 × 10⁻³⁴ J·s, 1 eV = 1.6 × 10⁻¹⁹ J)", o:["4.8 × 10¹⁴ Hz","7.7 × 10¹⁴ Hz","9.6 × 10¹⁴ Hz","3.2 × 10¹⁵ Hz"], a:1},
+  {s:'phy', q:"Two capacitors of 6 μF and 3 μF are connected in series. Their combined capacitance is:", o:["9 μF","4.5 μF","2 μF","18 μF"], a:2},
+  {s:'phy', q:"A gas expands isothermally. Which thermodynamic quantity remains constant?", o:["Pressure","Volume","Internal energy","Entropy"], a:2},
+  {s:'phy', q:"In Young's double-slit experiment, fringe width β = λD/d. If the slit separation d is halved, the fringe width:", o:["Halves","Doubles","Quadruples","Remains unchanged"], a:1},
+  {s:'phy', q:"An object of mass 2 kg moving at 6 m/s collides with a stationary 4 kg object and they stick together. Their common velocity after collision is:", o:["1 m/s","2 m/s","3 m/s","4 m/s"], a:1},
+  {s:'phy', q:"The RMS speed of gas molecules is proportional to:", o:["Absolute temperature T","√T","T²","1/T"], a:1},
+  {s:'phy', q:"A solenoid has 500 turns, length 0.5 m, and carries 2 A. Its magnetic field inside (μ₀ = 4π × 10⁻⁷ T·m/A) is approximately:", o:["0.8 mT","1.0 mT","1.26 mT","2.5 mT"], a:2},
+  {s:'phy', q:"The de Broglie wavelength of an electron (mass 9.11 × 10⁻³¹ kg) moving at 10⁶ m/s is approximately:", o:["0.73 nm","0.73 pm","7.3 pm","7.3 nm"], a:0},
+  {s:'phy', q:"A Carnot engine operates between 600 K and 300 K. Its efficiency is:", o:["25%","50%","75%","100%"], a:1},
+  {s:'phy', q:"The binding energy per nucleon peaks at which element, making it the most stable nucleus?", o:["Helium-4","Carbon-12","Iron-56","Uranium-238"], a:2},
+  {s:'phy', q:"An AC circuit has resistance 30 Ω and inductive reactance 40 Ω. Its impedance is:", o:["10 Ω","50 Ω","70 Ω","1200 Ω"], a:1},
+  {s:'phy', q:"A convex lens produces a real, inverted, magnified image when the object is placed:", o:["Beyond 2F","At 2F","Between F and 2F","Between the lens and F"], a:2},
+  {s:'phy', q:"Which phenomenon explains why the sky is blue?", o:["Refraction of sunlight","Diffraction of sunlight","Rayleigh scattering of sunlight","Total internal reflection"], a:2},
+  {s:'phy', q:"A photon has energy 4 eV. Its wavelength (h = 6.63 × 10⁻³⁴ J·s, c = 3 × 10⁸ m/s, 1 eV = 1.6 × 10⁻¹⁹ J) is approximately:", o:["310 nm","410 nm","511 nm","620 nm"], a:0},
+  {s:'phy', q:"What is the electric potential at a point 0.3 m from a point charge of 6 μC? (k = 9 × 10⁹ N·m²/C²)", o:["60 V","180 V","600 V","180,000 V"], a:3},
+  {s:'phy', q:"A body of weight 500 N is pulled up a frictionless inclined plane of angle 30°. The force required parallel to the incline is:", o:["250 N","433 N","500 N","1000 N"], a:0},
+  {s:'phy', q:"Kirchhoff's voltage law (KVL) is based on the conservation of:", o:["Charge","Mass","Energy","Momentum"], a:2},
+  {s:'phy', q:"A wire of resistance 8 Ω is stretched to twice its original length. Its new resistance is:", o:["4 Ω","16 Ω","32 Ω","64 Ω"], a:2},
+  {s:'phy', q:"The escape velocity from the Earth's surface (g = 10 m/s², R = 6.4 × 10⁶ m) is approximately:", o:["7.9 km/s","11.3 km/s","14.1 km/s","16.0 km/s"], a:1},
+  {s:'phy', q:"When white light is dispersed by a prism, which colour is refracted the LEAST?", o:["Violet","Blue","Green","Red"], a:3},
 
-  // ---- MATHEMATICS (76–100) ----
-  {s:'math', q:"Simplify: log₁₀ 1000 – log₁₀ 10", o:["1","2","3","4"], a:1},
-  {s:'math', q:"If f(x) = 3x² – 2x + 1, then f'(x) is:", o:["6x – 2","3x – 2","6x + 2","3x² – 2"], a:0},
-  {s:'math', q:"Find the sum of the first 10 terms of an AP: first term = 3, common difference = 4.", o:["210","240","220","230"], a:0},
-  {s:'math', q:"What is the value of sin 60° × cos 30°?", o:["1/2","√3/4","3/4","√3/2"], a:2},
-  {s:'math', q:"If x + y = 7 and xy = 12, find x² + y².", o:["25","1","13","37"], a:0},
-  {s:'math', q:"A bag has 4 red and 6 blue balls. The probability of picking 2 red balls without replacement is:", o:["2/15","12/100","4/10","8/15"], a:0},
-  {s:'math', q:"Evaluate: ∫(2x + 3)dx from 0 to 2", o:["10","12","8","14"], a:0},
-  {s:'math', q:"What is the remainder when x³ – 2x² + 3x – 1 is divided by (x – 1)?", o:["0","1","–1","2"], a:1},
-  {s:'math', q:"The equation 2x² – 5x + 2 = 0 has roots:", o:["x = 2 or x = ½","x = –2 or x = –½","x = 1 or x = 2","x = 5 or x = 2"], a:0},
-  {s:'math', q:"Convert 110101₂ to base 10:", o:["51","53","55","57"], a:1},
-  {s:'math', q:"Find the gradient of the line joining points (2, 3) and (6, 11).", o:["½","2","4","3"], a:1},
-  {s:'math', q:"If a matrix A = [[2,1],[3,4]], its determinant is:", o:["5","11","8","–5"], a:0},
-  {s:'math', q:"What is 5! ÷ 3! ?", o:["10","20","15","60"], a:1},
-  {s:'math', q:"The number of ways to arrange 6 people in a row is:", o:["36","120","360","720"], a:3},
-  {s:'math', q:"Simplify: (2³ × 2⁴) ÷ 2⁵", o:["2","4","8","16"], a:1},
-  {s:'math', q:"The mean of 5, 8, 11, 14, 17 is:", o:["10","11","12","13"], a:1},
-  {s:'math', q:"Solve for x: 3^(x+1) = 27", o:["x = 1","x = 2","x = 3","x = 0"], a:1},
-  {s:'math', q:"Find the area of a circle with radius 7 cm. (π = 22/7)", o:["44 cm²","154 cm²","176 cm²","308 cm²"], a:1},
-  {s:'math', q:"In a geometric progression, first term = 2 and common ratio = 3. The 4th term is:", o:["18","54","162","24"], a:1},
-  {s:'math', q:"If tan θ = 3/4 and θ is acute, then sin θ =", o:["3/5","4/5","3/4","5/4"], a:0},
-  {s:'math', q:"The solution of |2x – 3| = 5 is:", o:["x = 4 only","x = –1 only","x = 4 or x = –1","x = 1 or x = 4"], a:2},
-  {s:'math', q:"Find the value of ⁷C₃:", o:["21","35","42","210"], a:1},
-  {s:'math', q:"The angle in a semicircle is always:", o:["60°","45°","90°","180°"], a:2},
-  {s:'math', q:"Differentiate y = sin(3x) with respect to x:", o:["cos(3x)","3cos(3x)","-3cos(3x)","sin(3x)/3"], a:1},
-  {s:'math', q:"A car travels 60 km in 45 minutes. Its average speed in km/h is:", o:["70","75","80","90"], a:2}
+  // ---- CHEMISTRY (25) ----
+  {s:'chem', q:"A sample of gas occupies 4 L at 300 K and 2 atm. At 400 K and 1 atm, its volume is:", o:["8.0 L","10.7 L","5.3 L","6.4 L"], a:1},
+  {s:'chem', q:"Which quantum number describes the shape of an atomic orbital?", o:["Principal (n)","Azimuthal (l)","Magnetic (mₗ)","Spin (mₛ)"], a:1},
+  {s:'chem', q:"The equilibrium constant expression for N₂(g) + 3H₂(g) ⇌ 2NH₃(g) is:", o:["Kc = [NH₃]² / [N₂][H₂]³","Kc = [N₂][H₂]³ / [NH₃]²","Kc = [NH₃] / [N₂][H₂]","Kc = 2[NH₃] / [N₂] + 3[H₂]"], a:0},
+  {s:'chem', q:"A buffer solution is best described as:", o:["A solution with pH = 7","A solution that resists changes in pH when small amounts of acid or base are added","A solution of a strong acid and strong base","A solution with equal concentrations of H⁺ and OH⁻"], a:1},
+  {s:'chem', q:"Which of the following represents a secondary alcohol?", o:["CH₃OH","(CH₃)₂CHOH","(CH₃)₃COH","CH₃CH₂OH"], a:1},
+  {s:'chem', q:"In the electrolysis of dilute sulphuric acid, the gas evolved at the cathode is:", o:["Oxygen","Sulphur dioxide","Hydrogen","Ozone"], a:2},
+  {s:'chem', q:"Standard enthalpy of formation (ΔHf°) is defined as the enthalpy change when 1 mole of a compound is formed from its elements in their:", o:["Aqueous state at 25°C","Gaseous state at any temperature","Standard states at 25°C (298 K) and 1 atm","Activated state"], a:2},
+  {s:'chem', q:"Which of the following is an example of a nucleophilic addition reaction?", o:["Reaction of benzene with Br₂ / FeBr₃","Addition of HCN to propanone","Chlorination of methane under UV light","Dehydration of ethanol"], a:1},
+  {s:'chem', q:"In the periodic table, atomic radius generally decreases across a period because:", o:["The number of electron shells increases","Nuclear charge increases while shielding remains roughly constant","Electronegativity decreases","Ionisation energy decreases"], a:1},
+  {s:'chem', q:"The rate of a first-order reaction with rate constant k = 0.0693 s⁻¹ has a half-life of:", o:["14.4 s","10 s","6.93 s","1.44 s"], a:1},
+  {s:'chem', q:"In an electrochemical cell, the species with the higher reduction potential will:", o:["Be oxidised at the anode","Be reduced at the cathode","Act as the salt bridge","Remain unchanged"], a:1},
+  {s:'chem', q:"Markovnikov's rule predicts that in addition of HBr to propene, the Br⁻ attaches to:", o:["C-1 (the less substituted carbon)","C-2 (the more substituted carbon)","Both carbons equally","The terminal carbon only under basic conditions"], a:1},
+  {s:'chem', q:"The IUPAC name of CH₃–CH(OH)–CH₂–CH₃ is:", o:["1-butanol","2-butanol","3-butanol","Butan-1-ol"], a:1},
+  {s:'chem', q:"Le Chatelier's principle predicts that increasing pressure on the equilibrium N₂ + 3H₂ ⇌ 2NH₃ will:", o:["Shift equilibrium to the left","Have no effect","Shift equilibrium to the right","Increase the value of Kc"], a:2},
+  {s:'chem', q:"A 0.1 mol/L solution of a weak acid HA has a pH of 3. The degree of dissociation is:", o:["0.01%","1%","10%","100%"], a:1},
+  {s:'chem', q:"Which property distinguishes an aromatic compound according to Hückel's rule?", o:["Contains only single bonds","Has (4n + 2) π electrons in a planar conjugated ring","Contains at least one benzene ring","Has alternating double and triple bonds"], a:1},
+  {s:'chem', q:"Sodium reacts with water according to: 2Na + 2H₂O → 2NaOH + H₂. How many litres of H₂ at STP are produced from 4.6 g of Na? (Na = 23 g/mol, molar volume = 22.4 L)", o:["2.24 L","1.12 L","4.48 L","22.4 L"], a:0},
+  {s:'chem', q:"The shape of a PCl₅ molecule is:", o:["Tetrahedral","Trigonal bipyramidal","Octahedral","Trigonal planar"], a:1},
+  {s:'chem', q:"Which intermolecular force is responsible for the unexpectedly high boiling point of water?", o:["London dispersion forces","Dipole–dipole interactions","Hydrogen bonding","Ion–dipole interactions"], a:2},
+  {s:'chem', q:"In a galvanic cell using Zn and Cu electrodes in their respective sulphate solutions, the zinc electrode:", o:["Acts as the cathode and gains mass","Acts as the anode and loses mass","Acts as the cathode and loses mass","Remains unchanged"], a:1},
+  {s:'chem', q:"Polymerisation of tetrafluoroethylene (CF₂=CF₂) produces PTFE (Teflon). This is an example of:", o:["Condensation polymerisation","Addition polymerisation","Copolymerisation","Cross-linking"], a:1},
+  {s:'chem', q:"Which of the following oxides is amphoteric?", o:["Na₂O","CaO","Al₂O₃","SO₃"], a:2},
+  {s:'chem', q:"The strongest acid among the following is:", o:["HF","HCl","HBr","HI"], a:3},
+  {s:'chem', q:"A diprotic acid H₂A can donate two protons. In its second dissociation, the species acting as the acid is:", o:["H₂A","H₃O⁺","HA⁻","A²⁻"], a:2},
+  {s:'chem', q:"Which of the following best describes a catalyst?", o:["It is consumed during the reaction","It increases the activation energy","It provides an alternative pathway of lower activation energy","It shifts the equilibrium position to the right"], a:2},
+
+  // ---- ENGLISH (25) ----
+  {s:'eng', q:"Identify the correct sentence:", o:["Neither the manager nor the employees was present.","Neither the manager nor the employees were present.","Neither the manager nor the employees are was present.","Neither the manager nor the employees is present."], a:1},
+  {s:'eng', q:"Choose the word closest in meaning to 'PELLUCID':", o:["Turbid","Crystal-clear","Ominous","Loquacious"], a:1},
+  {s:'eng', q:"Which literary device is used in: 'The wind whispered through the trees'?", o:["Hyperbole","Simile","Personification","Onomatopoeia"], a:2},
+  {s:'eng', q:"Select the option that correctly fills the blank: 'She has ______ her keys somewhere in the house.'", o:["mislaid","mislain","mislead","mislayed"], a:0},
+  {s:'eng', q:"The plural of 'criterion' is:", o:["Criterions","Criterias","Criteria","Criteriae"], a:2},
+  {s:'eng', q:"In the sentence 'Having finished the report, the office was locked,' the error is:", o:["Subject–verb disagreement","A dangling modifier","Faulty parallelism","An ambiguous pronoun reference"], a:1},
+  {s:'eng', q:"Which of the following is a compound-complex sentence?", o:["She sings and dances.","Although she was tired, she finished her work.","She was tired, but she finished her work, which impressed her boss.","She finished her work."], a:2},
+  {s:'eng', q:"Choose the antonym of 'LACONIC':", o:["Concise","Verbose","Taciturn","Reticent"], a:1},
+  {s:'eng', q:"The figure of speech in 'He is as brave as a lion' is a:", o:["Metaphor","Personification","Simile","Synecdoche"], a:2},
+  {s:'eng', q:"Identify the mood of the verb in: 'If I were the president, I would reduce taxes.'", o:["Indicative","Imperative","Subjunctive","Conditional"], a:2},
+  {s:'eng', q:"Which sentence uses the apostrophe correctly?", o:["Its raining outside.","The cat licked it's paw.","The childrens' toys were scattered.","The children's toys were scattered."], a:3},
+  {s:'eng', q:"A word or phrase that qualifies or modifies another is called:", o:["A conjunction","A modifier","An antecedent","A predicate"], a:1},
+  {s:'eng', q:"'Pyrrhic victory' means:", o:["A victory won with great skill","A decisive victory with minimal losses","A victory that costs so much it is tantamount to defeat","A victory achieved through diplomacy"], a:2},
+  {s:'eng', q:"Select the word that best completes the analogy: SURGEON : SCALPEL :: CARPENTER : ______", o:["Hammer","Clinic","Wood","Blueprint"], a:0},
+  {s:'eng', q:"Which of the following punctuation marks is correctly used in a non-restrictive relative clause?", o:["Semicolon","Colon","Comma","Em-dash"], a:2},
+  {s:'eng', q:"The phrase 'a blessing in disguise' is an example of:", o:["A cliché idiom","An oxymoron","An alliteration","A euphemism"], a:0},
+  {s:'eng', q:"Choose the correctly punctuated sentence:", o:["Its a dog eat dog world out there.","It's a dog-eat-dog world out there.","Its' a dog eat-dog world out there.","It's a dog eat dog world, out there."], a:1},
+  {s:'eng', q:"Which of the following words is spelt correctly?", o:["Accomodate","Neccessary","Occurrence","Embarassment"], a:2},
+  {s:'eng', q:"In grammar, what is a 'gerund'?", o:["A verb used to describe an action in the past","A verb form ending in -ing that functions as a noun","A verb expressing a conditional state","An adjective derived from a verb"], a:1},
+  {s:'eng', q:"Identify the rhetorical device in: 'Ask not what your country can do for you — ask what you can do for your country.'", o:["Anaphora","Chiasmus","Epistrophe","Synecdoche"], a:1},
+  {s:'eng', q:"Choose the sentence in which 'less' is used correctly:", o:["There are less students in class today.","She has less books than her sister.","I have less money than I thought.","Less people attended the ceremony."], a:2},
+  {s:'eng', q:"The passive voice of 'The committee will announce the results tomorrow' is:", o:["The results will be announced by the committee tomorrow.","The results are announced by the committee tomorrow.","The results were announced by the committee.","The results will have been announced tomorrow."], a:0},
+  {s:'eng', q:"Which word class does 'however' belong to when used to connect two independent clauses?", o:["Subordinating conjunction","Coordinating conjunction","Conjunctive adverb","Preposition"], a:2},
+  {s:'eng', q:"Identify the type of error in: 'The data shows a clear trend in the research.'", o:["Dangling modifier","Subject–verb disagreement (data is plural)","Incorrect tense","Faulty parallelism"], a:1},
+  {s:'eng', q:"The literary term for a scene inserted into a narrative to depict events that occurred earlier is:", o:["Foreshadowing","In medias res","Flashback (analepsis)","Deus ex machina"], a:2}
 ];
 
 const SUBJECT_META = {
   bio:  { label:'BIOLOGY',     cls:'bio',  color:'var(--bio)'  },
   phy:  { label:'PHYSICS',     cls:'phy',  color:'var(--phy)'  },
   chem: { label:'CHEMISTRY',   cls:'chem', color:'var(--chem)' },
-  math: { label:'MATHEMATICS', cls:'math', color:'var(--math)' }
+  eng:  { label:'ENGLISH',     cls:'eng',  color:'var(--eng)'  }
 };
 
+// Shuffle the questions array (Fisher-Yates)
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+let QUESTIONS = [];
 let current = 0;
-let answers = new Array(100).fill(null);
+let answers = [];
 let timerInterval = null;
-let timeLeft = 20 * 60; // 1200 seconds
+let timeLeft = 20 * 60;
 
 function startExam() {
+  QUESTIONS = shuffle(RAW_QUESTIONS);
+  answers = new Array(100).fill(null);
   document.getElementById('landing').style.display = 'none';
   document.getElementById('exam').style.display = 'block';
   buildNavGrid();
@@ -1008,7 +516,6 @@ function renderQuestion(idx) {
     list.appendChild(btn);
   });
 
-  // Update nav grid
   document.querySelectorAll('.nav-btn').forEach((b, i) => {
     b.className = 'nav-btn';
     if (answers[i] !== null) b.classList.add('answered');
@@ -1026,9 +533,7 @@ function navigate(dir) {
   if (next >= 0 && next < 100) renderQuestion(next);
 }
 
-function goTo(idx) {
-  renderQuestion(idx);
-}
+function goTo(idx) { renderQuestion(idx); }
 
 function startTimer() {
   const box = document.getElementById('timerBox');
@@ -1040,10 +545,7 @@ function startTimer() {
     box.className = 'timer-box';
     if (timeLeft <= 300) box.classList.add('warning');
     if (timeLeft <= 60) box.classList.add('danger');
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      submitExam();
-    }
+    if (timeLeft <= 0) { clearInterval(timerInterval); submitExam(); }
   }, 1000);
 }
 
@@ -1051,21 +553,18 @@ function confirmSubmit() {
   const unanswered = answers.filter(a => a === null).length;
   document.getElementById('modalMsg').textContent =
     unanswered > 0
-      ? `You have ${unanswered} unanswered question(s). Submitting now will score them as zero. Are you sure?`
+      ? `You have ${unanswered} unanswered question(s). Submitting will score them as zero. Continue?`
       : 'You have answered all 100 questions. Ready to submit?';
   document.getElementById('submitModal').classList.add('show');
 }
 
-function closeModal() {
-  document.getElementById('submitModal').classList.remove('show');
-}
+function closeModal() { document.getElementById('submitModal').classList.remove('show'); }
 
 function submitExam() {
   clearInterval(timerInterval);
   closeModal();
 
-  // Calculate scores
-  let scores = { bio: {c:0,t:0}, phy: {c:0,t:0}, chem: {c:0,t:0}, math: {c:0,t:0} };
+  let scores = { bio:{c:0,t:0}, phy:{c:0,t:0}, chem:{c:0,t:0}, eng:{c:0,t:0} };
   let total = 0;
 
   QUESTIONS.forEach((q, i) => {
@@ -1076,12 +575,11 @@ function submitExam() {
   const pct = Math.round(total / 100 * 100);
   let grade, gradeColor, gradeMsg;
   if (pct >= 80) { grade='A'; gradeColor='var(--green)'; gradeMsg='Excellent! Outstanding performance!'; }
-  else if (pct >= 65) { grade='B'; gradeColor='var(--accent)'; gradeMsg='Good performance! You are well prepared.'; }
+  else if (pct >= 65) { grade='B'; gradeColor='var(--accent)'; gradeMsg='Good performance! Well prepared.'; }
   else if (pct >= 50) { grade='C'; gradeColor='var(--yellow)'; gradeMsg='Average performance. Keep practising!'; }
   else if (pct >= 40) { grade='D'; gradeColor='var(--accent2)'; gradeMsg='Below average. Revise more topics.'; }
   else { grade='F'; gradeColor='var(--red)'; gradeMsg='Poor performance. Intensive revision needed.'; }
 
-  // Build results HTML
   const circumference = 2 * Math.PI * 68;
   const offset = circumference - (pct / 100 * circumference);
 
@@ -1151,9 +649,9 @@ function submitExam() {
 
     <div class="subject-breakdown">
       <h3>Performance by Subject</h3>
-      ${['bio','phy','chem','math'].map(s => {
+      ${['bio','phy','chem','eng'].map(s => {
         const meta = SUBJECT_META[s];
-        const pctS = Math.round(scores[s].c / scores[s].t * 100);
+        const pctS = scores[s].t > 0 ? Math.round(scores[s].c / scores[s].t * 100) : 0;
         return `<div class="sb-row">
           <span class="sb-label" style="color:${meta.color}">${meta.label}</span>
           <div class="sb-bar-wrap"><div class="sb-bar-fill" style="width:${pctS}%;background:${meta.color}"></div></div>
@@ -1167,7 +665,7 @@ function submitExam() {
       ${reviewHTML}
     </div>
 
-    <button class="btn-retry" onclick="retryExam()">↺ Retry Examination</button>
+    <div class="finished-note">— End of examination. Good luck with your Post-UTME! —</div>
   `;
 }
 
@@ -1175,20 +673,6 @@ function formatTime(secs) {
   const m = Math.floor(secs / 60);
   const s = secs % 60;
   return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-}
-
-function retryExam() {
-  current = 0;
-  answers = new Array(100).fill(null);
-  timeLeft = 1200;
-  clearInterval(timerInterval);
-  document.getElementById('timerBox').textContent = '20:00';
-  document.getElementById('timerBox').className = 'timer-box';
-  document.getElementById('results').style.display = 'none';
-  document.getElementById('exam').style.display = 'block';
-  buildNavGrid();
-  renderQuestion(0);
-  startTimer();
 }
 </script>
 </body>
